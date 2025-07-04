@@ -1,0 +1,10 @@
+{
+  "private": true,
+  "name": "i-ask-therefore-i-create",
+  "version": "0.1.0",
+  "workspaces": [
+    "apps/*",
+    "packages/*",
+    "services/*"
+  ]
+}
