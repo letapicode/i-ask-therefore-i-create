@@ -69,3 +69,76 @@ This file lists actionable tasks derived from `implementation_plan.md` and the e
 
 ## Tools
 41. Add helper scripts in `tools/` for local development and deployment.
+
+## Repository Setup
+42. Configure workspace-wide build, test and lint scripts in the root `package.json`.
+43. Add `.env.example` files to each app directory documenting required variables.
+
+## Additional Infrastructure
+44. Create Terraform modules for S3 and CloudFront in `infrastructure/static-site`.
+45. Add PostgreSQL templates in `infrastructure/db` with encryption settings.
+46. Manage secrets via AWS SSM Parameter Store.
+
+## Extended Backend Services
+### Authentication Service (`apps/api-auth`)
+47. Implement password reset and email change endpoints.
+48. Add Google OAuth login support.
+
+### Orchestrator (`apps/orchestrator`)
+49. Expose `/api/status` endpoint to return job progress.
+50. Implement retry logic for failed CodeGen tasks.
+51. Store build artifacts in S3 for later download.
+
+### Code Generation Service (`apps/codegen`)
+52. Cache generated templates to speed up repeated builds.
+53. Enforce linting and formatting with ESLint and Prettier.
+
+### Email Service (`services/email`)
+54. Provide SES templates for verification and build notifications.
+
+### Analytics Service (`services/analytics`)
+55. Define DynamoDB schema for event logs.
+56. Expose aggregated metrics API.
+
+## Frontend Portal Enhancements (`apps/portal`)
+57. Add account settings page for updating user information.
+58. Implement analytics dashboard with charts.
+59. Display build logs and generation history.
+
+## Example App Template (`apps/user-app-temp`)
+60. Populate with a basic Todo app demonstrating generated features.
+
+## Shared Packages Extensions
+61. Add DynamoDB helper utilities in `packages/shared`.
+62. Create a CLI in `packages/codegen-templates` to list available modules.
+
+## CI/CD and DevOps Additions
+63. Create a release workflow under `ci/` to publish packages on tag.
+64. Configure Nx Cloud remote caching for faster builds.
+
+## Observability Improvements
+65. Define log retention and alarm policies in `infrastructure/observability`.
+66. Integrate Sentry DSNs via environment variables.
+
+## Testing & Security Expansion
+67. Add Cypress tests for portal user flows.
+68. Include OWASP dependency checks in CI.
+
+## Documentation Updates
+69. Document infrastructure deployment steps in `infrastructure/README.md`.
+
+## Tools and Utilities
+70. Add scripts in `tools/` to bootstrap new service folders.
+
+## Performance & Scaling
+71. Add k6 load testing scripts under `tools/loadtest`.
+72. Implement tenant isolation checks in the orchestrator.
+
+## Compliance
+73. Document GDPR data export and deletion processes.
+
+## Local Development
+74. Provide a `docker-compose.yml` for local stacks.
+
+## Repository Governance
+75. Add a `CODEOWNERS` file defining maintainers for each folder.
