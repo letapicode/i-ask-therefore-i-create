@@ -160,3 +160,19 @@ This file lists actionable tasks derived from `implementation_plan.md` and the e
 83. **Data Connector Templates** – provide connectors for common APIs (Stripe, Slack) that can be added on demand.
 84. **Edge Inference Support** – enable lightweight models to run in user browsers for offline predictions.
 85. **A/B Testing Toolkit** – add utilities to define experiments and collect metrics in generated apps.
+
+### Future Innovations
+86. **AI Chat Requirement Assistant** – integrate a conversational helper in the portal that clarifies requirements and suggests improvements while users describe their apps.
+87. **Auto Documentation Generation** – automatically create README files and inline comments for generated projects using summarization models.
+88. **Visual Workflow Builder** – provide a drag-and-drop interface to customize backend logic and serverless workflows.
+
+### Medium-Advanced Phase
+89. **Mobile App Generation** – offer optional React Native or Flutter output so apps run on iOS and Android.
+90. **Compliance & Security Scanning** – check generated code for GDPR, HIPAA and OWASP issues before deployment.
+91. **Generative UI Themes** – let users generate color palettes and style guides via short text prompts.
+
+### Advanced Phase Extensions
+92. **Plugin Marketplace** – publish a catalog where developers can share and rate community plugins for the platform.
+93. **Optimization Assistant** – analyze infrastructure cost and performance to recommend tuning actions.
+94. **Repo Import and Refactor** – import existing GitHub projects to regenerate or extend them using the codegen service.
+95. **Offline Generation Mode** – support running the entire pipeline locally for air‑gapped or restricted environments.
