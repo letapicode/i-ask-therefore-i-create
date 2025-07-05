@@ -176,3 +176,15 @@ This file lists actionable tasks derived from `implementation_plan.md` and the e
 93. **Optimization Assistant** – analyze infrastructure cost and performance to recommend tuning actions.
 94. **Repo Import and Refactor** – import existing GitHub projects to regenerate or extend them using the codegen service.
 95. **Offline Generation Mode** – support running the entire pipeline locally for air‑gapped or restricted environments.
+
+### Long-Term Vision
+96. **RL-Driven Code Quality Improvement** – use reinforcement learning from user feedback to enhance code generation accuracy.
+97. **Predictive Scaling Advisor** – analyze usage metrics to automatically suggest scaling actions for deployed apps.
+98. **Visual Database Schema Designer** – provide a drag-and-drop tool to design schemas feeding into the codegen pipeline.
+99. **Multi-Language Output** – extend templates to generate backend services in Python, Go and other languages.
+100. **GraphQL API Builder** – automatically expose GraphQL endpoints from generated data models.
+101. **Security Patch Automation** – detect dependency vulnerabilities and auto-generate pull requests with updates.
+102. **Custom AI Model Integration** – allow users to plug in their own fine-tuned models for specialized generation.
+103. **Live Coding Assistant** – offer an interactive helper that explains generated code and suggests improvements.
+104. **Smart Dependency Upgrader** – keep packages current with compatibility checks and rollback support.
+105. **Code Quality Insights Dashboard** – display maintainability and test coverage metrics for each project.
