@@ -188,3 +188,20 @@ This file lists actionable tasks derived from `implementation_plan.md` and the e
 103. **Live Coding Assistant** – offer an interactive helper that explains generated code and suggests improvements.
 104. **Smart Dependency Upgrader** – keep packages current with compatibility checks and rollback support.
 105. **Code Quality Insights Dashboard** – display maintainability and test coverage metrics for each project.
+
+### Research Frontier
+106. **Adaptive Prompt Training** – analyze user descriptions and refine prompt templates in `apps/codegen` using insights from `services/analytics`.
+107. **Personalized UI Assistant** – tailor portal layouts based on behavioral metrics (`apps/portal`, `services/analytics`).
+108. **VR App Preview** – render generated interfaces in WebXR for 3D inspection (`apps/portal`).
+109. **Ethical Compliance Checker** – flag privacy and fairness issues in generated code (`apps/codegen`, `services/analytics`).
+110. **Globalization Toolkit** – auto-localize UI strings and regional settings (`packages/codegen-templates`, `apps/portal`).
+111. **Experimental LLM Sandbox** – allow advanced users to plug custom models into `apps/codegen`.
+112. **Voice-Guided Data Modeling** – convert spoken requirements into schema definitions (`apps/portal`, `apps/codegen`).
+113. **Continuous Learning Feedback Loop** – use analytics and user ratings to retrain generation models (`services/analytics`, `apps/codegen`).
+114. **Cross-Domain Template Marketplace** – curate industry-specific templates in `packages/codegen-templates`.
+115. **Sustainability Report Generator** – track deployment metrics to estimate carbon impact (`services/analytics`).
+116. **In-App Tutorial Builder** – auto-generate guided walkthroughs for new apps (`packages/codegen-templates`, `apps/portal`).
+117. **AI Ethics Dashboard** – show transparency metrics for AI decisions in the portal (`apps/portal`, `services/analytics`).
+118. **Self-Service Data Lake** – provision data lakes and ETL connectors (`infrastructure/data-lake`, `services/analytics`).
+119. **Real-Time Performance Monitor** – stream live resource metrics and alerts (`services/analytics`, `infrastructure/observability`).
+120. **Quantum-Safe Cryptography** – integrate post-quantum algorithms for secure communication (`packages/shared`, `apps/api-auth`).
