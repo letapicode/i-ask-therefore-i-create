@@ -1,24 +1,26 @@
-import express from "express";
-import bcrypt from "bcryptjs";
-import jwt from "jsonwebtoken";
-import { putItem, getItem } from "../../packages/shared/src/dynamo";
-import { initSentry } from "../../packages/shared/src/sentry";
+import express from 'express';
+import bcrypt from 'bcryptjs';
+import jwt from 'jsonwebtoken';
+import { putItem, getItem, updateItem } from '../../packages/shared/src/dynamo';
+import { initSentry } from '../../packages/shared/src/sentry';
 
 export const app = express();
 app.use(express.json());
 
-const USER_TABLE = process.env.USER_TABLE || "users";
-const JWT_SECRET = process.env.JWT_SECRET || "secret";
+const USER_TABLE = process.env.USER_TABLE || 'users';
+const JWT_SECRET = process.env.JWT_SECRET || 'secret';
 
 interface User {
   email: string;
   passwordHash: string;
   verified?: boolean;
+  resetToken?: string;
 }
 
 app.post('/signup', async (req, res) => {
   const { email, password } = req.body;
-  if (!email || !password) return res.status(400).json({ error: 'missing fields' });
+  if (!email || !password)
+    return res.status(400).json({ error: 'missing fields' });
   const passwordHash = await bcrypt.hash(password, 10);
   await putItem(USER_TABLE, { email, passwordHash, verified: false });
   res.status(201).json({ ok: true });
@@ -26,7 +28,8 @@ app.post('/signup', async (req, res) => {
 
 app.post('/login', async (req, res) => {
   const { email, password } = req.body;
-  if (!email || !password) return res.status(400).json({ error: 'missing fields' });
+  if (!email || !password)
+    return res.status(400).json({ error: 'missing fields' });
   const user = await getItem<User>(USER_TABLE, { email });
   if (!user) return res.status(404).json({ error: 'user not found' });
   const match = await bcrypt.compare(password, user.passwordHash);
@@ -42,6 +45,44 @@ app.post('/verify', async (req, res) => {
   res.json({ ok: true });
 });
 
+app.post('/requestPasswordReset', async (req, res) => {
+  const { email } = req.body;
+  if (!email) return res.status(400).json({ error: 'missing email' });
+  const token = jwt.sign({ email }, JWT_SECRET, { expiresIn: '15m' });
+  await updateItem(USER_TABLE, { email }, 'SET resetToken = :t', {
+    ':t': token,
+  });
+  // In a real system we'd email the token
+  res.json({ ok: true, token });
+});
+
+app.post('/resetPassword', async (req, res) => {
+  const { email, token, password } = req.body;
+  if (!email || !token || !password)
+    return res.status(400).json({ error: 'missing fields' });
+  const user = await getItem<User>(USER_TABLE, { email });
+  if (!user || user.resetToken !== token)
+    return res.status(400).json({ error: 'invalid token' });
+  const passwordHash = await bcrypt.hash(password, 10);
+  await updateItem(
+    USER_TABLE,
+    { email },
+    'SET passwordHash = :p REMOVE resetToken',
+    { ':p': passwordHash }
+  );
+  res.json({ ok: true });
+});
+
+app.post('/changeEmail', async (req, res) => {
+  const { email, newEmail } = req.body;
+  if (!email || !newEmail)
+    return res.status(400).json({ error: 'missing fields' });
+  const user = await getItem<User>(USER_TABLE, { email });
+  if (!user) return res.status(404).json({ error: 'user not found' });
+  await putItem(USER_TABLE, { ...user, email: newEmail });
+  res.json({ ok: true });
+});
+
 export function start(port = 3000) {
   initSentry('api-auth');
   app.listen(port, () => console.log(`auth listening on ${port}`));
@@ -50,4 +91,3 @@ export function start(port = 3000) {
 if (require.main === module) {
   start(Number(process.env.PORT) || 3000);
 }
-

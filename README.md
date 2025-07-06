@@ -25,3 +25,7 @@ node services/analytics/src/index.ts &
 Infrastructure modules live under `infrastructure/`. Initialize them with `terraform init`.
 
 Local services can also be started via `docker-compose up`.
+
+## Linting and Formatting
+
+Run `pnpm lint` to execute ESLint and `pnpm format` to run Prettier across the repo.
