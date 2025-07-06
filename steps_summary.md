@@ -18,3 +18,10 @@ This file records brief summaries of each pull request.
 - Created GitHub Actions workflow under `ci/` running lint, test and build.
 - Documented environment variables with `.env.example` files for each app.
 - Added Terraform modules `static-site`, `db`, and `secrets` for additional infrastructure.
+
+## PR <pending> - Implement auth endpoints and helpers
+- Added signup, login and verify routes in `apps/api-auth` with JWT sessions and DynamoDB storage.
+- Created login and signup pages in the portal app.
+- Added CloudWatch dashboard resource to observability module.
+- Expanded README files and added dev/deploy helper scripts.
+- Updated task tracking to mark completed items.
