@@ -18,9 +18,9 @@
 |14|Trigger deployments|Completed|
 |15|Send notification emails|Completed|
 |16|Integrate OpenAI API|Completed|
-|17|Isolated generation tasks|Not Started|
+|17|Isolated generation tasks|Completed|
 |18|Run lint/unit tests|Completed|
-|19|Publish build artifacts|Not Started|
+|19|Publish build artifacts|Completed|
 |20|SES email wrapper|Completed|
 |21|Email service functions|Completed|
 |22|Collect usage events|Completed|
@@ -38,7 +38,7 @@
 |34|CloudWatch dashboards|Completed|
 |35|Sentry integration|Completed|
 |36|Unit tests for each service|Completed|
-|37|End-to-end tests|Not Started|
+|37|End-to-end tests|Completed|
 |38|Static analysis|Completed|
 |39|Expand README files|Completed|
 |40|User guides and diagrams|Completed|

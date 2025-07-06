@@ -52,3 +52,9 @@ docs.
 - Created CodeQL workflow for static analysis.
 - Documented system architecture under `docs/`.
 - Updated task tracker with completed items.
+
+## PR <pending> - Isolated execution, artifact uploads, and e2e test
+- Added Dockerfile and helper script to run codegen service in a container.
+- Orchestrator now uploads generated code to an S3 bucket via new `uploadObject` helper.
+- Created end-to-end test covering the createApp flow.
+- Updated task tracker to mark tasks 17, 19 and 37 as completed.

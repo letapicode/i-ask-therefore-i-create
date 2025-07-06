@@ -2,6 +2,7 @@ import express from 'express';
 import { randomUUID } from 'crypto';
 import fetch from 'node-fetch';
 import { putItem, getItem, scanTable } from '../../packages/shared/src/dynamo';
+import { uploadObject } from '../../packages/shared/src/s3';
 import { sendEmail } from '../../services/email/src';
 import { initSentry } from '../../packages/shared/src/sentry';
 
@@ -12,6 +13,7 @@ const JOBS_TABLE = process.env.JOBS_TABLE || 'jobs';
 const CODEGEN_URL = process.env.CODEGEN_URL || 'http://localhost:3003/generate';
 const DEPLOY_URL = process.env.DEPLOY_URL;
 const NOTIFY_EMAIL = process.env.NOTIFY_EMAIL;
+const ARTIFACTS_BUCKET = process.env.ARTIFACTS_BUCKET;
 
 interface Job {
   id: string;
@@ -41,11 +43,15 @@ async function dispatchJob(job: Job) {
     if (NOTIFY_EMAIL) {
       sendEmail({ template: 'job-start', to: NOTIFY_EMAIL, data: { id: job.id } });
     }
-    await fetch(CODEGEN_URL, {
+    const genRes = await fetch(CODEGEN_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ jobId: job.id, description: job.description })
     });
+    const { code } = await genRes.json();
+    if (ARTIFACTS_BUCKET && code) {
+      await uploadObject(ARTIFACTS_BUCKET, `${job.id}.txt`, code);
+    }
     await putItem(JOBS_TABLE, { ...job, status: 'complete' });
     await triggerDeploy(job.id);
     if (NOTIFY_EMAIL) {
