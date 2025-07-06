@@ -18,3 +18,7 @@ Utility scripts for local development and deployment.
 ```
 node tools/redeploy.js --id abc123 --description "New features" --url http://localhost:3002
 ```
+- `collab-editor.js` – live collaboration CLI for editing description files via WebSockets
+- `security-scan.js` – run ESLint and npm audit to check generated projects
+- `scale-advisor.js` – suggest autoscaling adjustments based on recent CloudWatch metrics
+- `auto-patch.js` – update dependencies using npm-check-updates and install patches

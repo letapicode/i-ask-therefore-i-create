@@ -86,3 +86,7 @@
 | 122    | Input Sanitization                      | Completed |
 | 123    | Audit Logging                           | Completed |
 | 124    | Portal Google Analytics                 | Completed |
+| 77     | Collaborative Editor                     | Completed |
+| 90     | Compliance & Security Scanning           | Completed |
+| 97     | Predictive Scaling Advisor               | Completed |
+| 101    | Security Patch Automation               | Completed |
