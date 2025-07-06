@@ -205,3 +205,8 @@ This file lists actionable tasks derived from `implementation_plan.md` and the e
 118. **Self-Service Data Lake** – provision data lakes and ETL connectors (`infrastructure/data-lake`, `services/analytics`).
 119. **Real-Time Performance Monitor** – stream live resource metrics and alerts (`services/analytics`, `infrastructure/observability`).
 120. **Quantum-Safe Cryptography** – integrate post-quantum algorithms for secure communication (`packages/shared`, `apps/api-auth`).
+
+121. **Automated Backups** – regularly back up generated code and user data with documented restore steps.
+122. **Input Sanitization** – validate and sanitize all user-provided data across services.
+123. **Audit Logging** – record codegen activity and portal actions for security reviews.
+124. **Portal Google Analytics** – integrate Google Analytics to measure portal usage.
