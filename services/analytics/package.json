@@ -3,5 +3,10 @@
   "version": "0.1.0",
   "dependencies": {
     "express": "^4.18.2"
+  },
+  "scripts": {
+    "build": "echo building analytics-service",
+    "lint": "echo linting analytics-service",
+    "test": "echo testing analytics-service"
   }
 }

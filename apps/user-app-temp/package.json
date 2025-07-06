@@ -1,4 +1,9 @@
 {
   "name": "user-app-temp",
-  "version": "0.1.0"
+  "version": "0.1.0",
+  "scripts": {
+    "build": "echo building user-app-temp",
+    "lint": "echo linting user-app-temp",
+    "test": "echo testing user-app-temp"
+  }
 }

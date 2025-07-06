@@ -1,4 +1,9 @@
 {
   "name": "api-auth",
-  "version": "0.1.0"
+  "version": "0.1.0",
+  "scripts": {
+    "build": "echo building api-auth",
+    "lint": "echo linting api-auth",
+    "test": "echo testing api-auth"
+  }
 }

@@ -4,5 +4,10 @@
   "dependencies": {
     "@aws-sdk/client-dynamodb": "^3.599.0",
     "@aws-sdk/lib-dynamodb": "^3.599.0"
+  },
+  "scripts": {
+    "build": "echo building shared",
+    "lint": "echo linting shared",
+    "test": "echo testing shared"
   }
 }
