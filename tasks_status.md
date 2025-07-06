@@ -72,6 +72,8 @@
 | 62     | Codegen CLI                             | Completed |
 | 70     | Service bootstrap scripts               | Completed |
 | 71     | Load testing                            | Completed |
+| 72     | Tenant isolation checks                  | Completed |
+| 73     | GDPR data export/delete docs             | Completed |
 | 74     | Docker Compose                          | Completed |
 | 75     | CODEOWNERS file                         | Completed |
 | 69     | Infrastructure Deployment Guide         | Completed |
