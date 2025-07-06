@@ -1,0 +1,9 @@
+# Code owners for each folder
+/apps/api-auth @maintainer1
+/apps/orchestrator @maintainer2
+/apps/codegen @maintainer3
+/apps/portal @maintainer4
+/services/email @maintainer5
+/services/analytics @maintainer6
+/infrastructure @infra-team
+/tools @dev-tools
