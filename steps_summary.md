@@ -3,16 +3,19 @@
 This file records brief summaries of each pull request.
 
 ## PR d65dd0b - Implement core infra modules and basic services
+
 - Added Terraform modules for IAM, Cognito, SES, Observability, and more.
 - Created shared packages and services for email and analytics.
 - Provides scaffolding for infrastructure and service development.
 
 ## PR ea5b49c - Add task tracking and summary instructions
+
 - Added `tasks_status.md` to track completion of numbered tasks.
 - Created `steps_summary.md` file for recording summaries.
 - Updated `AGENTS.md` with instruction to update this summary file.
 
 ## PR a858e6f - CI setup and new infrastructure modules
+
 - Configured Turborepo pipeline and remote cache via `turbo.json`.
 - Added root npm scripts for build/lint/test and package-level placeholders.
 - Created GitHub Actions workflow under `ci/` running lint, test and build.
@@ -20,6 +23,7 @@ This file records brief summaries of each pull request.
 - Added Terraform modules `static-site`, `db`, and `secrets` for additional infrastructure.
 
 ## PR <pending> - Implement auth endpoints and helpers
+
 - Added signup, login and verify routes in `apps/api-auth` with JWT sessions and DynamoDB storage.
 - Created login and signup pages in the portal app.
 - Added CloudWatch dashboard resource to observability module.
@@ -27,26 +31,30 @@ This file records brief summaries of each pull request.
 - Updated task tracking to mark completed items.
 
 ## PR <pending> - Implement orchestrator API and portal pages
+
 - Added `/api/createApp` and `/api/status` endpoints in the orchestrator with DynamoDB persistence.
 - Created simple codegen service using the retry helper.
 - Added portal pages for submitting descriptions and checking build status.
 - Updated READMEs and marked related tasks as completed.
 
 ## PR <pending> - Documentation and tooling updates
+
 - Added CODEOWNERS file and docker-compose setup.
 - Created bootstrap-service script and k6 load test example.
 - Documented infrastructure deployment and updated shared DynamoDB helpers.
 
 ## PR <pending> - Deployment triggers and app listing
+
 - Orchestrator now calls a deployment webhook and sends notification emails when
-jobs start, complete or fail.
+  jobs start, complete or fail.
 - Added endpoints `/api/apps` and `/api/redeploy/:id` with corresponding portal
-page and CLI tool.
+  page and CLI tool.
 - Implemented `scanTable` helper in shared package and updated infrastructure
-docs.
+  docs.
 - Updated task tracking to mark related items as completed.
 
 ## PR <pending> - OpenAI integration and testing setup
+
 - Connected code generation service to OpenAI API with new module and env var.
 - Added Jest-based unit tests across services and configured ts-jest.
 - Created CodeQL workflow for static analysis.
@@ -54,7 +62,15 @@ docs.
 - Updated task tracker with completed items.
 
 ## PR <pending> - Isolated execution, artifact uploads, and e2e test
+
 - Added Dockerfile and helper script to run codegen service in a container.
 - Orchestrator now uploads generated code to an S3 bucket via new `uploadObject` helper.
 - Created end-to-end test covering the createApp flow.
 - Updated task tracker to mark tasks 17, 19 and 37 as completed.
+
+## PR <pending> - Auth improvements and template caching
+
+- Added password reset and email change endpoints in `api-auth` with tests.
+- Implemented in-memory caching for `codegen` service to reuse templates.
+- Introduced ESLint and Prettier configs with documentation updates.
+- Marked tasks 47, 49, 50, 51, 52, 53, 62, 70, 71, 74 and 75 as completed.

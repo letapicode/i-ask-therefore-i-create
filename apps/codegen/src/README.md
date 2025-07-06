@@ -3,12 +3,13 @@
 Runs code generation tasks based on templates.
 
 Start the service with:
+
 ```bash
 pnpm install
 node apps/codegen/src/index.ts
 ```
 
-Set `OPENAI_API_KEY` to enable code generation via the OpenAI API.
+Set `OPENAI_API_KEY` to enable code generation via the OpenAI API. Generated templates are cached in memory so repeated descriptions return instantly.
 
 ## Endpoint
 
