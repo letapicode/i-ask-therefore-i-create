@@ -32,4 +32,20 @@
 |28|Editing descriptions triggers redeploys|Not Started|
 |29|Shared AWS helpers|Completed|
 |30|Codegen template library|Completed|
+|31|Turborepo/Nx tasks|Completed|
+|32|GitHub Actions|Completed|
+|33|Remote caching|Completed|
+|34|CloudWatch dashboards|Not Started|
+|35|Sentry integration|Not Started|
+|36|Unit tests for each service|Not Started|
+|37|End-to-end tests|Not Started|
+|38|Static analysis|Not Started|
+|39|Expand README files|Not Started|
+|40|User guides and diagrams|Not Started|
+|41|Helper scripts|Not Started|
+|42|Root build/test/lint scripts|Completed|
+|43|Environment example files|Completed|
+|44|Static site hosting module|Completed|
+|45|PostgreSQL templates|Completed|
+|46|Secrets management|Completed|
 

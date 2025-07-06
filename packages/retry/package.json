@@ -2,5 +2,10 @@
   "name": "retry",
   "version": "0.1.0",
   "main": "src/index.ts",
-  "types": "src/index.ts"
+  "types": "src/index.ts",
+  "scripts": {
+    "build": "echo building retry",
+    "lint": "echo linting retry",
+    "test": "echo testing retry"
+  }
 }

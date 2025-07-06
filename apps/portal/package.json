@@ -1,4 +1,9 @@
 {
   "name": "portal",
-  "version": "0.1.0"
+  "version": "0.1.0",
+  "scripts": {
+    "build": "echo building portal",
+    "lint": "echo linting portal",
+    "test": "echo testing portal"
+  }
 }

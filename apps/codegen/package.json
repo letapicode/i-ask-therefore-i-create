@@ -1,4 +1,9 @@
 {
   "name": "codegen",
-  "version": "0.1.0"
+  "version": "0.1.0",
+  "scripts": {
+    "build": "echo building codegen",
+    "lint": "echo linting codegen",
+    "test": "echo testing codegen"
+  }
 }
