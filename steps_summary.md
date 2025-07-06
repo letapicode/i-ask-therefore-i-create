@@ -74,3 +74,10 @@ This file records brief summaries of each pull request.
 - Implemented in-memory caching for `codegen` service to reuse templates.
 - Introduced ESLint and Prettier configs with documentation updates.
 - Marked tasks 47, 49, 50, 51, 52, 53, 62, 70, 71, 74 and 75 as completed.
+
+## PR <pending> - Voice input and offline mode
+
+- Added speech-to-text option on the portal create page.
+- Created CLI for streaming CloudWatch metrics and an offline startup script.
+- Documented auto documentation generation and offline mode.
+- Marked tasks 76, 87, 95 and 119 as completed.

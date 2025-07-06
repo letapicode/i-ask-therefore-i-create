@@ -6,6 +6,8 @@ Utility scripts for local development and deployment.
 - `deploy.sh` – run `terraform plan` across infrastructure modules
 - `bootstrap-service.sh` – create a new service folder with starter files
 - `redeploy.js` – CLI to update descriptions and trigger redeployments
+- `perf-monitor.js` – stream CloudWatch metrics to your terminal
+- `offline.sh` – spin up all services locally without external dependencies
 
 - `loadtest/basic.js` – example k6 script
 

@@ -1,4 +1,5 @@
 # i-ask-therefore-i-create
+
 Describe your idea. We generate the code, deploy it, and scale it—automatically.
 
 This repository uses a monorepo structure as outlined in `implementation_plan.md`.
@@ -25,6 +26,15 @@ node services/analytics/src/index.ts &
 Infrastructure modules live under `infrastructure/`. Initialize them with `terraform init`.
 
 Local services can also be started via `docker-compose up`.
+Use `./tools/offline.sh` to run the entire pipeline without external services.
+
+## Tools
+
+`tools/perf-monitor.js` streams CloudWatch metrics for any Lambda function:
+
+```bash
+node tools/perf-monitor.js -f my-function
+```
 
 ## Linting and Formatting
 
