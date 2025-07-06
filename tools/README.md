@@ -8,6 +8,7 @@ Utility scripts for local development and deployment.
 - `redeploy.js` – CLI to update descriptions and trigger redeployments
 - `perf-monitor.js` – stream CloudWatch metrics to your terminal
 - `offline.sh` – spin up all services locally without external dependencies
+- `audit-log.js` – append audit events to a log file
 
 - `loadtest/basic.js` – example k6 script
 

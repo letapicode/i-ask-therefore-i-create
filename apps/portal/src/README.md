@@ -17,3 +17,4 @@ Additional pages:
 - Voice input is available on the create page for quickly dictating descriptions.
 - `status.tsx` – check the current status of a code generation job.
 - `apps.tsx` – list all generated apps and their current status.
+- Google Analytics is loaded when `NEXT_PUBLIC_GA_ID` is set.

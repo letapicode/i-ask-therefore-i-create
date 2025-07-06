@@ -3,12 +3,14 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { putItem, getItem, updateItem } from '../../packages/shared/src/dynamo';
 import { initSentry } from '../../packages/shared/src/sentry';
+import { signMessage, verifyMessage } from '../../packages/shared/src/crypto';
 
 export const app = express();
 app.use(express.json());
 
 const USER_TABLE = process.env.USER_TABLE || 'users';
 const JWT_SECRET = process.env.JWT_SECRET || 'secret';
+const QS_KEY = process.env.QS_KEY || 'quantum-secret';
 
 interface User {
   email: string;
@@ -35,7 +37,8 @@ app.post('/login', async (req, res) => {
   const match = await bcrypt.compare(password, user.passwordHash);
   if (!match) return res.status(401).json({ error: 'invalid credentials' });
   const token = jwt.sign({ email }, JWT_SECRET, { expiresIn: '1h' });
-  res.json({ token });
+  const signature = signMessage(QS_KEY, token);
+  res.json({ token, signature });
 });
 
 app.post('/verify', async (req, res) => {
@@ -81,6 +84,14 @@ app.post('/changeEmail', async (req, res) => {
   if (!user) return res.status(404).json({ error: 'user not found' });
   await putItem(USER_TABLE, { ...user, email: newEmail });
   res.json({ ok: true });
+});
+
+app.post('/verifySignature', (req, res) => {
+  const { token, signature } = req.body;
+  if (!token || !signature)
+    return res.status(400).json({ error: 'missing fields' });
+  const valid = verifyMessage(QS_KEY, token, signature);
+  res.json({ valid });
 });
 
 export function start(port = 3000) {

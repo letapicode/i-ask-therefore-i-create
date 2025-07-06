@@ -81,3 +81,9 @@ This file records brief summaries of each pull request.
 - Created CLI for streaming CloudWatch metrics and an offline startup script.
 - Documented auto documentation generation and offline mode.
 - Marked tasks 76, 87, 95 and 119 as completed.
+
+## PR <pending> - Quantum-safe crypto and utilities
+
+- Added SHA3-based signing helpers in `packages/shared` and integrated them with the auth service.
+- Created tests for the new crypto module.
+- Updated task tracker for tasks 120-124.
