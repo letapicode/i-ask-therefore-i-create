@@ -1525,3 +1525,51 @@ This file expands on each item in `Tasks.md` with a short description of the exp
     3. Implement handlers with data access logic.
     4. Add integration tests and update the README.
 
+121. **Automated Backups**
+
+   - Design Terraform module inputs and outputs.
+   - Implement resources in the project.
+   - Run `terraform plan` to validate and document usage.
+   - Task details: Schedule backups of code repositories and databases with recovery documentation.
+  - Steps:
+    1. Create the module folder and variable files.
+    2. Define inputs/outputs following AWS conventions.
+    3. Run `terraform init && terraform fmt` to validate.
+    4. Document usage in `README.md` and commit.
+
+122. **Input Sanitization**
+
+   - Detail the expected outcome of the task.
+   - Implement the feature in the project.
+   - Document findings and add examples.
+   - Task details: Validate and sanitize all user-supplied data to prevent injection attacks.
+  - Steps:
+    1. Capture acceptance criteria in a design doc.
+    2. Implement the logic iteratively with commits.
+    3. Validate the feature with unit tests.
+    4. Provide usage examples in the docs.
+
+123. **Audit Logging**
+
+   - Outline command-line options or automation steps.
+   - Write scripts in the project.
+   - Verify cross-platform usage and add help output.
+   - Task details: Record code generation steps and portal activities for audit purposes.
+  - Steps:
+    1. Plan arguments and flags for the CLI.
+    2. Implement commands with the Commander library.
+    3. Ensure scripts run on Windows/macOS/Linux.
+    4. Provide examples in the tool README.
+
+124. **Portal Google Analytics**
+
+   - Sketch the UI/UX for the feature.
+   - Build React components in the project and connect to the API.
+   - Add page-level tests and document usage.
+   - Task details: Integrate Google Analytics scripts in the portal to track usage metrics.
+  - Steps:
+    1. Prototype screens in a design tool like Figma.
+    2. Implement pages using Next.js and Tailwind CSS.
+    3. Connect to backend APIs with SWR or React Query.
+    4. Add Cypress tests and document screenshots.
+
