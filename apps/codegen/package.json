@@ -1,6 +1,9 @@
 {
   "name": "codegen",
   "version": "0.1.0",
+  "dependencies": {
+    "express": "^4.18.2"
+  },
   "scripts": {
     "build": "echo building codegen",
     "lint": "echo linting codegen",

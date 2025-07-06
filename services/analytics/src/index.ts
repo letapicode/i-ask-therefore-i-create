@@ -1,5 +1,6 @@
 import express from "express";
 import fs from "fs";
+import { initSentry } from "../../packages/shared/src/sentry";
 
 const app = express();
 app.use(express.json());
@@ -28,6 +29,7 @@ app.get("/metrics", (_req, res) => {
 });
 
 export function start(port = 3001) {
+  initSentry('analytics');
   app.listen(port, () => console.log(`analytics listening on ${port}`));
 }
 
