@@ -1,6 +1,11 @@
 {
   "name": "api-auth",
   "version": "0.1.0",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "express": "^4.18.2",
+    "jsonwebtoken": "^9.0.0"
+  },
   "scripts": {
     "build": "echo building api-auth",
     "lint": "echo linting api-auth",

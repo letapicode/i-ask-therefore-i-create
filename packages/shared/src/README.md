@@ -18,3 +18,11 @@ This package now includes DynamoDB helper functions built on the AWS SDK v3 `Dyn
 ## S3 Helper
 
 `uploadObject(bucket, key, body)` uploads a build artifact to the specified S3 bucket.
+
+## Quantum-Safe Cryptography
+
+`generateKey()` creates a random key. `signMessage(key, msg)` returns a SHA3-512 HMAC and `verifyMessage(key, msg, sig)` verifies it. These helpers provide a simple quantum-resistant signing method used by the auth service.
+
+## Input Sanitization
+
+`sanitize(str)` HTML-escapes user supplied strings to prevent injection attacks.

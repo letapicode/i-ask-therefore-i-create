@@ -1,6 +1,6 @@
 {
   "$schema": "https://turborepo.org/schema.json",
-  "pipeline": {
+  "tasks": {
     "build": {
       "dependsOn": ["^build"],
       "outputs": ["dist/**"]
@@ -14,7 +14,7 @@
     }
   },
   "remoteCache": {
-    "url": "https://cache.example.com",
-    "sendToken": false
+    "enabled": false,
+    "apiUrl": "https://cache.example.com"
   }
 }
