@@ -36,3 +36,12 @@ This file records brief summaries of each pull request.
 - Added CODEOWNERS file and docker-compose setup.
 - Created bootstrap-service script and k6 load test example.
 - Documented infrastructure deployment and updated shared DynamoDB helpers.
+
+## PR <pending> - Deployment triggers and app listing
+- Orchestrator now calls a deployment webhook and sends notification emails when
+jobs start, complete or fail.
+- Added endpoints `/api/apps` and `/api/redeploy/:id` with corresponding portal
+page and CLI tool.
+- Implemented `scanTable` helper in shared package and updated infrastructure
+docs.
+- Updated task tracking to mark related items as completed.
