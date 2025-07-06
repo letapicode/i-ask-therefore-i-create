@@ -1,4 +1,10 @@
 {
   "name": "codegen-templates",
-  "version": "0.1.0"
+  "version": "0.1.0",
+  "bin": {
+    "codegen": "./src/cli.ts"
+  },
+  "dependencies": {
+    "commander": "^11.0.0"
+  }
 }

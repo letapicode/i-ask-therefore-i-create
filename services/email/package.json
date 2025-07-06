@@ -1,4 +1,7 @@
 {
   "name": "email-service",
-  "version": "0.1.0"
+  "version": "0.1.0",
+  "dependencies": {
+    "@aws-sdk/client-ses": "^3.599.0"
+  }
 }
