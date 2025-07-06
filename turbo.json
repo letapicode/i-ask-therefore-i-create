@@ -14,7 +14,7 @@
     }
   },
   "remoteCache": {
-    "enabled": false,
-    "apiUrl": "https://cache.example.com"
+    "enabled": true,
+    "apiUrl": "https://nx.app"
   }
 }

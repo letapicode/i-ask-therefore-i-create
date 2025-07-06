@@ -87,3 +87,4 @@ This file records brief summaries of each pull request.
 - Added SHA3-based signing helpers in `packages/shared` and integrated them with the auth service.
 - Created tests for the new crypto module.
 - Updated task tracker for tasks 120-124.
+\n## PR <pending> - CI improvements and observability updates\n\n- Added release pipeline and dependency scan workflows under `ci/`.\n- Enabled Nx Cloud remote caching via updated `turbo.json`.\n- Enhanced observability Terraform module with log retention and alarms.\n- Documented Sentry DSN usage and added example env vars.\n- Introduced basic Cypress tests and updated package scripts.\n- Updated task tracker for tasks 63-68.

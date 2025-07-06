@@ -54,6 +54,12 @@
 | 51     | Artifact storage                        | Completed |
 | 52     | Template caching                        | Completed |
 | 53     | Linting & formatting                    | Completed |
+| 63     | Release workflow                        | Completed |
+| 64     | Nx Cloud caching                        | Completed |
+| 65     | Log retention and alarms                | Completed |
+| 66     | Sentry DSN configuration                | Completed |
+| 67     | Cypress tests                           | Completed |
+| 68     | OWASP dependency checks                 | Completed |
 | 62     | Codegen CLI                             | Completed |
 | 70     | Service bootstrap scripts               | Completed |
 | 71     | Load testing                            | Completed |

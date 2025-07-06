@@ -28,6 +28,11 @@ Infrastructure modules live under `infrastructure/`. Initialize them with `terra
 Local services can also be started via `docker-compose up`.
 Use `./tools/offline.sh` to run the entire pipeline without external services.
 
+### Nx Cloud Caching
+
+Set `NX_CLOUD_ACCESS_TOKEN` in your environment to enable remote caching with Nx Cloud. The
+`turbo.json` configuration is already prepared to push and pull cache entries.
+
 ## Tools
 
 `tools/perf-monitor.js` streams CloudWatch metrics for any Lambda function:
@@ -39,3 +44,8 @@ node tools/perf-monitor.js -f my-function
 ## Linting and Formatting
 
 Run `pnpm lint` to execute ESLint and `pnpm format` to run Prettier across the repo.
+
+### Sentry
+
+If `SENTRY_DSN` is set in your environment the services will forward errors to
+Sentry using the helper in `packages/shared`.
