@@ -5,6 +5,7 @@ import { putItem, getItem, scanTable } from '../../packages/shared/src/dynamo';
 import { uploadObject } from '../../packages/shared/src/s3';
 import { sendEmail } from '../../services/email/src';
 import { initSentry } from '../../packages/shared/src/sentry';
+import { startSelfHealing, configure as configureHealing } from './selfHeal';
 
 export const app = express();
 app.use(express.json());
@@ -16,7 +17,7 @@ const NOTIFY_EMAIL = process.env.NOTIFY_EMAIL;
 const ARTIFACTS_BUCKET = process.env.ARTIFACTS_BUCKET;
 const TENANT_HEADER = 'x-tenant-id';
 
-interface Job {
+export interface Job {
   id: string;
   tenantId: string;
   description: string;
@@ -39,7 +40,7 @@ async function triggerDeploy(jobId: string) {
   }
 }
 
-async function dispatchJob(job: Job) {
+export async function dispatchJob(job: Job) {
   try {
     await putItem(JOBS_TABLE, { ...job, status: 'running' });
     if (NOTIFY_EMAIL) {
@@ -66,6 +67,8 @@ async function dispatchJob(job: Job) {
     }
   }
 }
+
+configureHealing(dispatchJob);
 
 app.post('/api/createApp', async (req, res) => {
   const tenantId = req.header(TENANT_HEADER);
@@ -109,6 +112,9 @@ app.post('/api/redeploy/:id', async (req, res) => {
 export function start(port = 3002) {
   initSentry('orchestrator');
   app.listen(port, () => console.log(`orchestrator listening on ${port}`));
+  if (process.env.SELF_HEAL) {
+    startSelfHealing();
+  }
 }
 
 if (require.main === module) {

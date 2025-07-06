@@ -120,3 +120,12 @@ This file records brief summaries of each pull request.
 - Implemented portal pages for VR preview, tutorial builder and ethics dashboard.
 - Created Terraform module for a basic data lake.
 - Updated task tracker for items 102 through 118.
+
+## PR <pending> - Extended feature stubs
+- Added Figma design import and chat helper pages in the portal.
+- Created `@iac/plugins` and `@iac/data-connectors` packages with basic interfaces.
+- Implemented self-healing job logic in the orchestrator.
+- Added scripts for test generation, optimization and repository import.
+- Documented new concepts including recommendation engine, workflow builder and more.
+- Updated `tasks_status.md` for tasks 78 through 100.
+
