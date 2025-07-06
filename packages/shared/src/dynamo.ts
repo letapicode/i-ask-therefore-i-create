@@ -5,6 +5,7 @@ import {
   PutCommand,
   UpdateCommand,
   QueryCommand,
+  ScanCommand,
 } from "@aws-sdk/lib-dynamodb";
 
 const client = new DynamoDBClient({});
@@ -39,5 +40,10 @@ export async function queryItems<T>(table: string, index: string, keyCondExp: st
       ExpressionAttributeValues: values,
     })
   );
+  return (res.Items as T[]) || [];
+}
+
+export async function scanTable<T>(table: string): Promise<T[]> {
+  const res = await docClient.send(new ScanCommand({ TableName: table }));
   return (res.Items as T[]) || [];
 }

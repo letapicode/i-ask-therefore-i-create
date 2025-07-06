@@ -15,8 +15,8 @@
 |11|/api/createApp endpoint|Completed|
 |12|Dispatch CodeGen jobs|Completed|
 |13|Persist job status in DynamoDB|Completed|
-|14|Trigger deployments|Not Started|
-|15|Send notification emails|Not Started|
+|14|Trigger deployments|Completed|
+|15|Send notification emails|Completed|
 |16|Integrate OpenAI API|Not Started|
 |17|Isolated generation tasks|Not Started|
 |18|Run lint/unit tests|Not Started|
@@ -28,8 +28,8 @@
 |24|Portal login/signup|Completed|
 |25|Create New App wizard|Completed|
 |26|Show build status|Completed|
-|27|List user apps|Not Started|
-|28|Editing descriptions triggers redeploys|Not Started|
+|27|List user apps|Completed|
+|28|Editing descriptions triggers redeploys|Completed|
 |29|Shared AWS helpers|Completed|
 |30|Codegen template library|Completed|
 |31|Turborepo/Nx tasks|Completed|
@@ -48,4 +48,5 @@
 |44|Static site hosting module|Completed|
 |45|PostgreSQL templates|Completed|
 |46|Secrets management|Completed|
+|69|Infrastructure Deployment Guide|Completed|
 
