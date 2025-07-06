@@ -4,7 +4,12 @@ Shared library code.
 
 ## DynamoDB Helpers
 
-This package now includes `putItem` and `getItem` helpers built on the AWS SDK v3 `DynamoDBDocumentClient`.
+This package now includes DynamoDB helper functions built on the AWS SDK v3 `DynamoDBDocumentClient`:
+
+- `putItem`
+- `getItem`
+- `updateItem`
+- `queryItems`
 
 ## Sentry
 

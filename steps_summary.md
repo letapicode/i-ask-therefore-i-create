@@ -31,3 +31,8 @@ This file records brief summaries of each pull request.
 - Created simple codegen service using the retry helper.
 - Added portal pages for submitting descriptions and checking build status.
 - Updated READMEs and marked related tasks as completed.
+
+## PR <pending> - Documentation and tooling updates
+- Added CODEOWNERS file and docker-compose setup.
+- Created bootstrap-service script and k6 load test example.
+- Documented infrastructure deployment and updated shared DynamoDB helpers.
