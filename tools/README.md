@@ -9,6 +9,7 @@ Utility scripts for local development and deployment.
 - `perf-monitor.js` – stream CloudWatch metrics to your terminal
 - `offline.sh` – spin up all services locally without external dependencies
 - `audit-log.js` – append audit events to a log file
+- `export-data.js` – export or delete tenant data for GDPR requests
 
 - `loadtest/basic.js` – example k6 script
 

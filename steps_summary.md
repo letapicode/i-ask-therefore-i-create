@@ -97,3 +97,11 @@ This file records brief summaries of each pull request.
 - Added account settings, analytics dashboard and log viewer pages in the portal.
 - Included Todo app template example.
 - Updated task tracker for tasks 48,54-61.
+
+## PR <pending> - Tenant isolation and GDPR docs
+
+- Implemented tenant-scoped APIs in the orchestrator using an `x-tenant-id` header.
+- Added unit tests covering isolation logic.
+- Created `export-data.js` script and documentation for GDPR data requests.
+- Updated task tracker for tasks 72 and 73.
+

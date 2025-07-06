@@ -14,9 +14,11 @@ const CODEGEN_URL = process.env.CODEGEN_URL || 'http://localhost:3003/generate';
 const DEPLOY_URL = process.env.DEPLOY_URL;
 const NOTIFY_EMAIL = process.env.NOTIFY_EMAIL;
 const ARTIFACTS_BUCKET = process.env.ARTIFACTS_BUCKET;
+const TENANT_HEADER = 'x-tenant-id';
 
 interface Job {
   id: string;
+  tenantId: string;
   description: string;
   status: 'queued' | 'running' | 'complete' | 'failed';
 }
@@ -66,31 +68,39 @@ async function dispatchJob(job: Job) {
 }
 
 app.post('/api/createApp', async (req, res) => {
+  const tenantId = req.header(TENANT_HEADER);
+  if (!tenantId) return res.status(401).json({ error: 'missing tenant' });
   const { description } = req.body;
   if (!description) return res.status(400).json({ error: 'missing description' });
   const id = randomUUID();
-  const job: Job = { id, description, status: 'queued' };
+  const job: Job = { id, tenantId, description, status: 'queued' };
   await putItem(JOBS_TABLE, job);
   dispatchJob(job); // fire and forget
   res.status(202).json({ jobId: id });
 });
 
 app.get('/api/status/:id', async (req, res) => {
+  const tenantId = req.header(TENANT_HEADER);
+  if (!tenantId) return res.status(401).json({ error: 'missing tenant' });
   const job = await getItem<Job>(JOBS_TABLE, { id: req.params.id });
-  if (!job) return res.status(404).json({ error: 'not found' });
+  if (!job || job.tenantId !== tenantId) return res.status(404).json({ error: 'not found' });
   res.json(job);
 });
 
-app.get('/api/apps', async (_req, res) => {
+app.get('/api/apps', async (req, res) => {
+  const tenantId = req.header(TENANT_HEADER);
+  if (!tenantId) return res.status(401).json({ error: 'missing tenant' });
   const jobs = await scanTable<Job>(JOBS_TABLE);
-  res.json(jobs);
+  res.json(jobs.filter(j => j.tenantId === tenantId));
 });
 
 app.post('/api/redeploy/:id', async (req, res) => {
+  const tenantId = req.header(TENANT_HEADER);
+  if (!tenantId) return res.status(401).json({ error: 'missing tenant' });
   const { description } = req.body;
   if (!description) return res.status(400).json({ error: 'missing description' });
   const id = req.params.id;
-  const job: Job = { id, description, status: 'queued' };
+  const job: Job = { id, tenantId, description, status: 'queued' };
   await putItem(JOBS_TABLE, job);
   dispatchJob(job);
   res.status(202).json({ jobId: id });
