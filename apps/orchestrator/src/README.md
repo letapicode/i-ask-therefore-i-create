@@ -1,3 +1,8 @@
-# orchestrator
+# Orchestrator Service
 
-Source code for orchestrator app.
+Coordinates code generation jobs and deployments.
+
+```bash
+pnpm install
+node apps/orchestrator/src/index.ts
+```

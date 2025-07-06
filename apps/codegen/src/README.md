@@ -1,3 +1,9 @@
-# codegen
+# Code Generation Service
 
-Source code for codegen app.
+Runs code generation tasks based on templates.
+
+Start the service with:
+```bash
+pnpm install
+node apps/codegen/src/index.ts
+```

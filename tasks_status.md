@@ -8,10 +8,10 @@
 |4|SES Configuration|Completed|
 |5|Observability Stack|Completed|
 |6|Terraform/CDK Scaffolding|Completed|
-|7|Signup and login endpoints|Not Started|
-|8|JWT session management|Not Started|
-|9|Connect user data store|Not Started|
-|10|Email verification endpoint|Not Started|
+|7|Signup and login endpoints|Completed|
+|8|JWT session management|Completed|
+|9|Connect user data store|Completed|
+|10|Email verification endpoint|Completed|
 |11|/api/createApp endpoint|Not Started|
 |12|Dispatch CodeGen jobs|Not Started|
 |13|Persist job status in DynamoDB|Not Started|
@@ -25,7 +25,7 @@
 |21|Email service functions|Completed|
 |22|Collect usage events|Completed|
 |23|Metrics API|Completed|
-|24|Portal login/signup|Not Started|
+|24|Portal login/signup|Completed|
 |25|Create New App wizard|Not Started|
 |26|Show build status|Not Started|
 |27|List user apps|Not Started|
@@ -35,14 +35,14 @@
 |31|Turborepo/Nx tasks|Completed|
 |32|GitHub Actions|Completed|
 |33|Remote caching|Completed|
-|34|CloudWatch dashboards|Not Started|
+|34|CloudWatch dashboards|Completed|
 |35|Sentry integration|Not Started|
 |36|Unit tests for each service|Not Started|
 |37|End-to-end tests|Not Started|
 |38|Static analysis|Not Started|
-|39|Expand README files|Not Started|
+|39|Expand README files|Completed|
 |40|User guides and diagrams|Not Started|
-|41|Helper scripts|Not Started|
+|41|Helper scripts|Completed|
 |42|Root build/test/lint scripts|Completed|
 |43|Environment example files|Completed|
 |44|Static site hosting module|Completed|
