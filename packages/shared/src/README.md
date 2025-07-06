@@ -10,6 +10,7 @@ This package now includes DynamoDB helper functions built on the AWS SDK v3 `Dyn
 - `getItem`
 - `updateItem`
 - `queryItems`
+- `scanTable`
 
 ## Sentry
 

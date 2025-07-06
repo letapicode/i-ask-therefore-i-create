@@ -49,6 +49,15 @@
 | 45     | PostgreSQL templates                    | Completed |
 | 46     | Secrets management                      | Completed |
 | 47     | Password reset & email change           | Completed |
+| 48     | Google OAuth                            | Completed |
+| 54     | SES Templates                          | Completed |
+| 55     | DynamoDB Schema                         | Completed |
+| 56     | Aggregated Metrics API                  | Completed |
+| 57     | Account Settings Page                   | Completed |
+| 58     | Analytics Dashboard                     | Completed |
+| 59     | Build Log Viewer                        | Completed |
+| 60     | Todo App Template                       | Completed |
+| 61     | DynamoDB Helpers                        | Completed |
 | 49     | Status endpoint                         | Completed |
 | 50     | Retry logic                             | Completed |
 | 51     | Artifact storage                        | Completed |

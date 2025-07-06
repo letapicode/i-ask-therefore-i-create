@@ -28,6 +28,16 @@ app.get("/metrics", (_req, res) => {
   res.json({ count: events.length });
 });
 
+app.get("/summary", (_req, res) => {
+  const events = readEvents();
+  const summary: Record<string, number> = {};
+  for (const e of events) {
+    const type = e.type || 'unknown';
+    summary[type] = (summary[type] || 0) + 1;
+  }
+  res.json(summary);
+});
+
 export function start(port = 3001) {
   initSentry('analytics');
   app.listen(port, () => console.log(`analytics listening on ${port}`));
