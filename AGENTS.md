@@ -5,3 +5,4 @@
 - Commit all changes to the main branch. No new branches should be created by Codex.
 - When committing, follow the project's existing style and structure. Documentation should be in Markdown.
 - Provide concise PR titles and detailed descriptions summarizing the changes and referencing relevant files.
+- After committing changes, append a short summary to `steps_summary.md` that explains what was done, how, and why. Include this summary with every pull request.

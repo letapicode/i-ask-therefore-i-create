@@ -1,0 +1,35 @@
+# Task Completion Status
+
+| Task # | Description | Status |
+|-------|-------------|--------|
+|1|VPC & Networking|Completed|
+|2|IAM Roles|Completed|
+|3|Cognito Setup|Completed|
+|4|SES Configuration|Completed|
+|5|Observability Stack|Completed|
+|6|Terraform/CDK Scaffolding|Completed|
+|7|Signup and login endpoints|Not Started|
+|8|JWT session management|Not Started|
+|9|Connect user data store|Not Started|
+|10|Email verification endpoint|Not Started|
+|11|/api/createApp endpoint|Not Started|
+|12|Dispatch CodeGen jobs|Not Started|
+|13|Persist job status in DynamoDB|Not Started|
+|14|Trigger deployments|Not Started|
+|15|Send notification emails|Not Started|
+|16|Integrate OpenAI API|Not Started|
+|17|Isolated generation tasks|Not Started|
+|18|Run lint/unit tests|Not Started|
+|19|Publish build artifacts|Not Started|
+|20|SES email wrapper|Completed|
+|21|Email service functions|Completed|
+|22|Collect usage events|Completed|
+|23|Metrics API|Completed|
+|24|Portal login/signup|Not Started|
+|25|Create New App wizard|Not Started|
+|26|Show build status|Not Started|
+|27|List user apps|Not Started|
+|28|Editing descriptions triggers redeploys|Not Started|
+|29|Shared AWS helpers|Completed|
+|30|Codegen template library|Completed|
+
