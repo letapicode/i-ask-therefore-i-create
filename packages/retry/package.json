@@ -6,6 +6,6 @@
   "scripts": {
     "build": "echo building retry",
     "lint": "echo linting retry",
-    "test": "echo testing retry"
+    "test": "jest"
   }
 }

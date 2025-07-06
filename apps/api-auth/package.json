@@ -4,6 +4,6 @@
   "scripts": {
     "build": "echo building api-auth",
     "lint": "echo linting api-auth",
-    "test": "echo testing api-auth"
+    "test": "jest"
   }
 }

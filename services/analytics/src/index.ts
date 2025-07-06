@@ -2,7 +2,7 @@ import express from "express";
 import fs from "fs";
 import { initSentry } from "../../packages/shared/src/sentry";
 
-const app = express();
+export const app = express();
 app.use(express.json());
 
 const DB_FILE = process.env.EVENT_DB || ".events.json";
@@ -36,3 +36,4 @@ export function start(port = 3001) {
 if (require.main === module) {
   start(Number(process.env.PORT) || 3001);
 }
+

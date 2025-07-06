@@ -1,18 +1,23 @@
 import express from 'express';
 import { retry } from '../../packages/retry/src';
 import { initSentry } from '../../packages/shared/src/sentry';
+import { generateCode } from './openai';
 
-const app = express();
+export const app = express();
 app.use(express.json());
 
 app.post('/generate', async (req, res) => {
   const { jobId, description } = req.body;
   console.log('generating code for', jobId, description);
-  await retry(async () => {
-    // placeholder for real generation logic
-    if (!description) throw new Error('invalid');
-  });
-  res.json({ ok: true });
+  try {
+    const code = await retry(async () => {
+      if (!description) throw new Error('invalid');
+      return generateCode({ description });
+    });
+    res.json({ ok: true, code });
+  } catch (err: any) {
+    res.status(500).json({ error: err.message });
+  }
 });
 
 export function start(port = 3003) {
@@ -23,3 +28,4 @@ export function start(port = 3003) {
 if (require.main === module) {
   start(Number(process.env.PORT) || 3003);
 }
+

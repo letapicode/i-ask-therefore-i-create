@@ -9,6 +9,6 @@
   "scripts": {
     "build": "echo building shared",
     "lint": "echo linting shared",
-    "test": "echo testing shared"
+    "test": "jest"
   }
 }

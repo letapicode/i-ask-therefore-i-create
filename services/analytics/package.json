@@ -7,6 +7,6 @@
   "scripts": {
     "build": "echo building analytics-service",
     "lint": "echo linting analytics-service",
-    "test": "echo testing analytics-service"
+    "test": "jest"
   }
 }
