@@ -87,7 +87,7 @@ This file records brief summaries of each pull request.
 - Added SHA3-based signing helpers in `packages/shared` and integrated them with the auth service.
 - Created tests for the new crypto module.
 - Updated task tracker for tasks 120-124.
-\n## PR <pending> - CI improvements and observability updates\n\n- Added release pipeline and dependency scan workflows under `ci/`.\n- Enabled Nx Cloud remote caching via updated `turbo.json`.\n- Enhanced observability Terraform module with log retention and alarms.\n- Documented Sentry DSN usage and added example env vars.\n- Introduced basic Cypress tests and updated package scripts.\n- Updated task tracker for tasks 63-68.
+  \n## PR <pending> - CI improvements and observability updates\n\n- Added release pipeline and dependency scan workflows under `ci/`.\n- Enabled Nx Cloud remote caching via updated `turbo.json`.\n- Enhanced observability Terraform module with log retention and alarms.\n- Documented Sentry DSN usage and added example env vars.\n- Introduced basic Cypress tests and updated package scripts.\n- Updated task tracker for tasks 63-68.
 
 ## PR <pending> - OAuth, analytics and portal pages
 
@@ -105,10 +105,18 @@ This file records brief summaries of each pull request.
 - Created `export-data.js` script and documentation for GDPR data requests.
 - Updated task tracker for tasks 72 and 73.
 
-
 ## PR <pending> - Collaboration and automation tools
+
 - Added WebSocket-based `collab-editor.js` CLI for live description editing.
 - Created `security-scan.js` to run ESLint and npm audit checks.
 - Introduced `scale-advisor.js` for Lambda autoscaling suggestions.
 - Added `auto-patch.js` script to upgrade dependencies using npm-check-updates.
 - Documented new tools and marked tasks 77, 90, 97 and 101 as completed.
+
+## PR <pending> - Advanced features and scripts
+
+- Enabled custom LLM support in the codegen service.
+- Added multiple developer tools including smart dependency upgrades, coverage dashboard, compliance checks and more.
+- Implemented portal pages for VR preview, tutorial builder and ethics dashboard.
+- Created Terraform module for a basic data lake.
+- Updated task tracker for items 102 through 118.

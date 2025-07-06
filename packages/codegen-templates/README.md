@@ -9,3 +9,5 @@ Run `pnpm codegen` to list available templates:
 ```bash
 pnpm exec ts-node packages/codegen-templates/src/cli.ts
 ```
+
+Additional templates can be registered at runtime using `marketplace.ts`.
