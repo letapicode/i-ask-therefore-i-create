@@ -25,3 +25,9 @@ This file records brief summaries of each pull request.
 - Added CloudWatch dashboard resource to observability module.
 - Expanded README files and added dev/deploy helper scripts.
 - Updated task tracking to mark completed items.
+
+## PR <pending> - Implement orchestrator API and portal pages
+- Added `/api/createApp` and `/api/status` endpoints in the orchestrator with DynamoDB persistence.
+- Created simple codegen service using the retry helper.
+- Added portal pages for submitting descriptions and checking build status.
+- Updated READMEs and marked related tasks as completed.

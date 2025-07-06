@@ -1,5 +1,7 @@
 import { SESClient, SendTemplatedEmailCommand } from "@aws-sdk/client-ses";
+import { initSentry } from "../../packages/shared/src/sentry";
 
+initSentry('email');
 const ses = new SESClient({});
 
 export interface SendOptions {

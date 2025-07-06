@@ -12,9 +12,9 @@
 |8|JWT session management|Completed|
 |9|Connect user data store|Completed|
 |10|Email verification endpoint|Completed|
-|11|/api/createApp endpoint|Not Started|
-|12|Dispatch CodeGen jobs|Not Started|
-|13|Persist job status in DynamoDB|Not Started|
+|11|/api/createApp endpoint|Completed|
+|12|Dispatch CodeGen jobs|Completed|
+|13|Persist job status in DynamoDB|Completed|
 |14|Trigger deployments|Not Started|
 |15|Send notification emails|Not Started|
 |16|Integrate OpenAI API|Not Started|
@@ -26,8 +26,8 @@
 |22|Collect usage events|Completed|
 |23|Metrics API|Completed|
 |24|Portal login/signup|Completed|
-|25|Create New App wizard|Not Started|
-|26|Show build status|Not Started|
+|25|Create New App wizard|Completed|
+|26|Show build status|Completed|
 |27|List user apps|Not Started|
 |28|Editing descriptions triggers redeploys|Not Started|
 |29|Shared AWS helpers|Completed|
@@ -36,7 +36,7 @@
 |32|GitHub Actions|Completed|
 |33|Remote caching|Completed|
 |34|CloudWatch dashboards|Completed|
-|35|Sentry integration|Not Started|
+|35|Sentry integration|Completed|
 |36|Unit tests for each service|Not Started|
 |37|End-to-end tests|Not Started|
 |38|Static analysis|Not Started|

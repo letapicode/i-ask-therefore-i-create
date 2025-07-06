@@ -2,6 +2,7 @@ import express from "express";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { putItem, getItem } from "../../packages/shared/src/dynamo";
+import { initSentry } from "../../packages/shared/src/sentry";
 
 const app = express();
 app.use(express.json());
@@ -42,6 +43,7 @@ app.post('/verify', async (req, res) => {
 });
 
 export function start(port = 3000) {
+  initSentry('api-auth');
   app.listen(port, () => console.log(`auth listening on ${port}`));
 }
 
