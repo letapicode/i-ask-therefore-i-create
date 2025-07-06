@@ -88,3 +88,12 @@ This file records brief summaries of each pull request.
 - Created tests for the new crypto module.
 - Updated task tracker for tasks 120-124.
 \n## PR <pending> - CI improvements and observability updates\n\n- Added release pipeline and dependency scan workflows under `ci/`.\n- Enabled Nx Cloud remote caching via updated `turbo.json`.\n- Enhanced observability Terraform module with log retention and alarms.\n- Documented Sentry DSN usage and added example env vars.\n- Introduced basic Cypress tests and updated package scripts.\n- Updated task tracker for tasks 63-68.
+
+## PR <pending> - OAuth, analytics and portal pages
+
+- Added Google OAuth support with new `/google` endpoint.
+- Created SES email templates folder.
+- Provisioned analytics DynamoDB table and `/summary` API.
+- Added account settings, analytics dashboard and log viewer pages in the portal.
+- Included Todo app template example.
+- Updated task tracker for tasks 48,54-61.

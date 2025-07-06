@@ -13,6 +13,7 @@ Environment variables:
 
 - `USER_TABLE` – DynamoDB table name for users
 - `JWT_SECRET` – secret used to sign tokens
+- `GOOGLE_CLIENT_ID` – OAuth client used for Google sign-in
 
 ## Endpoints
 
@@ -22,3 +23,4 @@ Environment variables:
 - `POST /requestPasswordReset`
 - `POST /resetPassword`
 - `POST /changeEmail`
+- `POST /google` – exchange Google ID token for JWT

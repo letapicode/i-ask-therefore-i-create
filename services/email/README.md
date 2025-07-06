@@ -15,3 +15,6 @@ await sendEmail({
   data: { project: "Demo" }
 });
 ```
+
+Default templates live under `templates/`. Edit `verification.html` and `build.html`
+to customize the messages sent for signup confirmation and build results.

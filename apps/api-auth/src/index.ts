@@ -1,6 +1,7 @@
 import express from 'express';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
+import { OAuth2Client } from 'google-auth-library';
 import { putItem, getItem, updateItem } from '../../packages/shared/src/dynamo';
 import { initSentry } from '../../packages/shared/src/sentry';
 import { signMessage, verifyMessage } from '../../packages/shared/src/crypto';
@@ -11,6 +12,8 @@ app.use(express.json());
 const USER_TABLE = process.env.USER_TABLE || 'users';
 const JWT_SECRET = process.env.JWT_SECRET || 'secret';
 const QS_KEY = process.env.QS_KEY || 'quantum-secret';
+const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID || '';
+const googleClient = new OAuth2Client(GOOGLE_CLIENT_ID);
 
 interface User {
   email: string;
@@ -39,6 +42,35 @@ app.post('/login', async (req, res) => {
   const token = jwt.sign({ email }, JWT_SECRET, { expiresIn: '1h' });
   const signature = signMessage(QS_KEY, token);
   res.json({ token, signature });
+});
+
+app.post('/google', async (req, res) => {
+  const { idToken } = req.body;
+  if (!idToken) return res.status(400).json({ error: 'missing token' });
+  try {
+    const ticket = await googleClient.verifyIdToken({
+      idToken,
+      audience: GOOGLE_CLIENT_ID,
+    });
+    const payload = ticket.getPayload();
+    if (!payload || !payload.email) {
+      return res.status(401).json({ error: 'invalid token' });
+    }
+    const email = payload.email;
+    let user = await getItem<User>(USER_TABLE, { email });
+    if (!user) {
+      await putItem(USER_TABLE, {
+        email,
+        passwordHash: await bcrypt.hash(idToken, 10),
+        verified: true,
+      });
+    }
+    const token = jwt.sign({ email }, JWT_SECRET, { expiresIn: '1h' });
+    const signature = signMessage(QS_KEY, token);
+    res.json({ token, signature });
+  } catch (err) {
+    res.status(400).json({ error: 'invalid token' });
+  }
 });
 
 app.post('/verify', async (req, res) => {
