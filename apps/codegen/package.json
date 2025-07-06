@@ -2,11 +2,12 @@
   "name": "codegen",
   "version": "0.1.0",
   "dependencies": {
-    "express": "^4.18.2"
+    "express": "^4.18.2",
+    "node-fetch": "^3.3.2"
   },
   "scripts": {
     "build": "echo building codegen",
     "lint": "echo linting codegen",
-    "test": "echo testing codegen"
+    "test": "jest"
   }
 }

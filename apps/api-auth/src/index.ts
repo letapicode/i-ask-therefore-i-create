@@ -4,7 +4,7 @@ import jwt from "jsonwebtoken";
 import { putItem, getItem } from "../../packages/shared/src/dynamo";
 import { initSentry } from "../../packages/shared/src/sentry";
 
-const app = express();
+export const app = express();
 app.use(express.json());
 
 const USER_TABLE = process.env.USER_TABLE || "users";
@@ -50,3 +50,4 @@ export function start(port = 3000) {
 if (require.main === module) {
   start(Number(process.env.PORT) || 3000);
 }
+

@@ -45,3 +45,10 @@ page and CLI tool.
 - Implemented `scanTable` helper in shared package and updated infrastructure
 docs.
 - Updated task tracking to mark related items as completed.
+
+## PR <pending> - OpenAI integration and testing setup
+- Connected code generation service to OpenAI API with new module and env var.
+- Added Jest-based unit tests across services and configured ts-jest.
+- Created CodeQL workflow for static analysis.
+- Documented system architecture under `docs/`.
+- Updated task tracker with completed items.

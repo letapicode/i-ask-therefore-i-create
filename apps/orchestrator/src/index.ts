@@ -5,7 +5,7 @@ import { putItem, getItem, scanTable } from '../../packages/shared/src/dynamo';
 import { sendEmail } from '../../services/email/src';
 import { initSentry } from '../../packages/shared/src/sentry';
 
-const app = express();
+export const app = express();
 app.use(express.json());
 
 const JOBS_TABLE = process.env.JOBS_TABLE || 'jobs';
@@ -98,3 +98,4 @@ export function start(port = 3002) {
 if (require.main === module) {
   start(Number(process.env.PORT) || 3002);
 }
+

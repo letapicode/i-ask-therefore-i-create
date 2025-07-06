@@ -7,6 +7,6 @@
   "scripts": {
     "build": "echo building email-service",
     "lint": "echo linting email-service",
-    "test": "echo testing email-service"
+    "test": "jest"
   }
 }

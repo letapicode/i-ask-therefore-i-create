@@ -17,9 +17,9 @@
 |13|Persist job status in DynamoDB|Completed|
 |14|Trigger deployments|Completed|
 |15|Send notification emails|Completed|
-|16|Integrate OpenAI API|Not Started|
+|16|Integrate OpenAI API|Completed|
 |17|Isolated generation tasks|Not Started|
-|18|Run lint/unit tests|Not Started|
+|18|Run lint/unit tests|Completed|
 |19|Publish build artifacts|Not Started|
 |20|SES email wrapper|Completed|
 |21|Email service functions|Completed|
@@ -37,11 +37,11 @@
 |33|Remote caching|Completed|
 |34|CloudWatch dashboards|Completed|
 |35|Sentry integration|Completed|
-|36|Unit tests for each service|Not Started|
+|36|Unit tests for each service|Completed|
 |37|End-to-end tests|Not Started|
-|38|Static analysis|Not Started|
+|38|Static analysis|Completed|
 |39|Expand README files|Completed|
-|40|User guides and diagrams|Not Started|
+|40|User guides and diagrams|Completed|
 |41|Helper scripts|Completed|
 |42|Root build/test/lint scripts|Completed|
 |43|Environment example files|Completed|
