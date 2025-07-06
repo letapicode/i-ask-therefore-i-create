@@ -21,3 +21,6 @@ Additional pages:
 - `dashboard.tsx` – show analytics summaries.
 - `logs.tsx` – view build logs.
 - Google Analytics is loaded when `NEXT_PUBLIC_GA_ID` is set.
+- `vr-preview.tsx` – inspect generated interfaces in WebXR
+- `tutorial-builder.tsx` – compose in-app guides
+- `ethics-dashboard.tsx` – transparency metrics overview

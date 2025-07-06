@@ -18,7 +18,16 @@ Utility scripts for local development and deployment.
 ```
 node tools/redeploy.js --id abc123 --description "New features" --url http://localhost:3002
 ```
+
 - `collab-editor.js` – live collaboration CLI for editing description files via WebSockets
 - `security-scan.js` – run ESLint and npm audit to check generated projects
 - `scale-advisor.js` – suggest autoscaling adjustments based on recent CloudWatch metrics
 - `auto-patch.js` – update dependencies using npm-check-updates and install patches
+- `smart-upgrade.js` – upgrade dependencies and revert if tests fail
+- `live-assistant.js` – explain code and suggest improvements using an LLM
+- `quality-dashboard.js` – run tests with coverage and print a summary
+- `compliance-check.js` – scan files for disallowed patterns
+- `extract-i18n.js` – gather UI strings for translation
+- `llm-sandbox.js` – send custom prompts to any model endpoint
+- `voice-modeler.js` – record descriptions for data models
+- `sustainability-report.js` – estimate energy usage from CloudWatch metrics

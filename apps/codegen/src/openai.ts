@@ -1,10 +1,14 @@
 import fetch from 'node-fetch';
+import { generateWithCustomModel } from './customModel';
 
 export interface GenerationOptions {
   description: string;
 }
 
 export async function generateCode(opts: GenerationOptions): Promise<string> {
+  if (process.env.CUSTOM_MODEL_URL) {
+    return generateWithCustomModel(opts);
+  }
   const apiKey = process.env.OPENAI_API_KEY;
   if (!apiKey) {
     throw new Error('OPENAI_API_KEY not configured');
@@ -13,12 +17,12 @@ export async function generateCode(opts: GenerationOptions): Promise<string> {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': `Bearer ${apiKey}`
+      Authorization: `Bearer ${apiKey}`,
     },
     body: JSON.stringify({
       model: 'gpt-3.5-turbo',
-      messages: [{ role: 'user', content: opts.description }]
-    })
+      messages: [{ role: 'user', content: opts.description }],
+    }),
   });
   if (!res.ok) {
     throw new Error(`OpenAI request failed: ${res.status}`);
