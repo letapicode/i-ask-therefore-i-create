@@ -5,17 +5,30 @@ jest.mock('node-fetch', () =>
   jest.fn(async () => ({ ok: true, json: async () => ({}) }))
 );
 
-const memory: Record<string, any> = {};
+const jobMem: Record<string, any> = {};
+const connMem: Record<string, any> = {};
 jest.mock('../../packages/shared/src/dynamo', () => ({
-  putItem: jest.fn(async (_t: string, item: any) => {
-    memory[item.id] = item;
+  putItem: jest.fn(async (t: string, item: any) => {
+    if (t === 'connectors') connMem[item.tenantId] = item;
+    else jobMem[item.id] = item;
   }),
-  getItem: jest.fn(async (_t: string, key: any) => memory[key.id]),
-  scanTable: jest.fn(async () => Object.values(memory)),
+  getItem: jest.fn(async (t: string, key: any) => {
+    if (t === 'connectors') return connMem[key.tenantId];
+    return jobMem[key.id];
+  }),
+  scanTable: jest.fn(async (t: string) => {
+    if (t === 'connectors') return Object.values(connMem);
+    return Object.values(jobMem);
+  }),
+  deleteItem: jest.fn(async (t: string, key: any) => {
+    if (t === 'connectors') delete connMem[key.tenantId];
+    else delete jobMem[key.id];
+  }),
 }));
 
 afterEach(() => {
-  for (const key of Object.keys(memory)) delete memory[key];
+  for (const key of Object.keys(jobMem)) delete jobMem[key];
+  for (const key of Object.keys(connMem)) delete connMem[key];
 });
 
 test('status endpoint returns 404 for missing job', async () => {
@@ -26,7 +39,7 @@ test('status endpoint returns 404 for missing job', async () => {
 });
 
 test('cannot access job from another tenant', async () => {
-  memory['job1'] = {
+  jobMem['job1'] = {
     id: 'job1',
     tenantId: 't1',
     description: 'a',
@@ -40,14 +53,14 @@ test('cannot access job from another tenant', async () => {
 });
 
 test('lists only tenant jobs', async () => {
-  memory['j1'] = {
+  jobMem['j1'] = {
     id: 'j1',
     tenantId: 't1',
     description: 'a',
     language: 'node',
     status: 'complete',
   };
-  memory['j2'] = {
+  jobMem['j2'] = {
     id: 'j2',
     tenantId: 't2',
     description: 'b',
@@ -65,7 +78,7 @@ test('createApp forwards language', async () => {
     .set('x-tenant-id', 't1')
     .send({ description: 'test', language: 'go' });
   expect(res.status).toBe(202);
-  const job = memory[Object.keys(memory)[0]];
+  const job = jobMem[Object.keys(jobMem)[0]];
   expect(job.language).toBe('go');
 });
 
@@ -75,4 +88,31 @@ test('schema endpoints persist data', async () => {
     .send({ tables: [{ name: 't' }] });
   const res = await request(app).get('/api/schema');
   expect(res.body.tables[0].name).toBe('t');
+});
+
+test('connectors API stores and retrieves config', async () => {
+  await request(app)
+    .post('/api/connectors')
+    .set('x-tenant-id', 't1')
+    .send({ stripeKey: 'sk', slackKey: 'sl' });
+  const res = await request(app)
+    .get('/api/connectors')
+    .set('x-tenant-id', 't1');
+  expect(res.body.stripeKey).toBe('sk');
+  expect(res.body.slackKey).toBe('sl');
+});
+
+test('connectors DELETE removes type', async () => {
+  await request(app)
+    .post('/api/connectors')
+    .set('x-tenant-id', 't1')
+    .send({ stripeKey: 'sk', slackKey: 'sl' });
+  await request(app)
+    .delete('/api/connectors/stripe')
+    .set('x-tenant-id', 't1');
+  const res = await request(app)
+    .get('/api/connectors')
+    .set('x-tenant-id', 't1');
+  expect(res.body.stripeKey).toBeUndefined();
+  expect(res.body.slackKey).toBe('sl');
 });

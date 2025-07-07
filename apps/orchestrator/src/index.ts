@@ -1,7 +1,7 @@
 import express from 'express';
 import { randomUUID } from 'crypto';
 import fetch from 'node-fetch';
-import { putItem, getItem, scanTable } from '../../packages/shared/src/dynamo';
+import { putItem, getItem, scanTable, deleteItem } from '../../packages/shared/src/dynamo';
 import { uploadObject } from '../../packages/shared/src/s3';
 import { sendEmail } from '../../services/email/src';
 import { initSentry } from '../../packages/shared/src/sentry';
@@ -27,6 +27,7 @@ const ARTIFACTS_BUCKET = process.env.ARTIFACTS_BUCKET;
 const TENANT_HEADER = 'x-tenant-id';
 const WORKFLOW_FILE = process.env.WORKFLOW_FILE || 'workflow.json';
 const SCHEMA_FILE = process.env.SCHEMA_FILE || 'schema.json';
+const CONNECTORS_TABLE = process.env.CONNECTORS_TABLE || 'connectors';
 
 export interface Job {
   id: string;
@@ -145,6 +146,43 @@ app.get('/api/apps', async (req, res) => {
   if (!tenantId) return res.status(401).json({ error: 'missing tenant' });
   const jobs = await scanTable<Job>(JOBS_TABLE);
   res.json(jobs.filter((j) => j.tenantId === tenantId));
+});
+
+app.get('/api/connectors', async (req, res) => {
+  const tenantId = req.header(TENANT_HEADER);
+  if (!tenantId) return res.status(401).json({ error: 'missing tenant' });
+  const item = await getItem<{ tenantId: string; config: Record<string, any> }>(
+    CONNECTORS_TABLE,
+    { tenantId }
+  );
+  res.json(item?.config || {});
+});
+
+app.post('/api/connectors', async (req, res) => {
+  const tenantId = req.header(TENANT_HEADER);
+  if (!tenantId) return res.status(401).json({ error: 'missing tenant' });
+  const existing =
+    (await getItem<{ tenantId: string; config: Record<string, any> }>(
+      CONNECTORS_TABLE,
+      { tenantId }
+    )) || { tenantId, config: {} };
+  existing.config = { ...existing.config, ...req.body };
+  await putItem(CONNECTORS_TABLE, existing);
+  res.status(201).json({ ok: true });
+});
+
+app.delete('/api/connectors/:type', async (req, res) => {
+  const tenantId = req.header(TENANT_HEADER);
+  if (!tenantId) return res.status(401).json({ error: 'missing tenant' });
+  const item = await getItem<{ tenantId: string; config: Record<string, any> }>(
+    CONNECTORS_TABLE,
+    { tenantId }
+  );
+  if (!item || !item.config[req.params.type])
+    return res.status(404).json({ error: 'not found' });
+  delete item.config[req.params.type];
+  await putItem(CONNECTORS_TABLE, item);
+  res.json({ ok: true });
 });
 
 app.post('/api/figma', (req, res) => {
