@@ -182,8 +182,29 @@ This file records brief summaries of each pull request.
 - Portal connectors page now loads and saves connector keys via the API.
 - Documented available connectors and API usage in `edge-connectors.md`.
 
-## PR <pending> - RL feedback automation
 
+## PR <pending> - GraphQL schema integration
+
+- Integrated `generateSchema` into the orchestrator dispatch pipeline and added template hooks.
+- Provided GraphQL boilerplate and `/graphql` endpoint in the user app template.
+- Documented schema customization in `graphql-builder.md`.
+
+## PR <pending> - Language-aware code generation
+
+- `generateCode` now accepts a `language` option and the codegen service caches results per language.
+- Added Node.js template and documented language selection in `multi-language.md`.
+- Orchestrator README updated with language field example.
+
+## PR <pending> - Edge inference model support
+
+- Added `binary-assets/models` directory with placeholder TensorFlow model.
+- Exported `loadModel` and `predict` helpers and used them in a new `/api/predict` endpoint.
+- Connectors page and a new portal demo call the prediction API.
+- Documented model formats and limitations in `edge-inference.md`.
+- Updated `tasks_status.md` for task 144.
+  
+ ## PR <pending> - RL feedback automation
 - Added scheduled workflow `train-from-ratings.yml` to retrain models nightly.
 - Training script now stores rating snapshots and history under `services/analytics/training` and logs outcomes via `audit.log`.
 - Documented schedule adjustments in `docs/rl-code-quality.md`.
+

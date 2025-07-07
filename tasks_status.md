@@ -143,11 +143,12 @@
 | 139    | GraphQL Builder & Template Marketplace  | Completed |
 | 140    | Regional Data Compliance Toolkit        | Completed |
 | 141    | Data Connectors API Integration         | Completed |
-| 142    | Language-Aware Code Generation          | Planned   |
-| 143    | GraphQL Schema Integration              | Planned   |
-| 144    | Edge Inference Model Support            | Planned   |
+| 142    | Language-Aware Code Generation          | Completed |
+| 143    | GraphQL Schema Integration              | Pending   |
+| 144    | Edge Inference Model Support            | Completed |
 | 145    | RL Feedback Automation                  | Completed |
-| 146    | VR Preview Navigation & Assets          | Planned   |
-| 147    | Plugin Marketplace Installation Flow    | Planned   |
-| 148    | Real-Time Dashboard Charts & Alerts     | Planned   |
-| 149    | Compliance Enforcement Hooks            | Planned   |
+| 146    | VR Preview Navigation & Assets          | Pending   |
+| 147    | Plugin Marketplace Installation Flow    | Pending   |
+| 148    | Real-Time Dashboard Charts & Alerts     | Pending   |
+| 149    | Compliance Enforcement Hooks            | Pending   |
+

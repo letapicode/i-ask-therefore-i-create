@@ -14,3 +14,4 @@ Keys are managed via the `/api/connectors` endpoints:
 - `DELETE /api/connectors/:type` – remove a saved key
 
 This also enables optional TensorFlow.js models to run predictions in the browser for offline support.
+Use `/api/predict` to test models through the portal's connectors page.

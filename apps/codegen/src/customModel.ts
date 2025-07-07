@@ -11,7 +11,7 @@ export async function generateWithCustomModel(
   const res = await fetch(url, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ prompt: opts.description }),
+    body: JSON.stringify({ prompt: opts.description, language: opts.language }),
   });
   if (!res.ok) {
     throw new Error(`Custom model request failed: ${res.status}`);
