@@ -213,3 +213,11 @@ This file records brief summaries of each pull request.
 - Fetched generated apps and rendered them as WebXR boxes.
 - Documented controls and asset loading in `docs/vr-preview.md`.
 
+## PR <pending> - Real-time dashboard charts and alerts
+- Integrated Chart.js into the portal dashboard and performance pages.
+- Added filtering controls and alert display backed by new `/alerts` endpoint.
+- Analytics service now supports query parameters, alert thresholds and exposes performance and alert data.
+- Documented monitoring options in `dashboard-monitoring.md` and updated task status.
+
+
+

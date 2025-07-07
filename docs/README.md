@@ -17,3 +17,4 @@ This folder contains user guides and architecture diagrams.
 - [Template Marketplace](./template-marketplace.md)
 - [Regional Compliance](./regional-compliance.md)
 - [Localization](./i18n.md)
+- [Dashboard Monitoring](./dashboard-monitoring.md)
