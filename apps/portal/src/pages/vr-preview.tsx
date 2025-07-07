@@ -4,28 +4,55 @@ export default function VrPreview() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
-    const script = document.createElement('script');
-    script.src = 'https://unpkg.com/three@0.160.0/build/three.min.js';
-    script.onload = () => {
-      const THREE = (window as any).THREE;
-      const scene = new THREE.Scene();
-      const camera = new THREE.PerspectiveCamera(75, 2, 0.1, 1000);
-      const renderer = new THREE.WebGLRenderer({ canvas: canvasRef.current });
+    let renderer: any, scene: any, camera: any;
+    let controls: any;
+    async function init() {
+      const THREE = await import('three');
+      const { OrbitControls } = await import('three/examples/jsm/controls/OrbitControls.js');
+      const { VRButton } = await import('three/examples/jsm/webxr/VRButton.js');
+
+      scene = new THREE.Scene();
+      camera = new THREE.PerspectiveCamera(75, 600 / 400, 0.1, 1000);
+      renderer = new THREE.WebGLRenderer({ canvas: canvasRef.current! });
       renderer.setSize(600, 400);
-      const geometry = new THREE.BoxGeometry();
-      const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
-      const cube = new THREE.Mesh(geometry, material);
-      scene.add(cube);
-      camera.position.z = 5;
-      function animate() {
-        requestAnimationFrame(animate);
-        cube.rotation.x += 0.01;
-        cube.rotation.y += 0.01;
-        renderer.render(scene, camera);
+      renderer.xr.enabled = true;
+      document.body.appendChild(VRButton.createButton(renderer));
+
+      controls = new OrbitControls(camera, renderer.domElement);
+      camera.position.set(0, 1.6, 3);
+
+      try {
+        const res = await fetch('http://localhost:3002/api/apps');
+        const apps = await res.json();
+        apps.forEach((a: any, i: number) => {
+          const box = new THREE.BoxGeometry();
+          const mat = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
+          const mesh = new THREE.Mesh(box, mat);
+          mesh.position.set(i * 2, 1, -3);
+          scene.add(mesh);
+        });
+      } catch (err) {
+        console.error(err);
       }
-      animate();
+
+      const step = 0.1;
+      function onKey(e: KeyboardEvent) {
+        if (e.key === 'w') camera.position.z -= step;
+        if (e.key === 's') camera.position.z += step;
+        if (e.key === 'a') camera.position.x -= step;
+        if (e.key === 'd') camera.position.x += step;
+      }
+      window.addEventListener('keydown', onKey);
+
+      renderer.setAnimationLoop(() => {
+        controls.update();
+        renderer.render(scene, camera);
+      });
+    }
+    init();
+    return () => {
+      renderer?.setAnimationLoop(null);
     };
-    document.body.appendChild(script);
   }, []);
 
   return (

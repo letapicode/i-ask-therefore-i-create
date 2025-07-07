@@ -141,13 +141,12 @@
 | 137    | A/B Testing Toolkit                     | Completed |
 | 138    | VR Preview Enhancements                 | Completed |
 | 139    | GraphQL Builder & Template Marketplace  | Completed |
-| 140    | Regional Data Compliance Toolkit        | Completed |
 | 141    | Data Connectors API Integration         | Completed |
 | 142    | Language-Aware Code Generation          | Completed |
 | 143    | GraphQL Schema Integration              | Pending   |
 | 144    | Edge Inference Model Support            | Completed |
 | 145    | RL Feedback Automation                  | Completed |
-| 146    | VR Preview Navigation & Assets          | Pending   |
+| 146    | VR Preview Navigation & Assets          | Completed |
 | 147    | Plugin Marketplace Installation Flow    | Pending   |
 | 148    | Real-Time Dashboard Charts & Alerts     | Pending   |
 | 149    | Compliance Enforcement Hooks            | Pending   |

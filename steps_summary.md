@@ -182,7 +182,6 @@ This file records brief summaries of each pull request.
 - Portal connectors page now loads and saves connector keys via the API.
 - Documented available connectors and API usage in `edge-connectors.md`.
 
-
 ## PR <pending> - GraphQL schema integration
 
 - Integrated `generateSchema` into the orchestrator dispatch pipeline and added template hooks.
@@ -207,4 +206,10 @@ This file records brief summaries of each pull request.
 - Added scheduled workflow `train-from-ratings.yml` to retrain models nightly.
 - Training script now stores rating snapshots and history under `services/analytics/training` and logs outcomes via `audit.log`.
 - Documented schedule adjustments in `docs/rl-code-quality.md`.
+
+## PR <pending> - VR preview navigation and assets
+- Added OrbitControls and VRButton to `/vr-preview` for immersive navigation.
+- Created `binary-assets/vr` with sample scene placeholder and README.
+- Fetched generated apps and rendered them as WebXR boxes.
+- Documented controls and asset loading in `docs/vr-preview.md`.
 
