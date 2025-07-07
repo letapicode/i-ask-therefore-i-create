@@ -1,8 +1,17 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 export default function Connectors() {
   const [stripeKey, setStripeKey] = useState('');
   const [slackKey, setSlackKey] = useState('');
+
+  useEffect(() => {
+    fetch('/api/connectors')
+      .then((res) => res.json())
+      .then((data) => {
+        setStripeKey(data.stripeKey || '');
+        setSlackKey(data.slackKey || '');
+      });
+  }, []);
 
   const save = async () => {
     await fetch('/api/connectors', {

@@ -174,3 +174,8 @@ This file records brief summaries of each pull request.
   GraphQL integration, edge inference models, RL automation,
   VR preview controls, plugin installation, performance dashboard charts
   and compliance enforcement.
+
+## PR <pending> - Data connectors API integration
+- Added `/api/connectors` GET, POST and DELETE routes in the orchestrator with DynamoDB persistence.
+- Portal connectors page now loads and saves connector keys via the API.
+- Documented available connectors and API usage in `edge-connectors.md`.
