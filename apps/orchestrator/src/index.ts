@@ -1,7 +1,12 @@
 import express from 'express';
 import { randomUUID } from 'crypto';
 import fetch from 'node-fetch';
-import { putItem, getItem, scanTable, deleteItem } from '../../packages/shared/src/dynamo';
+import {
+  putItem,
+  getItem,
+  scanTable,
+  deleteItem,
+} from '../../packages/shared/src/dynamo';
 import { uploadObject } from '../../packages/shared/src/s3';
 import { sendEmail } from '../../services/email/src';
 import { initSentry } from '../../packages/shared/src/sentry';
@@ -10,6 +15,13 @@ import fs from 'fs';
 import { logAudit } from '../../packages/shared/src/audit';
 import { figmaToReact } from '../../packages/shared/src/figma';
 import { policyMiddleware } from '../../packages/shared/src/policyMiddleware';
+import {
+  loadModel,
+  predict,
+} from '../../packages/data-connectors/src/tfHelper';
+import * as tf from '@tensorflow/tfjs';
+import { generateSchema } from '../../packages/codegen-templates/src/graphqlBuilder';
+import { runTemplateHooks } from '../../packages/codegen-templates/src/marketplace';
 
 export const app = express();
 app.use(express.json());
@@ -63,6 +75,11 @@ export async function dispatchJob(job: Job) {
         data: { id: job.id },
       });
     }
+    let schema = '';
+    if (fs.existsSync(SCHEMA_FILE)) {
+      const models = JSON.parse(fs.readFileSync(SCHEMA_FILE, 'utf-8'));
+      schema = runTemplateHooks('graphql', generateSchema(models));
+    }
     const genRes = await fetch(CODEGEN_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -70,6 +87,7 @@ export async function dispatchJob(job: Job) {
         jobId: job.id,
         description: job.description,
         language: job.language,
+        schema,
       }),
     });
     const { code } = await genRes.json();
@@ -161,11 +179,10 @@ app.get('/api/connectors', async (req, res) => {
 app.post('/api/connectors', async (req, res) => {
   const tenantId = req.header(TENANT_HEADER);
   if (!tenantId) return res.status(401).json({ error: 'missing tenant' });
-  const existing =
-    (await getItem<{ tenantId: string; config: Record<string, any> }>(
-      CONNECTORS_TABLE,
-      { tenantId }
-    )) || { tenantId, config: {} };
+  const existing = (await getItem<{
+    tenantId: string;
+    config: Record<string, any>;
+  }>(CONNECTORS_TABLE, { tenantId })) || { tenantId, config: {} };
   existing.config = { ...existing.config, ...req.body };
   await putItem(CONNECTORS_TABLE, existing);
   res.status(201).json({ ok: true });
@@ -188,6 +205,20 @@ app.delete('/api/connectors/:type', async (req, res) => {
 app.post('/api/figma', (req, res) => {
   const code = figmaToReact(req.body);
   res.json({ code });
+});
+
+app.post('/api/predict', async (req, res) => {
+  try {
+    const modelPath =
+      process.env.MODEL_PATH ||
+      __dirname + '/../../../binary-assets/models/placeholder-model.json';
+    const model = await loadModel('file://' + modelPath);
+    const input = tf.tensor(req.body.input || []);
+    const output = await predict(model, input);
+    res.json({ result: Array.from((output as any).dataSync()) });
+  } catch (err) {
+    res.status(500).json({ error: 'prediction failed' });
+  }
 });
 
 app.post('/api/redeploy/:id', async (req, res) => {
