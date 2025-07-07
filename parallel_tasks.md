@@ -1573,3 +1573,196 @@ This file expands on each item in `Tasks.md` with a short description of the exp
     3. Connect to backend APIs with SWR or React Query.
     4. Add Cypress tests and document screenshots.
 
+
+125. **Recommendation Engine Service**
+
+   - Aggregate analytics events and compute suggestions.
+   - Expose `/api/recommendations` in `services/analytics`.
+   - Display recommendations on the portal dashboard.
+   - Task details: Build a service that processes usage metrics and returns feature suggestions to help users improve their apps.
+  - Steps:
+    1. Design DynamoDB tables and a processing workflow.
+    2. Implement the REST endpoint and integrate authentication.
+    3. Update portal components to fetch and render results.
+    4. Document the API and provide sample responses.
+
+126. **Plugin Marketplace Implementation**
+
+   - Extend the plugin registry with publish and install APIs.
+   - Store plugin metadata and ratings in DynamoDB.
+   - Build portal pages for browsing and rating plugins.
+   - Task details: Provide a full marketplace so the community can share extensions built with `@iac/plugins`.
+  - Steps:
+    1. Create database tables for plugin info and reviews.
+    2. Implement CRUD endpoints and installation scripts.
+    3. Develop React pages for search, details and ratings.
+    4. Document how to contribute and install plugins.
+
+127. **Visual Workflow Builder**
+
+   - Implement a drag-and-drop canvas using React Flow.
+   - Persist workflows through orchestrator APIs.
+   - Use saved workflows when dispatching jobs.
+   - Task details: Allow users to design backend workflows visually in the portal.
+  - Steps:
+    1. Set up a `/workflow` page with React Flow components.
+    2. Add API routes to read and write workflow configs.
+    3. Load workflows in orchestrator job execution.
+    4. Document the feature with screenshots.
+
+128. **Multi-Language Code Generation**
+
+   - Add FastAPI and Go templates to `packages/codegen-templates`.
+   - Update orchestrator logic to select language-specific templates.
+   - Provide a portal option for choosing the target language.
+   - Task details: Enable generation of Python and Go applications in addition to Node.js.
+  - Steps:
+    1. Create template folders and sample apps for each language.
+    2. Extend the codegen pipeline to handle the new templates.
+    3. Add a dropdown in the new app wizard for language choice.
+    4. Validate by generating and running sample projects.
+
+129. **RL Code Quality Feedback Loop**
+
+   - Capture user ratings of generated code via the analytics service.
+   - Feed metrics into `apps/codegen` to retrain prompt templates.
+   - Schedule periodic training jobs.
+   - Task details: Use reinforcement learning techniques to continually improve code generation quality.
+  - Steps:
+    1. Add rating endpoints and storage schema.
+    2. Aggregate scores and pass them to `retrainModel`.
+    3. Automate the training job with cron or workflow runs.
+    4. Document how feedback influences subsequent generations.
+
+130. **Real-Time Performance Dashboard**
+
+   - Stream metrics from `tools/perf-monitor.js` into the analytics database.
+   - Render live graphs and alerts in the portal.
+   - Allow filtering by application or time range.
+   - Task details: Surface performance data so users can monitor deployments in real time.
+  - Steps:
+    1. Hook perf-monitor output into the analytics service.
+    2. Build dashboard components with charting libraries.
+    3. Configure alert thresholds and notifications.
+    4. Provide documentation for enabling monitoring.
+
+131. **Scheduled Backups & Audit Logging**
+
+   - Automate backups of code and databases to object storage.
+   - Integrate `audit-log.js` across all services.
+   - Publish restore procedures in the docs.
+   - Task details: Ensure all user data can be restored and actions are fully traceable.
+  - Steps:
+    1. Set up cron jobs and storage buckets for backups.
+    2. Include audit logging middleware in each API.
+    3. Test restoring from backup archives.
+    4. Document schedules and log formats.
+
+132. **Figma-to-Code Import Pipeline**
+
+   - Create a backend endpoint to convert Figma JSON into React components.
+   - Wire the endpoint to the existing portal upload page.
+   - Provide preview and download options for generated code.
+   - Task details: Complete the flow from design files to working UI code.
+  - Steps:
+    1. Implement a conversion script using the Figma API.
+    2. Add `/api/figma` route in the orchestrator service.
+    3. Update the portal page to show generated components.
+    4. Document how to prepare and import Figma designs.
+
+133. **AI-Based Test Generation**
+
+   - Use OpenAI to generate Jest tests for new projects.
+   - Output tests alongside the generated source files.
+   - Trigger the script in CI workflows.
+   - Task details: Provide automated test coverage with minimal developer effort.
+  - Steps:
+    1. Extend `tools/gen-tests.js` to call the OpenAI API.
+    2. Save the resulting tests in the appropriate folders.
+    3. Invoke the script from the CI configuration.
+    4. Document configuration and limitations.
+
+134. **Visual Database Schema Designer**
+
+   - Add a drag-and-drop interface for modeling tables and relationships.
+   - Export definitions as migrations consumed by codegen.
+   - Integrate the designer into the portal.
+   - Task details: Let users design databases visually and generate schemas automatically.
+  - Steps:
+    1. Build the schema canvas with a library like React Flow.
+    2. Persist designs through orchestrator APIs.
+    3. Convert saved models into migration files during generation.
+    4. Document with examples of common schemas.
+
+135. **Voice-Guided Data Modeling**
+
+   - Capture spoken descriptions of data models in the portal.
+   - Convert speech to structured schema definitions.
+   - Allow users to review and edit before saving.
+   - Task details: Leverage voice-modeler.js to speed up database design.
+  - Steps:
+    1. Implement voice capture using the Web Speech API.
+    2. Parse transcriptions into table definitions.
+    3. Present editable results in the schema designer.
+    4. Document supported commands and workflows.
+
+136. **Edge Inference & Data Connectors**
+
+   - Package TensorFlow.js models for client-side predictions.
+   - Replace stub connectors with real API calls (e.g., Stripe, Slack).
+   - Provide configuration UIs for each connector.
+   - Task details: Enable offline inference and robust integrations with popular services.
+  - Steps:
+    1. Bundle small models and helper functions in the codegen output.
+    2. Implement authentication and API logic for each connector.
+    3. Create portal settings pages to manage connectors.
+    4. Write documentation on enabling edge inference.
+
+137. **A/B Testing Toolkit**
+
+   - Utilities for defining experiments in generated apps.
+   - Store variant metrics in the analytics service.
+   - Portal dashboard to visualize experiment results.
+   - Task details: Allow teams to run controlled feature tests and measure impact.
+  - Steps:
+    1. Add experiment helpers in a shared package.
+    2. Collect events from each variant via analytics APIs.
+    3. Display performance graphs and winner calculations.
+    4. Document example setups and best practices.
+
+138. **VR Preview Enhancements**
+
+   - Use WebXR to render generated UIs in 3D.
+   - Bundle example assets for testing.
+   - Provide controls for navigation within the preview.
+   - Task details: Upgrade the VR preview page from a placeholder to an interactive experience.
+  - Steps:
+    1. Install a WebXR viewer library and configure bundling.
+    2. Update the portal page to load generated scenes.
+    3. Add build scripts for preview assets.
+    4. Document how to launch and interact with the preview.
+
+139. **GraphQL Builder & Template Marketplace**
+
+   - Implement a GraphQL API builder as part of the codegen templates.
+   - Allow browsing cross-domain templates in a marketplace view.
+   - Integrate selections with the app wizard.
+   - Task details: Provide schema generation tools and a central place to share specialized templates.
+  - Steps:
+    1. Create builder modules in `packages/codegen-templates`.
+    2. Build marketplace pages for searching and installing templates.
+    3. Wire schema generation into the orchestrator pipeline.
+    4. Document submission guidelines for new templates.
+
+140. **Regional Data Compliance Toolkit**
+
+   - Apply per-region retention and deletion policies.
+   - Expose export hooks for user data.
+   - Summarize compliance status in the portal.
+   - Task details: Help apps comply with regulations like GDPR by region.
+  - Steps:
+    1. Define policy configuration files for each supported region.
+    2. Integrate checks and hooks into backend services.
+    3. Build a portal page to display compliance summaries.
+    4. Document how to add policies for new regions.
+
