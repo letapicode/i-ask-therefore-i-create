@@ -2,9 +2,11 @@ import express from 'express';
 import { retry } from '../../packages/retry/src';
 import { initSentry } from '../../packages/shared/src/sentry';
 import { generateCode } from './openai';
+import { policyMiddleware } from '../../packages/shared/src/policyMiddleware';
 
 export const app = express();
 app.use(express.json());
+app.use(policyMiddleware);
 
 const cache = new Map<string, string>();
 

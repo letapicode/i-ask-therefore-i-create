@@ -1,9 +1,11 @@
 import express from 'express';
 import fs from 'fs';
 import { logAudit } from '../../packages/shared/src/audit';
+import { policyMiddleware } from '../../packages/shared/src/policyMiddleware';
 
 export const app = express();
 app.use(express.json());
+app.use(policyMiddleware);
 app.use((req, _res, next) => {
   logAudit(`plugins ${req.method} ${req.url}`);
   next();

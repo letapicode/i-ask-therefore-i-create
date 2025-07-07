@@ -50,6 +50,7 @@ export interface Job {
   description: string;
   language: string;
   status: 'queued' | 'running' | 'complete' | 'failed';
+  created: number;
 }
 
 async function triggerDeploy(jobId: string) {
@@ -134,7 +135,14 @@ app.post('/api/createApp', async (req, res) => {
   if (!description)
     return res.status(400).json({ error: 'missing description' });
   const id = randomUUID();
-  const job: Job = { id, tenantId, description, language, status: 'queued' };
+  const job: Job = {
+    id,
+    tenantId,
+    description,
+    language,
+    status: 'queued',
+    created: Date.now(),
+  };
   await putItem(JOBS_TABLE, job);
   dispatchJob(job); // fire and forget
   res.status(202).json({ jobId: id });
@@ -295,10 +303,48 @@ app.post('/api/redeploy/:id', async (req, res) => {
   if (!description)
     return res.status(400).json({ error: 'missing description' });
   const id = req.params.id;
-  const job: Job = { id, tenantId, description, language, status: 'queued' };
+  const job: Job = {
+    id,
+    tenantId,
+    description,
+    language,
+    status: 'queued',
+    created: Date.now(),
+  };
   await putItem(JOBS_TABLE, job);
   dispatchJob(job);
   res.status(202).json({ jobId: id });
+});
+
+app.get('/api/exportData', async (req, res) => {
+  const tenantId = req.header(TENANT_HEADER);
+  if (!tenantId) return res.status(401).json({ error: 'missing tenant' });
+  const policy = (req as any).policy as any;
+  let items = (await scanTable<Job>(JOBS_TABLE)).filter(
+    (i) => i.tenantId === tenantId
+  );
+  if (policy?.retentionDays) {
+    const cutoff = Date.now() - policy.retentionDays * 24 * 3600 * 1000;
+    items = items.filter((i) => (i.created || 0) >= cutoff);
+  }
+  res.json(items);
+});
+
+app.delete('/api/exportData', async (req, res) => {
+  const tenantId = req.header(TENANT_HEADER);
+  if (!tenantId) return res.status(401).json({ error: 'missing tenant' });
+  const policy = (req as any).policy as any;
+  let items = (await scanTable<Job>(JOBS_TABLE)).filter(
+    (i) => i.tenantId === tenantId
+  );
+  if (policy?.retentionDays) {
+    const cutoff = Date.now() - policy.retentionDays * 24 * 3600 * 1000;
+    items = items.filter((i) => (i.created || 0) >= cutoff);
+  }
+  for (const item of items) {
+    await deleteItem(JOBS_TABLE, { id: item.id });
+  }
+  res.json({ deleted: items.length });
 });
 
 app.get('/api/policy', (req, res) => {
