@@ -179,3 +179,9 @@ This file records brief summaries of each pull request.
 - Added `/api/connectors` GET, POST and DELETE routes in the orchestrator with DynamoDB persistence.
 - Portal connectors page now loads and saves connector keys via the API.
 - Documented available connectors and API usage in `edge-connectors.md`.
+
+## PR <pending> - VR preview navigation and assets
+- Added OrbitControls and VRButton to `/vr-preview` for immersive navigation.
+- Created `binary-assets/vr` with sample scene placeholder and README.
+- Fetched generated apps and rendered them as WebXR boxes.
+- Documented controls and asset loading in `docs/vr-preview.md`.
