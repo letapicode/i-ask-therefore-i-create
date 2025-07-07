@@ -11,6 +11,7 @@ app.use((req, _res, next) => {
 });
 
 const DB_FILE = process.env.EVENT_DB || '.events.json';
+const EXP_FILE = process.env.EXPERIMENT_DB || '.experiments.json';
 
 function readEvents(): any[] {
   if (!fs.existsSync(DB_FILE)) return [];
@@ -19,6 +20,15 @@ function readEvents(): any[] {
 
 function saveEvents(events: any[]) {
   fs.writeFileSync(DB_FILE, JSON.stringify(events, null, 2));
+}
+
+function readExperiments(): any[] {
+  if (!fs.existsSync(EXP_FILE)) return [];
+  return JSON.parse(fs.readFileSync(EXP_FILE, 'utf-8'));
+}
+
+function saveExperiments(data: any[]) {
+  fs.writeFileSync(EXP_FILE, JSON.stringify(data, null, 2));
 }
 
 app.post('/events', (req, res) => {
@@ -75,6 +85,25 @@ function generateRecommendations(events: any[]): string[] {
 app.get('/recommendations', (_req, res) => {
   const events = readEvents();
   res.json({ recommendations: generateRecommendations(events) });
+});
+
+app.get('/experiments', (_req, res) => {
+  res.json(readExperiments());
+});
+
+app.post('/experiments', (req, res) => {
+  const list = readExperiments();
+  const idx = list.findIndex((e) => e.id === req.body.id);
+  if (idx >= 0) list[idx] = { ...list[idx], ...req.body };
+  else list.push({ ...req.body, created: Date.now() });
+  saveExperiments(list);
+  res.status(201).json({ ok: true });
+});
+
+app.get('/experiments/:id', (req, res) => {
+  const exp = readExperiments().find((e) => e.id === req.params.id);
+  if (!exp) return res.status(404).json({ error: 'not found' });
+  res.json(exp);
 });
 
 export function start(port = 3001) {

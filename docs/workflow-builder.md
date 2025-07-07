@@ -1,3 +1,9 @@
 # Visual Workflow Builder
 
-A future portal tool will let you drag and drop steps to customize backend workflows. This document outlines the concept and lists required events. Implementation will rely on a client-side canvas and save configurations through the orchestrator API.
+The portal now uses React Flow to visually arrange workflow nodes. Configurations are loaded from `/api/workflow` and saved back to that endpoint. Example JSON:
+
+```json
+{
+  "nodes": [{ "id": "1", "type": "start", "position": { "x": 0, "y": 0 } }]
+}
+```

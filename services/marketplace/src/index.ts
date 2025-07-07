@@ -1,6 +1,7 @@
 import express from 'express';
 import fs from 'fs';
 import { logAudit } from '../../packages/shared/src/audit';
+import { templates } from '../../packages/codegen-templates/src/templates';
 
 export const app = express();
 app.use(express.json());
@@ -32,6 +33,10 @@ app.post('/plugins', (req, res) => {
 app.post('/install', (req, res) => {
   logAudit(`install plugin ${req.body.name}`);
   res.json({ ok: true });
+});
+
+app.get('/templates', (_req, res) => {
+  res.json(templates);
 });
 
 export function start(port = 3005) {

@@ -22,7 +22,7 @@ test('status endpoint returns 404 for missing job', async () => {
 });
 
 test('cannot access job from another tenant', async () => {
-  memory['job1'] = { id: 'job1', tenantId: 't1', description: 'a', status: 'complete' };
+memory['job1'] = { id: 'job1', tenantId: 't1', description: 'a', language: 'node', status: 'complete' };
   const res = await request(app)
     .get('/api/status/job1')
     .set('x-tenant-id', 't2');
@@ -30,11 +30,21 @@ test('cannot access job from another tenant', async () => {
 });
 
 test('lists only tenant jobs', async () => {
-  memory['j1'] = { id: 'j1', tenantId: 't1', description: 'a', status: 'complete' };
-  memory['j2'] = { id: 'j2', tenantId: 't2', description: 'b', status: 'complete' };
+  memory['j1'] = { id: 'j1', tenantId: 't1', description: 'a', language: 'node', status: 'complete' };
+  memory['j2'] = { id: 'j2', tenantId: 't2', description: 'b', language: 'node', status: 'complete' };
   const res = await request(app)
     .get('/api/apps')
     .set('x-tenant-id', 't1');
   expect(res.body).toHaveLength(1);
   expect(res.body[0].id).toBe('j1');
+});
+
+test('createApp forwards language', async () => {
+  const res = await request(app)
+    .post('/api/createApp')
+    .set('x-tenant-id', 't1')
+    .send({ description: 'test', language: 'go' });
+  expect(res.status).toBe(202);
+  const job = memory[Object.keys(memory)[0]];
+  expect(job.language).toBe('go');
 });

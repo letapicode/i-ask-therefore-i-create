@@ -15,3 +15,4 @@ This folder contains user guides and architecture diagrams.
 - [VR Preview](./vr-preview.md)
 - [Template Marketplace](./template-marketplace.md)
 - [Regional Compliance](./regional-compliance.md)
+- [Localization](./i18n.md)

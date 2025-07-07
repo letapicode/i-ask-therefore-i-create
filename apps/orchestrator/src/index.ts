@@ -9,9 +9,11 @@ import { startSelfHealing, configure as configureHealing } from './selfHeal';
 import fs from 'fs';
 import { logAudit } from '../../packages/shared/src/audit';
 import { figmaToReact } from '../../packages/shared/src/figma';
+import { policyMiddleware } from '../../packages/shared/src/policyMiddleware';
 
 export const app = express();
 app.use(express.json());
+app.use(policyMiddleware);
 app.use((req, _res, next) => {
   logAudit(`orchestrator ${req.method} ${req.url}`);
   next();
@@ -29,6 +31,7 @@ export interface Job {
   id: string;
   tenantId: string;
   description: string;
+  language: string;
   status: 'queued' | 'running' | 'complete' | 'failed';
 }
 
@@ -61,7 +64,11 @@ export async function dispatchJob(job: Job) {
     const genRes = await fetch(CODEGEN_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ jobId: job.id, description: job.description }),
+      body: JSON.stringify({
+        jobId: job.id,
+        description: job.description,
+        language: job.language,
+      }),
     });
     const { code } = await genRes.json();
     if (ARTIFACTS_BUCKET && code) {
@@ -93,11 +100,11 @@ configureHealing(dispatchJob);
 app.post('/api/createApp', async (req, res) => {
   const tenantId = req.header(TENANT_HEADER);
   if (!tenantId) return res.status(401).json({ error: 'missing tenant' });
-  const { description } = req.body;
+  const { description, language = 'node' } = req.body;
   if (!description)
     return res.status(400).json({ error: 'missing description' });
   const id = randomUUID();
-  const job: Job = { id, tenantId, description, status: 'queued' };
+  const job: Job = { id, tenantId, description, language, status: 'queued' };
   await putItem(JOBS_TABLE, job);
   dispatchJob(job); // fire and forget
   res.status(202).json({ jobId: id });
@@ -137,14 +144,18 @@ app.post('/api/figma', (req, res) => {
 app.post('/api/redeploy/:id', async (req, res) => {
   const tenantId = req.header(TENANT_HEADER);
   if (!tenantId) return res.status(401).json({ error: 'missing tenant' });
-  const { description } = req.body;
+  const { description, language = 'node' } = req.body;
   if (!description)
     return res.status(400).json({ error: 'missing description' });
   const id = req.params.id;
-  const job: Job = { id, tenantId, description, status: 'queued' };
+  const job: Job = { id, tenantId, description, language, status: 'queued' };
   await putItem(JOBS_TABLE, job);
   dispatchJob(job);
   res.status(202).json({ jobId: id });
+});
+
+app.get('/api/policy', (req, res) => {
+  res.json((req as any).policy || {});
 });
 
 export function start(port = 3002) {

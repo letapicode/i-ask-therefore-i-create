@@ -4,10 +4,26 @@ export interface ConnectorConfig {
 
 export type Connector = (config: ConnectorConfig) => Promise<void>;
 
+import fetch from 'node-fetch';
+
 export async function stripeConnector(config: ConnectorConfig) {
-  console.log('connecting to Stripe with', config.apiKey);
+  const res = await fetch('https://api.stripe.com/v1/charges', {
+    method: 'GET',
+    headers: { Authorization: `Bearer ${config.apiKey}` },
+  });
+  if (!res.ok) throw new Error('Stripe request failed');
+  console.log('Stripe connected');
 }
 
 export async function slackConnector(config: ConnectorConfig) {
-  console.log('posting to Slack with', config.apiKey);
+  const res = await fetch('https://slack.com/api/chat.postMessage', {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${config.apiKey}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ channel: '#general', text: 'hello' }),
+  });
+  const data = await res.json();
+  if (!data.ok) throw new Error('Slack request failed');
 }

@@ -7,5 +7,6 @@ Simple service providing a minimal plugin catalog.
 - `GET /plugins` – list available plugins
 - `POST /plugins` – publish a new plugin
 - `POST /install` – record an installation event
+- `GET /templates` – list code generation templates
 
 Run with `node dist/index.js` after building.
