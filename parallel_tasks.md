@@ -1759,10 +1759,118 @@ This file expands on each item in `Tasks.md` with a short description of the exp
    - Apply per-region retention and deletion policies.
    - Expose export hooks for user data.
    - Summarize compliance status in the portal.
-   - Task details: Help apps comply with regulations like GDPR by region.
+  - Task details: Help apps comply with regulations like GDPR by region.
   - Steps:
     1. Define policy configuration files for each supported region.
     2. Integrate checks and hooks into backend services.
     3. Build a portal page to display compliance summaries.
     4. Document how to add policies for new regions.
+
+141. **Data Connectors API Integration**
+
+   - Add `/api/connectors` routes in the orchestrator.
+   - Persist connector settings in DynamoDB.
+   - Connect portal forms to create and update connectors.
+   - Task details: Provide a complete API for storing third-party service keys and options.
+  - Steps:
+    1. Implement GET/POST/DELETE handlers in `apps/orchestrator`.
+    2. Store connector configs in a new table or existing analytics store.
+    3. Update portal pages to fetch and submit data.
+    4. Document available connector types and usage.
+
+142. **Language-Aware Code Generation**
+
+   - Use the `language` field when generating code.
+   - Select templates for Node.js, Python and Go.
+   - Update orchestrator and codegen service accordingly.
+   - Task details: Support multiple backend languages from the wizard.
+  - Steps:
+    1. Pass the `language` option into `generateCode`.
+    2. Extend templates in `packages/codegen-templates`.
+    3. Verify output through sample generation jobs.
+    4. Document how to choose a language.
+
+143. **GraphQL Schema Integration**
+
+   - Integrate `generateSchema` with code generation.
+   - Expose GraphQL endpoints in generated apps.
+   - Provide hooks for template marketplace selections.
+   - Task details: Deliver a working GraphQL builder end to end.
+  - Steps:
+    1. Call `generateSchema` from the orchestrator pipeline.
+    2. Add GraphQL server boilerplate to templates.
+    3. Expose a `/graphql` endpoint in generated services.
+    4. Document schema customization options.
+
+144. **Edge Inference Model Support**
+
+   - Add TensorFlow models under `binary-assets/models`.
+   - Connect `tfHelper` functions to the portal.
+   - Demonstrate inference through data connector workflows.
+   - Task details: Enable running ML models in the browser or at the edge.
+  - Steps:
+    1. Include placeholder model files and loading logic.
+    2. Create prediction endpoints using `tfHelper`.
+    3. Update portal pages to call inference APIs.
+    4. Document model formats and limitations.
+
+145. **RL Feedback Automation**
+
+   - Schedule `train-from-ratings.js` to run automatically.
+   - Persist rating history for audits.
+   - Trigger retraining jobs and log results.
+   - Task details: Automate reinforcement learning loops from analytics data.
+  - Steps:
+    1. Add a cron job or workflow runner script.
+    2. Save training outputs in `services/analytics`.
+    3. Alert maintainers on training failures.
+    4. Document how to adjust the schedule.
+
+146. **VR Preview Navigation & Assets**
+
+   - Add navigation controls to the VR preview.
+   - Bundle sample assets and scenes.
+   - Link generated UIs into the preview environment.
+   - Task details: Provide an immersive preview for generated apps.
+  - Steps:
+    1. Install control libraries for Three.js/WebXR.
+    2. Load generated components as WebXR scenes.
+    3. Include assets under `binary-assets/vr` with a README.
+    4. Document usage and keyboard shortcuts.
+
+147. **Plugin Marketplace Installation Flow**
+
+   - Allow users to install and remove plugins from the marketplace.
+   - Record ratings and usage metrics.
+   - Orchestrator updates projects with selected plugins.
+   - Task details: Turn the marketplace into a functional distribution channel.
+  - Steps:
+    1. Add installation APIs in `apps/orchestrator`.
+    2. Persist plugin metadata in `services/plugins`.
+    3. Update portal pages with install buttons and rating forms.
+    4. Document the plugin submission process.
+
+148. **Real-Time Dashboard Charts & Alerts**
+
+   - Convert performance lists to chart visualizations.
+   - Add threshold-based alerts and notifications.
+   - Provide filtering by app and time range.
+   - Task details: Upgrade the dashboard into a full monitoring tool.
+  - Steps:
+    1. Integrate a chart library such as Chart.js.
+    2. Implement alert logic in `services/analytics`.
+    3. Display charts and alert status in the portal.
+    4. Document configuration options.
+
+149. **Compliance Enforcement Hooks**
+
+   - Enforce region policies on data storage and deletion.
+   - Provide export and download endpoints for user data.
+   - Validate compliance status during deployments.
+   - Task details: Fully implement the regional compliance toolkit.
+  - Steps:
+    1. Hook policy checks into each service's CRUD routes.
+    2. Generate reports on compliance coverage.
+    3. Add CLI commands for exporting data by region.
+    4. Document onboarding steps for new regions.
 

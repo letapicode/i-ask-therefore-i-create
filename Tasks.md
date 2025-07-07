@@ -228,3 +228,14 @@ This file lists actionable tasks derived from `implementation_plan.md` and the e
 138. **VR Preview Enhancements** – replace the placeholder iframe with an interactive WebXR preview.
 139. **GraphQL Builder & Template Marketplace** – offer a GraphQL API builder and cross-domain template selection.
 140. **Regional Data Compliance Toolkit** – implement per-region retention policies with export and delete hooks.
+
+### Finalization Tasks
+141. **Data Connectors API Integration** – create `/api/connectors` endpoints and persist connector settings in `apps/orchestrator`.
+142. **Language-Aware Code Generation** – update codegen to select Node.js, Python or Go templates based on the chosen language.
+143. **GraphQL Schema Integration** – call `generateSchema` during app creation and expose `/graphql` in generated services.
+144. **Edge Inference Model Support** – bundle TensorFlow models and wire `tfHelper` into portal workflows.
+145. **RL Feedback Automation** – schedule `train-from-ratings.js` to retrain models from collected ratings.
+146. **VR Preview Navigation & Assets** – add controls, sample assets and generated scenes to the WebXR preview.
+147. **Plugin Marketplace Installation Flow** – enable installing/removing plugins with ratings stored in `services/plugins`.
+148. **Real-Time Dashboard Charts & Alerts** – visualize metrics with charts and trigger alerts from `services/analytics`.
+149. **Compliance Enforcement Hooks** – enforce region policies and provide export endpoints for user data.
