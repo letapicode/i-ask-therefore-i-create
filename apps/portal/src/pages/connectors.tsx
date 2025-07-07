@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 export default function Connectors() {
   const [stripeKey, setStripeKey] = useState('');
   const [slackKey, setSlackKey] = useState('');
+  const [demoResult, setDemoResult] = useState<number[]>([]);
 
   useEffect(() => {
     fetch('/api/connectors')
@@ -20,6 +21,16 @@ export default function Connectors() {
       body: JSON.stringify({ stripeKey, slackKey }),
     });
     alert('saved');
+  };
+
+  const runDemo = async () => {
+    const res = await fetch('/api/predict', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ input: [1, 2, 3] }),
+    });
+    const data = await res.json();
+    setDemoResult(data.result || []);
   };
 
   return (
@@ -40,6 +51,10 @@ export default function Connectors() {
         />
       </div>
       <button onClick={save}>Save</button>
+      <hr />
+      <h2>Inference Demo</h2>
+      <button onClick={runDemo}>Run Prediction</button>
+      <pre>{JSON.stringify(demoResult)}</pre>
     </div>
   );
 }
