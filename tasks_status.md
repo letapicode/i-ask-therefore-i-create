@@ -142,3 +142,6 @@
 | 138    | VR Preview Enhancements                 | Completed |
 | 139    | GraphQL Builder & Template Marketplace  | Completed |
 | 140    | Regional Data Compliance Toolkit        | Completed |
+| 141    | Connectors API Integration            | Completed |
+| 142    | Language-Aware Code Generation        | Completed |
+| 143    | GraphQL Schema Integration            | Completed |

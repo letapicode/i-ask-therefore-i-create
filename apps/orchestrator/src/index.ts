@@ -10,6 +10,8 @@ import fs from 'fs';
 import { logAudit } from '../../packages/shared/src/audit';
 import { figmaToReact } from '../../packages/shared/src/figma';
 import { policyMiddleware } from '../../packages/shared/src/policyMiddleware';
+import { generateSchema } from '../../packages/codegen-templates/src/graphqlBuilder';
+import { runTemplateHooks } from '../../packages/codegen-templates/src/marketplace';
 
 export const app = express();
 app.use(express.json());
@@ -63,6 +65,11 @@ export async function dispatchJob(job: Job) {
         data: { id: job.id },
       });
     }
+    let schema = '';
+    if (fs.existsSync(SCHEMA_FILE)) {
+      const models = JSON.parse(fs.readFileSync(SCHEMA_FILE, 'utf-8'));
+      schema = runTemplateHooks('graphql', generateSchema(models));
+    }
     const genRes = await fetch(CODEGEN_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -70,6 +77,7 @@ export async function dispatchJob(job: Job) {
         jobId: job.id,
         description: job.description,
         language: job.language,
+        schema,
       }),
     });
     const { code } = await genRes.json();
