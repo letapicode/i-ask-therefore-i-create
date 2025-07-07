@@ -3,11 +3,13 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { OAuth2Client } from 'google-auth-library';
 import { putItem, getItem, updateItem } from '../../packages/shared/src/dynamo';
+import { policyMiddleware } from '../../packages/shared/src/policyMiddleware';
 import { initSentry } from '../../packages/shared/src/sentry';
 import { signMessage, verifyMessage } from '../../packages/shared/src/crypto';
 
 export const app = express();
 app.use(express.json());
+app.use(policyMiddleware);
 
 const USER_TABLE = process.env.USER_TABLE || 'users';
 const JWT_SECRET = process.env.JWT_SECRET || 'secret';

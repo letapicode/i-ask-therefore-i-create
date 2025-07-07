@@ -2,9 +2,11 @@ import express from 'express';
 import fs from 'fs';
 import { initSentry } from '../../packages/shared/src/sentry';
 import { logAudit } from '../../packages/shared/src/audit';
+import { policyMiddleware } from '../../packages/shared/src/policyMiddleware';
 
 export const app = express();
 app.use(express.json());
+app.use(policyMiddleware);
 app.use((req, _res, next) => {
   logAudit(`analytics ${req.method} ${req.url}`);
   next();
@@ -100,6 +102,22 @@ function generateRecommendations(events: any[]): string[] {
 app.get('/recommendations', (_req, res) => {
   const events = readEvents();
   res.json({ recommendations: generateRecommendations(events) });
+});
+
+app.get('/complianceReport', (req, res) => {
+  const policy = (req as any).policy as any;
+  const events = readEvents();
+  const report: Record<string, any> = {
+    region: policy?.region || 'unknown',
+    retentionDays: policy?.retentionDays || null,
+    totalEvents: events.length,
+    staleEvents: 0,
+  };
+  if (policy?.retentionDays) {
+    const cutoff = Date.now() - policy.retentionDays * 24 * 3600 * 1000;
+    report.staleEvents = events.filter((e) => e.time < cutoff).length;
+  }
+  res.json(report);
 });
 
 app.get('/experiments', (_req, res) => {

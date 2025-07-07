@@ -2,9 +2,11 @@ import express from 'express';
 import fs from 'fs';
 import { logAudit } from '../../packages/shared/src/audit';
 import { templates } from '../../packages/codegen-templates/src/templates';
+import { policyMiddleware } from '../../packages/shared/src/policyMiddleware';
 
 export const app = express();
 app.use(express.json());
+app.use(policyMiddleware);
 app.use((req, _res, next) => {
   logAudit(`marketplace ${req.method} ${req.url}`);
   next();

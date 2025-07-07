@@ -144,12 +144,12 @@
 | 140    | Regional Data Compliance Toolkit        | Completed |
 | 141    | Data Connectors API Integration         | Completed |
 | 142    | Language-Aware Code Generation          | Completed |
-| 143    | GraphQL Schema Integration              | Pending   |
+| 143    | GraphQL Schema Integration              | Completed |
 | 144    | Edge Inference Model Support            | Completed |
 | 145    | RL Feedback Automation                  | Completed |
 | 146    | VR Preview Navigation & Assets          | Completed |
 | 147    | Plugin Marketplace Installation Flow    | Completed |
 | 148    | Real-Time Dashboard Charts & Alerts     | Completed |
-| 149    | Compliance Enforcement Hooks            | Pending   |
+| 149    | Compliance Enforcement Hooks            | Completed |
 
 

@@ -228,3 +228,14 @@ This file records brief summaries of each pull request.
 - Added `/api/plugins` install and remove endpoints in the orchestrator and included plugins when dispatching jobs.
 - Portal marketplace page now provides install buttons and rating inputs.
 - Documented the plugin submission process in `plugin-marketplace.md`.
+
+## PR <pending> - GraphQL schema integration status
+
+- Updated `tasks_status.md` to mark GraphQL schema integration as complete.
+
+## PR <pending> - Compliance enforcement hooks
+
+- Applied `policyMiddleware` to all service entrypoints.
+- Added `/api/exportData` endpoints for region-aware export and deletion.
+- Analytics service now generates a compliance report.
+- Documented workflow in `docs/regional-compliance.md` and updated task status.
