@@ -132,3 +132,8 @@ This file records brief summaries of each pull request.
 
 ## PR <pending> - Added new future tasks
 - Appended tasks 125-140 for multi-cloud, compliance, UI builder, data migration, accessibility, pair programming, notebooks, cost forecasting, Kubernetes, offline PWA, SBOM security, industry templates, architecture engine, sketch import, AR generation, and regional compliance toolkit.
+
+## PR <pending> - Reordered next-gen tasks
+- Replaced previous items 125-140 with new actionable features including recommendation engine service, plugin marketplace, visual workflow builder and multi-language code generation.
+- Expanded `parallel_tasks.md` with detailed descriptions and steps for tasks 125-140.
+- These tasks focus on completing partially implemented features such as RL feedback loops, VR preview enhancements and regional compliance tooling.
