@@ -40,6 +40,9 @@ const TENANT_HEADER = 'x-tenant-id';
 const WORKFLOW_FILE = process.env.WORKFLOW_FILE || 'workflow.json';
 const SCHEMA_FILE = process.env.SCHEMA_FILE || 'schema.json';
 const CONNECTORS_TABLE = process.env.CONNECTORS_TABLE || 'connectors';
+const PLUGINS_TABLE = process.env.PLUGINS_TABLE || 'plugins';
+const PLUGIN_SERVICE_URL =
+  process.env.PLUGIN_SERVICE_URL || 'http://localhost:3006';
 
 export interface Job {
   id: string;
@@ -88,6 +91,13 @@ export async function dispatchJob(job: Job) {
         description: job.description,
         language: job.language,
         schema,
+        plugins:
+          (
+            await getItem<{ tenantId: string; plugins: string[] }>(
+              PLUGINS_TABLE,
+              { tenantId: job.tenantId }
+            )
+          )?.plugins || [],
       }),
     });
     const { code } = await genRes.json();
@@ -199,6 +209,63 @@ app.delete('/api/connectors/:type', async (req, res) => {
     return res.status(404).json({ error: 'not found' });
   delete item.config[req.params.type];
   await putItem(CONNECTORS_TABLE, item);
+  res.json({ ok: true });
+});
+
+app.get('/api/plugins', async (req, res) => {
+  const tenantId = req.header(TENANT_HEADER);
+  if (!tenantId) return res.status(401).json({ error: 'missing tenant' });
+  const item = await getItem<{ tenantId: string; plugins: string[] }>(
+    PLUGINS_TABLE,
+    { tenantId }
+  );
+  res.json(item?.plugins || []);
+});
+
+app.post('/api/plugins', async (req, res) => {
+  const tenantId = req.header(TENANT_HEADER);
+  if (!tenantId) return res.status(401).json({ error: 'missing tenant' });
+  const name = req.body.name;
+  if (!name) return res.status(400).json({ error: 'missing name' });
+  const existing = (await getItem<{ tenantId: string; plugins: string[] }>(
+    PLUGINS_TABLE,
+    {
+      tenantId,
+    }
+  )) || { tenantId, plugins: [] };
+  if (!existing.plugins.includes(name)) existing.plugins.push(name);
+  await putItem(PLUGINS_TABLE, existing);
+  try {
+    await fetch(`${PLUGIN_SERVICE_URL}/install`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name }),
+    });
+  } catch (err) {
+    console.error('plugin service error', err);
+  }
+  res.status(201).json({ ok: true });
+});
+
+app.delete('/api/plugins/:name', async (req, res) => {
+  const tenantId = req.header(TENANT_HEADER);
+  if (!tenantId) return res.status(401).json({ error: 'missing tenant' });
+  const item = await getItem<{ tenantId: string; plugins: string[] }>(
+    PLUGINS_TABLE,
+    { tenantId }
+  );
+  if (!item) return res.status(404).json({ error: 'not found' });
+  item.plugins = item.plugins.filter((p) => p !== req.params.name);
+  await putItem(PLUGINS_TABLE, item);
+  try {
+    await fetch(`${PLUGIN_SERVICE_URL}/remove`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name: req.params.name }),
+    });
+  } catch (err) {
+    console.error('plugin service error', err);
+  }
   res.json({ ok: true });
 });
 
