@@ -179,3 +179,10 @@ This file records brief summaries of each pull request.
 - Added `/api/connectors` GET, POST and DELETE routes in the orchestrator with DynamoDB persistence.
 - Portal connectors page now loads and saves connector keys via the API.
 - Documented available connectors and API usage in `edge-connectors.md`.
+
+## PR <pending> - Edge inference model support
+- Added `binary-assets/models` directory with placeholder TensorFlow model.
+- Exported `loadModel` and `predict` helpers and used them in a new `/api/predict` endpoint.
+- Connectors page and a new portal demo call the prediction API.
+- Documented model formats and limitations in `edge-inference.md`.
+- Updated `tasks_status.md` for task 144.

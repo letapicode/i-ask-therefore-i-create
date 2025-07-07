@@ -10,6 +10,8 @@ import fs from 'fs';
 import { logAudit } from '../../packages/shared/src/audit';
 import { figmaToReact } from '../../packages/shared/src/figma';
 import { policyMiddleware } from '../../packages/shared/src/policyMiddleware';
+import { loadModel, predict } from '../../packages/data-connectors/src/tfHelper';
+import * as tf from '@tensorflow/tfjs';
 
 export const app = express();
 app.use(express.json());
@@ -188,6 +190,19 @@ app.delete('/api/connectors/:type', async (req, res) => {
 app.post('/api/figma', (req, res) => {
   const code = figmaToReact(req.body);
   res.json({ code });
+});
+
+app.post('/api/predict', async (req, res) => {
+  try {
+    const modelPath = process.env.MODEL_PATH ||
+      __dirname + '/../../../binary-assets/models/placeholder-model.json';
+    const model = await loadModel('file://' + modelPath);
+    const input = tf.tensor(req.body.input || []);
+    const output = await predict(model, input);
+    res.json({ result: Array.from((output as any).dataSync()) });
+  } catch (err) {
+    res.status(500).json({ error: 'prediction failed' });
+  }
 });
 
 app.post('/api/redeploy/:id', async (req, res) => {
