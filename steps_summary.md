@@ -160,6 +160,7 @@ This file records brief summaries of each pull request.
 - Updated task tracker to mark items 132 through 140 as completed.
 
 ## PR <pending> - Multi-language templates and analytics updates
+
 - Added FastAPI, Go and mobile codegen templates and selection in the orchestrator and portal.
 - Replaced connector stubs with functional Stripe and Slack API calls and added TensorFlow.js helper.
 - Implemented A/B testing endpoints in the analytics service with file persistence and tests.
@@ -176,6 +177,18 @@ This file records brief summaries of each pull request.
   and compliance enforcement.
 
 ## PR <pending> - Data connectors API integration
+
 - Added `/api/connectors` GET, POST and DELETE routes in the orchestrator with DynamoDB persistence.
 - Portal connectors page now loads and saves connector keys via the API.
 - Documented available connectors and API usage in `edge-connectors.md`.
+
+## PR <pending> - Plugin installation flow
+
+- Created plugins service to store install counts and ratings.
+- Added `/api/plugins` install and remove endpoints in the orchestrator and included plugins when dispatching jobs.
+- Portal marketplace page now provides install buttons and rating inputs.
+- Documented the plugin submission process in `plugin-marketplace.md`.
+
+## PR <pending> - Optimize plugin service
+
+- Cached plugin metadata in memory to reduce file I/O and added test helpers to reset state.
