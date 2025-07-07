@@ -7,21 +7,26 @@ jest.mock('node-fetch', () =>
 
 const jobMem: Record<string, any> = {};
 const connMem: Record<string, any> = {};
+const pluginMem: Record<string, any> = {};
 jest.mock('../../packages/shared/src/dynamo', () => ({
   putItem: jest.fn(async (t: string, item: any) => {
     if (t === 'connectors') connMem[item.tenantId] = item;
+    else if (t === 'plugins') pluginMem[item.tenantId] = item;
     else jobMem[item.id] = item;
   }),
   getItem: jest.fn(async (t: string, key: any) => {
     if (t === 'connectors') return connMem[key.tenantId];
+    if (t === 'plugins') return pluginMem[key.tenantId];
     return jobMem[key.id];
   }),
   scanTable: jest.fn(async (t: string) => {
     if (t === 'connectors') return Object.values(connMem);
+    if (t === 'plugins') return Object.values(pluginMem);
     return Object.values(jobMem);
   }),
   deleteItem: jest.fn(async (t: string, key: any) => {
     if (t === 'connectors') delete connMem[key.tenantId];
+    else if (t === 'plugins') delete pluginMem[key.tenantId];
     else delete jobMem[key.id];
   }),
 }));
@@ -29,6 +34,7 @@ jest.mock('../../packages/shared/src/dynamo', () => ({
 afterEach(() => {
   for (const key of Object.keys(jobMem)) delete jobMem[key];
   for (const key of Object.keys(connMem)) delete connMem[key];
+  for (const key of Object.keys(pluginMem)) delete pluginMem[key];
 });
 
 test('status endpoint returns 404 for missing job', async () => {
@@ -115,4 +121,16 @@ test('connectors DELETE removes type', async () => {
     .set('x-tenant-id', 't1');
   expect(res.body.stripeKey).toBeUndefined();
   expect(res.body.slackKey).toBe('sl');
+});
+
+test('plugins API installs and removes plugin', async () => {
+  await request(app)
+    .post('/api/plugins')
+    .set('x-tenant-id', 't1')
+    .send({ name: 'auth' });
+  let res = await request(app).get('/api/plugins').set('x-tenant-id', 't1');
+  expect(res.body).toContain('auth');
+  await request(app).delete('/api/plugins/auth').set('x-tenant-id', 't1');
+  res = await request(app).get('/api/plugins').set('x-tenant-id', 't1');
+  expect(res.body).not.toContain('auth');
 });

@@ -221,3 +221,10 @@ This file records brief summaries of each pull request.
 
 
 
+
+## PR <pending> - Plugin installation flow
+
+- Created plugins service to store install counts and ratings.
+- Added `/api/plugins` install and remove endpoints in the orchestrator and included plugins when dispatching jobs.
+- Portal marketplace page now provides install buttons and rating inputs.
+- Documented the plugin submission process in `plugin-marketplace.md`.
