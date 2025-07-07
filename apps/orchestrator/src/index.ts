@@ -8,6 +8,7 @@ import { initSentry } from '../../packages/shared/src/sentry';
 import { startSelfHealing, configure as configureHealing } from './selfHeal';
 import fs from 'fs';
 import { logAudit } from '../../packages/shared/src/audit';
+import { figmaToReact } from '../../packages/shared/src/figma';
 
 export const app = express();
 app.use(express.json());
@@ -126,6 +127,11 @@ app.get('/api/apps', async (req, res) => {
   if (!tenantId) return res.status(401).json({ error: 'missing tenant' });
   const jobs = await scanTable<Job>(JOBS_TABLE);
   res.json(jobs.filter((j) => j.tenantId === tenantId));
+});
+
+app.post('/api/figma', (req, res) => {
+  const code = figmaToReact(req.body);
+  res.json({ code });
 });
 
 app.post('/api/redeploy/:id', async (req, res) => {
