@@ -1,6 +1,7 @@
 # Orchestrator Service
 
-Coordinates code generation jobs and deployments.
+Coordinates code generation jobs and deployments. Jobs can target different
+backend languages.
 
 ```bash
 pnpm install
@@ -9,7 +10,8 @@ node apps/orchestrator/src/index.ts
 
 ## Endpoints
 
-- `POST /api/createApp` – start a new code generation job. Body: `{ "description": "my idea" }`. Returns a `jobId`.
+- `POST /api/createApp` – start a new code generation job. Body:
+  `{ "description": "my idea", "language": "node" }`. Returns a `jobId`.
 - `GET /api/status/:id` – retrieve the current status of a job.
 - `GET /api/apps` – list all generated apps.
 - `POST /api/redeploy/:id` – submit a new description to redeploy an existing app.

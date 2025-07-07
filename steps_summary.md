@@ -180,7 +180,14 @@ This file records brief summaries of each pull request.
 - Portal connectors page now loads and saves connector keys via the API.
 - Documented available connectors and API usage in `edge-connectors.md`.
 
+
 ## PR <pending> - GraphQL schema integration
 - Integrated `generateSchema` into the orchestrator dispatch pipeline and added template hooks.
 - Provided GraphQL boilerplate and `/graphql` endpoint in the user app template.
 - Documented schema customization in `graphql-builder.md`.
+
+## PR <pending> - Language-aware code generation
+- `generateCode` now accepts a `language` option and the codegen service caches results per language.
+- Added Node.js template and documented language selection in `multi-language.md`.
+- Orchestrator README updated with language field example.
+
