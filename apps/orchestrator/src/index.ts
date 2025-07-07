@@ -10,6 +10,8 @@ import fs from 'fs';
 import { logAudit } from '../../packages/shared/src/audit';
 import { figmaToReact } from '../../packages/shared/src/figma';
 import { policyMiddleware } from '../../packages/shared/src/policyMiddleware';
+import { applyRetention, RegionPolicy } from '../../packages/shared/src/policy';
+import { RegionPolicy } from '../../packages/shared/src/policy';
 
 export const app = express();
 app.use(express.json());
@@ -29,11 +31,24 @@ const WORKFLOW_FILE = process.env.WORKFLOW_FILE || 'workflow.json';
 const SCHEMA_FILE = process.env.SCHEMA_FILE || 'schema.json';
 const CONNECTORS_TABLE = process.env.CONNECTORS_TABLE || 'connectors';
 
+async function cleanupOldJobs(policy: RegionPolicy) {
+  if (!policy.retentionDays) return;
+  const all = await scanTable<Job>(JOBS_TABLE);
+  const cutoff = Date.now() - policy.retentionDays * 24 * 60 * 60 * 1000;
+  for (const job of all) {
+    if (job.region === policy.region && job.created < cutoff) {
+      await deleteItem(JOBS_TABLE, { id: job.id });
+    }
+  }
+}
+
 export interface Job {
   id: string;
   tenantId: string;
+  region: string;
   description: string;
   language: string;
+  created: number;
   status: 'queued' | 'running' | 'complete' | 'failed';
 }
 
@@ -106,8 +121,18 @@ app.post('/api/createApp', async (req, res) => {
   if (!description)
     return res.status(400).json({ error: 'missing description' });
   const id = randomUUID();
-  const job: Job = { id, tenantId, description, language, status: 'queued' };
+  const region = ((req as any).policy as any)?.region || 'us';
+  const job: Job = {
+    id,
+    tenantId,
+    region,
+    description,
+    language,
+    created: Date.now(),
+    status: 'queued',
+  };
   await putItem(JOBS_TABLE, job);
+  await cleanupOldJobs((req as any).policy as RegionPolicy);
   dispatchJob(job); // fire and forget
   res.status(202).json({ jobId: id });
 });
@@ -135,8 +160,13 @@ app.post('/api/schema', (req, res) => {
 app.get('/api/status/:id', async (req, res) => {
   const tenantId = req.header(TENANT_HEADER);
   if (!tenantId) return res.status(401).json({ error: 'missing tenant' });
+  const policy = (req as any).policy as RegionPolicy | undefined;
   const job = await getItem<Job>(JOBS_TABLE, { id: req.params.id });
-  if (!job || job.tenantId !== tenantId)
+  if (
+    !job ||
+    job.tenantId !== tenantId ||
+    (policy && job.region !== policy.region)
+  )
     return res.status(404).json({ error: 'not found' });
   res.json(job);
 });
@@ -144,8 +174,14 @@ app.get('/api/status/:id', async (req, res) => {
 app.get('/api/apps', async (req, res) => {
   const tenantId = req.header(TENANT_HEADER);
   if (!tenantId) return res.status(401).json({ error: 'missing tenant' });
+  const policy = (req as any).policy as RegionPolicy | undefined;
+  if (policy) await cleanupOldJobs(policy);
   const jobs = await scanTable<Job>(JOBS_TABLE);
-  res.json(jobs.filter((j) => j.tenantId === tenantId));
+  res.json(
+    jobs.filter(
+      (j) => j.tenantId === tenantId && (!policy || j.region === policy.region)
+    )
+  );
 });
 
 app.get('/api/connectors', async (req, res) => {
@@ -197,10 +233,28 @@ app.post('/api/redeploy/:id', async (req, res) => {
   if (!description)
     return res.status(400).json({ error: 'missing description' });
   const id = req.params.id;
-  const job: Job = { id, tenantId, description, language, status: 'queued' };
+  const region = ((req as any).policy as any)?.region || 'us';
+  const job: Job = {
+    id,
+    tenantId,
+    region,
+    description,
+    language,
+    created: Date.now(),
+    status: 'queued',
+  };
   await putItem(JOBS_TABLE, job);
+  await cleanupOldJobs((req as any).policy as RegionPolicy);
   dispatchJob(job);
   res.status(202).json({ jobId: id });
+});
+
+app.get('/api/export', async (req, res) => {
+  const policy = (req as any).policy as RegionPolicy | undefined;
+  const jobs = await scanTable<Job>(JOBS_TABLE);
+  const data = jobs.filter((j) => !policy || j.region === policy.region);
+  res.setHeader('Content-Disposition', 'attachment; filename="export.json"');
+  res.json(data);
 });
 
 app.get('/api/policy', (req, res) => {

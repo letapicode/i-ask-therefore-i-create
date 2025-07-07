@@ -179,3 +179,10 @@ This file records brief summaries of each pull request.
 - Added `/api/connectors` GET, POST and DELETE routes in the orchestrator with DynamoDB persistence.
 - Portal connectors page now loads and saves connector keys via the API.
 - Documented available connectors and API usage in `edge-connectors.md`.
+
+## PR <pending> - Compliance enforcement hooks
+- Added policy middleware to analytics and marketplace services with retention filtering.
+- Jobs now store region and creation time; orchestrator cleans old records and exports data by region.
+- New CLI tools `export-region.js` and `compliance-report.js`.
+- `deploy.sh` verifies compliance before planning.
+- Updated docs with onboarding steps for new regions.
