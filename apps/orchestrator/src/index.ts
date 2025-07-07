@@ -26,6 +26,7 @@ const NOTIFY_EMAIL = process.env.NOTIFY_EMAIL;
 const ARTIFACTS_BUCKET = process.env.ARTIFACTS_BUCKET;
 const TENANT_HEADER = 'x-tenant-id';
 const WORKFLOW_FILE = process.env.WORKFLOW_FILE || 'workflow.json';
+const SCHEMA_FILE = process.env.SCHEMA_FILE || 'schema.json';
 
 export interface Job {
   id: string;
@@ -117,6 +118,16 @@ app.get('/api/workflow', (_req, res) => {
 
 app.post('/api/workflow', (req, res) => {
   fs.writeFileSync(WORKFLOW_FILE, JSON.stringify(req.body, null, 2));
+  res.json({ ok: true });
+});
+
+app.get('/api/schema', (_req, res) => {
+  if (!fs.existsSync(SCHEMA_FILE)) return res.json({});
+  res.json(JSON.parse(fs.readFileSync(SCHEMA_FILE, 'utf-8')));
+});
+
+app.post('/api/schema', (req, res) => {
+  fs.writeFileSync(SCHEMA_FILE, JSON.stringify(req.body, null, 2));
   res.json({ ok: true });
 });
 
