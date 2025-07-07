@@ -3,6 +3,7 @@ import { generateWithCustomModel } from './customModel';
 
 export interface GenerationOptions {
   description: string;
+  language: string;
 }
 
 export async function generateCode(opts: GenerationOptions): Promise<string> {
@@ -21,7 +22,12 @@ export async function generateCode(opts: GenerationOptions): Promise<string> {
     },
     body: JSON.stringify({
       model: 'gpt-3.5-turbo',
-      messages: [{ role: 'user', content: opts.description }],
+      messages: [
+        {
+          role: 'user',
+          content: `Generate a ${opts.language} project for: ${opts.description}`,
+        },
+      ],
     }),
   });
   if (!res.ok) {

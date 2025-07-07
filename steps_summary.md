@@ -179,3 +179,8 @@ This file records brief summaries of each pull request.
 - Added `/api/connectors` GET, POST and DELETE routes in the orchestrator with DynamoDB persistence.
 - Portal connectors page now loads and saves connector keys via the API.
 - Documented available connectors and API usage in `edge-connectors.md`.
+
+## PR <pending> - Language-aware code generation
+- `generateCode` now accepts a `language` option and the codegen service caches results per language.
+- Added Node.js template and documented language selection in `multi-language.md`.
+- Orchestrator README updated with language field example.
