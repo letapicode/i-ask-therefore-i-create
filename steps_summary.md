@@ -166,3 +166,11 @@ This file records brief summaries of each pull request.
 - Marketplace now exposes `/templates`; workflow builder uses React Flow.
 - Introduced i18n helpers, region policy middleware and AWS cost optimization script.
 - Added schema persistence endpoints and enhanced voice modeling with table parsing.
+
+## PR <pending> - Add finalization tasks
+
+- Appended tasks 141-149 to `Tasks.md` and `parallel_tasks.md`.
+- New tasks outline work for connectors APIs, language-aware generation,
+  GraphQL integration, edge inference models, RL automation,
+  VR preview controls, plugin installation, performance dashboard charts
+  and compliance enforcement.
