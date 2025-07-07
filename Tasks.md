@@ -210,3 +210,21 @@ This file lists actionable tasks derived from `implementation_plan.md` and the e
 122. **Input Sanitization** – validate and sanitize all user-provided data across services.
 123. **Audit Logging** – record codegen activity and portal actions for security reviews.
 124. **Portal Google Analytics** – integrate Google Analytics to measure portal usage.
+
+### Next-Gen Enhancements
+125. **Multi-Cloud Orchestrator** – extend the orchestrator and `infrastructure/` modules so apps can deploy to AWS, GCP or Azure using provider-specific Terraform stacks.
+126. **Compliance Framework Integration** – add libraries in `packages/shared` to enforce HIPAA and PCI policies with encryption defaults and automated reports in the portal.
+127. **Visual UI Builder** – create a drag-and-drop editor under `packages/ui-builder` and integrate it with the portal and codegen pipeline.
+128. **Automated Data Migration** – generate schema diff scripts in `packages/shared` and trigger migrations via the orchestrator before redeployments.
+129. **AI Accessibility Analyzer** – implement a tool in `tools/accessibility-audit.js` using axe-core to flag issues and inject fixes into generated UI code.
+130. **Real-Time Pair Programming** – upgrade the collaborative editor to support multiple cursors, chat and AI suggestions with session data stored in Redis.
+131. **Notebook Workspace** – launch per-tenant JupyterLab instances in `/apps/notebooks` with secure tokens and portal integration.
+132. **Cost Forecasting Service** – query cloud billing APIs from `services/analytics` to predict monthly spend and display budget graphs in the portal.
+133. **Kubernetes Support** – add `infrastructure/k8s` templates and extend the orchestrator to deploy workloads on Kubernetes clusters.
+134. **PWA Template Library** – include service worker templates in `packages/codegen-templates` for offline-first apps selected in the portal.
+135. **SBOM & Supply Chain Security** – generate CycloneDX SBOM files during builds and scan them for vulnerabilities, alerting users in the portal.
+136. **Industry Template Packs** – provide specialized scaffolds under `packages/codegen-templates/industry` with a selector in the app wizard.
+137. **Architecture Recommendation Engine** – analyze app descriptions in `apps/codegen` to suggest service layouts before generation.
+138. **Sketch Import Pipeline** – allow uploading sketches in the portal, convert them with TensorFlow.js, and feed the result to codegen.
+139. **Augmented Reality App Generation** – add WebXR templates and sample assets so generated apps can include AR components.
+140. **Regional Data Compliance Toolkit** – configure per-region retention policies and export/delete hooks, generating compliance summaries in the portal.
