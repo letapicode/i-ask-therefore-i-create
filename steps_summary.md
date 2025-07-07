@@ -182,6 +182,7 @@ This file records brief summaries of each pull request.
 - Portal connectors page now loads and saves connector keys via the API.
 - Documented available connectors and API usage in `edge-connectors.md`.
 
+
 ## PR <pending> - GraphQL schema integration
 
 - Integrated `generateSchema` into the orchestrator dispatch pipeline and added template hooks.
@@ -201,3 +202,9 @@ This file records brief summaries of each pull request.
 - Connectors page and a new portal demo call the prediction API.
 - Documented model formats and limitations in `edge-inference.md`.
 - Updated `tasks_status.md` for task 144.
+  
+ ## PR <pending> - RL feedback automation
+- Added scheduled workflow `train-from-ratings.yml` to retrain models nightly.
+- Training script now stores rating snapshots and history under `services/analytics/training` and logs outcomes via `audit.log`.
+- Documented schedule adjustments in `docs/rl-code-quality.md`.
+
