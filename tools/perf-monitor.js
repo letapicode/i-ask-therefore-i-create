@@ -4,6 +4,7 @@ const {
   CloudWatchClient,
   GetMetricDataCommand,
 } = require('@aws-sdk/client-cloudwatch');
+const fetch = require('node-fetch');
 
 const program = new Command();
 program
@@ -47,6 +48,14 @@ async function poll() {
     const res = await client.send(new GetMetricDataCommand(params));
     const val = res.MetricDataResults?.[0]?.Values?.[0] || 0;
     console.log(`[${new Date().toISOString()}] ${opts.metric}: ${val}`);
+    const url = process.env.ANALYTICS_URL;
+    if (url) {
+      fetch(`${url}/events`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ type: 'perf', metric: opts.metric, value: val }),
+      }).catch(() => {});
+    }
   } catch (err) {
     console.error('Error fetching metrics', err);
   }

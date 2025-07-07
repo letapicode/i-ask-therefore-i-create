@@ -6,9 +6,15 @@ import { uploadObject } from '../../packages/shared/src/s3';
 import { sendEmail } from '../../services/email/src';
 import { initSentry } from '../../packages/shared/src/sentry';
 import { startSelfHealing, configure as configureHealing } from './selfHeal';
+import fs from 'fs';
+import { logAudit } from '../../packages/shared/src/audit';
 
 export const app = express();
 app.use(express.json());
+app.use((req, _res, next) => {
+  logAudit(`orchestrator ${req.method} ${req.url}`);
+  next();
+});
 
 const JOBS_TABLE = process.env.JOBS_TABLE || 'jobs';
 const CODEGEN_URL = process.env.CODEGEN_URL || 'http://localhost:3003/generate';
@@ -16,6 +22,7 @@ const DEPLOY_URL = process.env.DEPLOY_URL;
 const NOTIFY_EMAIL = process.env.NOTIFY_EMAIL;
 const ARTIFACTS_BUCKET = process.env.ARTIFACTS_BUCKET;
 const TENANT_HEADER = 'x-tenant-id';
+const WORKFLOW_FILE = process.env.WORKFLOW_FILE || 'workflow.json';
 
 export interface Job {
   id: string;
@@ -44,12 +51,16 @@ export async function dispatchJob(job: Job) {
   try {
     await putItem(JOBS_TABLE, { ...job, status: 'running' });
     if (NOTIFY_EMAIL) {
-      sendEmail({ template: 'job-start', to: NOTIFY_EMAIL, data: { id: job.id } });
+      sendEmail({
+        template: 'job-start',
+        to: NOTIFY_EMAIL,
+        data: { id: job.id },
+      });
     }
     const genRes = await fetch(CODEGEN_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ jobId: job.id, description: job.description })
+      body: JSON.stringify({ jobId: job.id, description: job.description }),
     });
     const { code } = await genRes.json();
     if (ARTIFACTS_BUCKET && code) {
@@ -58,12 +69,20 @@ export async function dispatchJob(job: Job) {
     await putItem(JOBS_TABLE, { ...job, status: 'complete' });
     await triggerDeploy(job.id);
     if (NOTIFY_EMAIL) {
-      sendEmail({ template: 'job-complete', to: NOTIFY_EMAIL, data: { id: job.id } });
+      sendEmail({
+        template: 'job-complete',
+        to: NOTIFY_EMAIL,
+        data: { id: job.id },
+      });
     }
   } catch (err) {
     await putItem(JOBS_TABLE, { ...job, status: 'failed' });
     if (NOTIFY_EMAIL) {
-      sendEmail({ template: 'job-failed', to: NOTIFY_EMAIL, data: { id: job.id } });
+      sendEmail({
+        template: 'job-failed',
+        to: NOTIFY_EMAIL,
+        data: { id: job.id },
+      });
     }
   }
 }
@@ -74,7 +93,8 @@ app.post('/api/createApp', async (req, res) => {
   const tenantId = req.header(TENANT_HEADER);
   if (!tenantId) return res.status(401).json({ error: 'missing tenant' });
   const { description } = req.body;
-  if (!description) return res.status(400).json({ error: 'missing description' });
+  if (!description)
+    return res.status(400).json({ error: 'missing description' });
   const id = randomUUID();
   const job: Job = { id, tenantId, description, status: 'queued' };
   await putItem(JOBS_TABLE, job);
@@ -82,11 +102,22 @@ app.post('/api/createApp', async (req, res) => {
   res.status(202).json({ jobId: id });
 });
 
+app.get('/api/workflow', (_req, res) => {
+  if (!fs.existsSync(WORKFLOW_FILE)) return res.json({});
+  res.json(JSON.parse(fs.readFileSync(WORKFLOW_FILE, 'utf-8')));
+});
+
+app.post('/api/workflow', (req, res) => {
+  fs.writeFileSync(WORKFLOW_FILE, JSON.stringify(req.body, null, 2));
+  res.json({ ok: true });
+});
+
 app.get('/api/status/:id', async (req, res) => {
   const tenantId = req.header(TENANT_HEADER);
   if (!tenantId) return res.status(401).json({ error: 'missing tenant' });
   const job = await getItem<Job>(JOBS_TABLE, { id: req.params.id });
-  if (!job || job.tenantId !== tenantId) return res.status(404).json({ error: 'not found' });
+  if (!job || job.tenantId !== tenantId)
+    return res.status(404).json({ error: 'not found' });
   res.json(job);
 });
 
@@ -94,14 +125,15 @@ app.get('/api/apps', async (req, res) => {
   const tenantId = req.header(TENANT_HEADER);
   if (!tenantId) return res.status(401).json({ error: 'missing tenant' });
   const jobs = await scanTable<Job>(JOBS_TABLE);
-  res.json(jobs.filter(j => j.tenantId === tenantId));
+  res.json(jobs.filter((j) => j.tenantId === tenantId));
 });
 
 app.post('/api/redeploy/:id', async (req, res) => {
   const tenantId = req.header(TENANT_HEADER);
   if (!tenantId) return res.status(401).json({ error: 'missing tenant' });
   const { description } = req.body;
-  if (!description) return res.status(400).json({ error: 'missing description' });
+  if (!description)
+    return res.status(400).json({ error: 'missing description' });
   const id = req.params.id;
   const job: Job = { id, tenantId, description, status: 'queued' };
   await putItem(JOBS_TABLE, job);
@@ -120,4 +152,3 @@ export function start(port = 3002) {
 if (require.main === module) {
   start(Number(process.env.PORT) || 3002);
 }
-

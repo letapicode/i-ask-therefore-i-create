@@ -31,3 +31,5 @@ node tools/redeploy.js --id abc123 --description "New features" --url http://loc
 - `llm-sandbox.js` – send custom prompts to any model endpoint
 - `voice-modeler.js` – record descriptions for data models
 - `sustainability-report.js` – estimate energy usage from CloudWatch metrics
+- `backup.js` – copy project data into timestamped folders
+- `train-from-ratings.js` – retrain the model based on collected ratings

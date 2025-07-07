@@ -12,6 +12,7 @@ This repository uses a monorepo structure as outlined in `implementation_plan.md
 - **portal** – user interface
 - **services/email** – SES email wrapper
 - **services/analytics** – collect usage metrics
+- **services/marketplace** – community plugin catalog
 
 ## Getting Started
 
@@ -49,3 +50,4 @@ Run `pnpm lint` to execute ESLint and `pnpm format` to run Prettier across the r
 
 If `SENTRY_DSN` is set in your environment the services will forward errors to
 Sentry using the helper in `packages/shared`.
+\nRun `node tools/backup.js` nightly to archive data in `backups/`.
