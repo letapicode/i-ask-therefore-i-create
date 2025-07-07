@@ -179,3 +179,8 @@ This file records brief summaries of each pull request.
 - Added `/api/connectors` GET, POST and DELETE routes in the orchestrator with DynamoDB persistence.
 - Portal connectors page now loads and saves connector keys via the API.
 - Documented available connectors and API usage in `edge-connectors.md`.
+
+## PR <pending> - GraphQL schema integration
+- Integrated `generateSchema` into the orchestrator dispatch pipeline and added template hooks.
+- Provided GraphQL boilerplate and `/graphql` endpoint in the user app template.
+- Documented schema customization in `graphql-builder.md`.
