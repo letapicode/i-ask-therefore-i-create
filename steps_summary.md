@@ -122,6 +122,7 @@ This file records brief summaries of each pull request.
 - Updated task tracker for items 102 through 118.
 
 ## PR <pending> - Extended feature stubs
+
 - Added Figma design import and chat helper pages in the portal.
 - Created `@iac/plugins` and `@iac/data-connectors` packages with basic interfaces.
 - Implemented self-healing job logic in the orchestrator.
@@ -129,11 +130,22 @@ This file records brief summaries of each pull request.
 - Documented new concepts including recommendation engine, workflow builder and more.
 - Updated `tasks_status.md` for tasks 78 through 100.
 
-
 ## PR <pending> - Added new future tasks
+
 - Appended tasks 125-140 for multi-cloud, compliance, UI builder, data migration, accessibility, pair programming, notebooks, cost forecasting, Kubernetes, offline PWA, SBOM security, industry templates, architecture engine, sketch import, AR generation, and regional compliance toolkit.
 
 ## PR <pending> - Reordered next-gen tasks
+
 - Replaced previous items 125-140 with new actionable features including recommendation engine service, plugin marketplace, visual workflow builder and multi-language code generation.
 - Expanded `parallel_tasks.md` with detailed descriptions and steps for tasks 125-140.
 - These tasks focus on completing partially implemented features such as RL feedback loops, VR preview enhancements and regional compliance tooling.
+
+## PR <pending> - Implemented tasks 125-131
+
+- Added recommendation engine endpoint and portal integration.
+- Created plugin marketplace service and UI page.
+- Built simple workflow builder with orchestrator storage.
+- Extended templates for FastAPI and Go.
+- Recorded user ratings and training script.
+- Added performance dashboard and metrics ingestion.
+- Implemented backup script and audit logging middleware.
