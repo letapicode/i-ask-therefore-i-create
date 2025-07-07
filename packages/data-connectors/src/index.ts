@@ -5,6 +5,7 @@ export interface ConnectorConfig {
 export type Connector = (config: ConnectorConfig) => Promise<void>;
 
 import fetch from 'node-fetch';
+export * from './tfHelper';
 
 export async function stripeConnector(config: ConnectorConfig) {
   const res = await fetch('https://api.stripe.com/v1/charges', {
