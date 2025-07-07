@@ -158,3 +158,10 @@ This file records brief summaries of each pull request.
 - Enhanced VR preview with a Three.js demo scene.
 - Added GraphQL template, regional policies and multiple new docs.
 - Updated task tracker to mark items 132 through 140 as completed.
+
+## PR <pending> - Multi-language templates and analytics updates
+- Added FastAPI, Go and mobile codegen templates and selection in the orchestrator and portal.
+- Replaced connector stubs with functional Stripe and Slack API calls and added TensorFlow.js helper.
+- Implemented A/B testing endpoints in the analytics service with file persistence and tests.
+- Marketplace now exposes `/templates`; workflow builder uses React Flow.
+- Introduced i18n helpers, region policy middleware and AWS cost optimization script.

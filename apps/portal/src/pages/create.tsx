@@ -3,6 +3,7 @@ import { useState, useRef } from 'react';
 export default function CreateApp() {
   const [description, setDescription] = useState('');
   const [jobId, setJobId] = useState('');
+  const [language, setLanguage] = useState('node');
   const [listening, setListening] = useState(false);
   const recognitionRef = useRef<any>();
 
@@ -11,7 +12,7 @@ export default function CreateApp() {
     const res = await fetch('http://localhost:3002/api/createApp', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ description }),
+      body: JSON.stringify({ description, language }),
     });
     const data = await res.json();
     setJobId(data.jobId);
@@ -48,6 +49,20 @@ export default function CreateApp() {
           value={description}
           onChange={(e) => setDescription(e.target.value)}
         />
+        <div>
+          <label>
+            Language
+            <select
+              value={language}
+              onChange={(e) => setLanguage(e.target.value)}
+            >
+              <option value="node">Node.js</option>
+              <option value="fastapi">FastAPI</option>
+              <option value="go">Go</option>
+              <option value="mobile">Mobile</option>
+            </select>
+          </label>
+        </div>
         <div>
           <button type="button" onClick={listening ? stopVoice : startVoice}>
             {listening ? 'Stop Voice' : 'Voice Input'}

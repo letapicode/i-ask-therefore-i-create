@@ -1,7 +1,13 @@
 import type { AppProps } from 'next/app';
 import Script from 'next/script';
+import { useEffect } from 'react';
+import { loadTranslations } from '../lib/i18n';
 
 export default function MyApp({ Component, pageProps }: AppProps) {
+  useEffect(() => {
+    const lang = localStorage.getItem('lang') || 'en';
+    loadTranslations(lang).then((d) => (window.__t = d));
+  }, []);
   return (
     <>
       {process.env.NEXT_PUBLIC_GA_ID && (

@@ -2,7 +2,7 @@ module.exports = {
   preset: 'ts-jest',
   testEnvironment: 'node',
   testMatch: ['**/*.test.ts'],
-  testPathIgnorePatterns: ['/node_modules/', 'apps/orchestrator/src'],
+  testPathIgnorePatterns: ['/node_modules/'],
   moduleNameMapper: {
     '^../../packages/(.*)$': '<rootDir>/packages/$1',
     '^../../services/(.*)$': '<rootDir>/services/$1'

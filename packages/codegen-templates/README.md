@@ -11,4 +11,4 @@ pnpm exec ts-node packages/codegen-templates/src/cli.ts
 ```
 
 Additional templates can be registered at runtime using `marketplace.ts`.
-\nIncludes templates for Node.js plus experimental FastAPI and Go projects.
+\nIncludes templates for Node.js plus experimental FastAPI, Go and mobile projects.
