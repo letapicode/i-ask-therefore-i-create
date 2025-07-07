@@ -12,6 +12,7 @@ app.use((req, _res, next) => {
 
 const DB_FILE = process.env.EVENT_DB || '.events.json';
 const EXP_FILE = process.env.EXPERIMENT_DB || '.experiments.json';
+const ALERT_THRESHOLD = Number(process.env.ALERT_THRESHOLD || '1000');
 
 function readEvents(): any[] {
   if (!fs.existsSync(DB_FILE)) return [];
@@ -50,9 +51,23 @@ app.get('/metrics', (_req, res) => {
   res.json({ count: events.length });
 });
 
-app.get('/performance', (_req, res) => {
-  const events = readEvents().filter((e) => e.type === 'perf');
-  res.json(events.slice(-20));
+app.get('/performance', (req, res) => {
+  const { app, range } = req.query as { app?: string; range?: string };
+  let events = readEvents().filter((e) => e.type === 'perf');
+  if (app) events = events.filter((e) => e.app === app);
+  if (range) {
+    const since = Date.now() - Number(range) * 3600 * 1000;
+    events = events.filter((e) => e.time >= since);
+  }
+  res.json(events.slice(-100));
+});
+
+app.get('/alerts', (req, res) => {
+  const { app } = req.query as { app?: string };
+  let events = readEvents().filter((e) => e.type === 'perf');
+  if (app) events = events.filter((e) => e.app === app);
+  const alerts = events.filter((e) => e.value > ALERT_THRESHOLD);
+  res.json(alerts.slice(-20));
 });
 
 app.get('/summary', (_req, res) => {

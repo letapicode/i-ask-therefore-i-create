@@ -5,5 +5,8 @@
     "build": "echo building portal",
     "lint": "echo linting portal",
     "test": "echo testing portal"
+  },
+  "dependencies": {
+    "chart.js": "^4.4.0"
   }
 }

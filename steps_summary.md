@@ -179,3 +179,9 @@ This file records brief summaries of each pull request.
 - Added `/api/connectors` GET, POST and DELETE routes in the orchestrator with DynamoDB persistence.
 - Portal connectors page now loads and saves connector keys via the API.
 - Documented available connectors and API usage in `edge-connectors.md`.
+
+## PR <pending> - Real-time dashboard charts and alerts
+- Integrated Chart.js into the portal dashboard and performance pages.
+- Added filtering controls and alert display backed by new `/alerts` endpoint.
+- Analytics service now supports query parameters, alert thresholds and exposes performance and alert data.
+- Documented monitoring options in `dashboard-monitoring.md` and updated task status.
