@@ -11,6 +11,7 @@ This folder contains user guides and architecture diagrams.
 - [Schema Designer](./schema-designer.md)
 - [Voice Guided Modeling](./voice-modeling.md)
 - [Edge Connectors](./edge-connectors.md)
+- [Edge Inference](./edge-inference.md)
 - [A/B Testing](./ab-testing-toolkit.md)
 - [VR Preview](./vr-preview.md)
 - [Template Marketplace](./template-marketplace.md)

@@ -7,3 +7,6 @@ Run locally with:
 npm install
 node index.js
 ```
+
+The app exposes REST todo routes and a `/graphql` endpoint using the schema in
+`schema.graphql`.

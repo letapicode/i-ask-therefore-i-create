@@ -1,6 +1,11 @@
 {
   "name": "user-app-temp",
   "version": "0.1.0",
+  "dependencies": {
+    "express": "^4.18.2",
+    "express-graphql": "^0.12.0",
+    "graphql": "^16.8.0"
+  },
   "scripts": {
     "build": "echo building user-app-temp",
     "lint": "echo linting user-app-temp",

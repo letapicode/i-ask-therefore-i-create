@@ -160,6 +160,7 @@ This file records brief summaries of each pull request.
 - Updated task tracker to mark items 132 through 140 as completed.
 
 ## PR <pending> - Multi-language templates and analytics updates
+
 - Added FastAPI, Go and mobile codegen templates and selection in the orchestrator and portal.
 - Replaced connector stubs with functional Stripe and Slack API calls and added TensorFlow.js helper.
 - Implemented A/B testing endpoints in the analytics service with file persistence and tests.
@@ -176,12 +177,47 @@ This file records brief summaries of each pull request.
   and compliance enforcement.
 
 ## PR <pending> - Data connectors API integration
+
 - Added `/api/connectors` GET, POST and DELETE routes in the orchestrator with DynamoDB persistence.
 - Portal connectors page now loads and saves connector keys via the API.
 - Documented available connectors and API usage in `edge-connectors.md`.
+
+## PR <pending> - GraphQL schema integration
+
+- Integrated `generateSchema` into the orchestrator dispatch pipeline and added template hooks.
+- Provided GraphQL boilerplate and `/graphql` endpoint in the user app template.
+- Documented schema customization in `graphql-builder.md`.
+
+## PR <pending> - Language-aware code generation
+
+- `generateCode` now accepts a `language` option and the codegen service caches results per language.
+- Added Node.js template and documented language selection in `multi-language.md`.
+- Orchestrator README updated with language field example.
+
+## PR <pending> - Edge inference model support
+
+- Added `binary-assets/models` directory with placeholder TensorFlow model.
+- Exported `loadModel` and `predict` helpers and used them in a new `/api/predict` endpoint.
+- Connectors page and a new portal demo call the prediction API.
+- Documented model formats and limitations in `edge-inference.md`.
+- Updated `tasks_status.md` for task 144.
+  
+ ## PR <pending> - RL feedback automation
+- Added scheduled workflow `train-from-ratings.yml` to retrain models nightly.
+- Training script now stores rating snapshots and history under `services/analytics/training` and logs outcomes via `audit.log`.
+- Documented schedule adjustments in `docs/rl-code-quality.md`.
+
+## PR <pending> - VR preview navigation and assets
+- Added OrbitControls and VRButton to `/vr-preview` for immersive navigation.
+- Created `binary-assets/vr` with sample scene placeholder and README.
+- Fetched generated apps and rendered them as WebXR boxes.
+- Documented controls and asset loading in `docs/vr-preview.md`.
 
 ## PR <pending> - Real-time dashboard charts and alerts
 - Integrated Chart.js into the portal dashboard and performance pages.
 - Added filtering controls and alert display backed by new `/alerts` endpoint.
 - Analytics service now supports query parameters, alert thresholds and exposes performance and alert data.
 - Documented monitoring options in `dashboard-monitoring.md` and updated task status.
+
+
+

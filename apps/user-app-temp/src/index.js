@@ -1,6 +1,17 @@
 const express = require('express');
+const { graphqlHTTP } = require('express-graphql');
+const { buildSchema } = require('graphql');
+const fs = require('fs');
 const app = express();
 app.use(express.json());
+
+let schemaText = 'type Query { hello: String }';
+if (fs.existsSync(__dirname + '/schema.graphql')) {
+  schemaText = fs.readFileSync(__dirname + '/schema.graphql', 'utf-8');
+}
+const schema = buildSchema(schemaText);
+const root = { hello: () => 'Hello world' };
+app.use('/graphql', graphqlHTTP({ schema, rootValue: root, graphiql: true }));
 
 let todos = [];
 
