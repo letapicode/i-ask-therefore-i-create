@@ -165,3 +165,4 @@ This file records brief summaries of each pull request.
 - Implemented A/B testing endpoints in the analytics service with file persistence and tests.
 - Marketplace now exposes `/templates`; workflow builder uses React Flow.
 - Introduced i18n helpers, region policy middleware and AWS cost optimization script.
+- Added schema persistence endpoints and enhanced voice modeling with table parsing.
