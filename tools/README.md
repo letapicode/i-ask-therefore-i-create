@@ -33,3 +33,4 @@ node tools/redeploy.js --id abc123 --description "New features" --url http://loc
 - `sustainability-report.js` – estimate energy usage from CloudWatch metrics
 - `backup.js` – copy project data into timestamped folders
 - `train-from-ratings.js` – retrain the model based on collected ratings
+- `run-migrations.js` – apply generated SQL migrations to a database

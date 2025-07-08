@@ -239,3 +239,9 @@ This file records brief summaries of each pull request.
 - Added `/api/exportData` endpoints for region-aware export and deletion.
 - Analytics service now generates a compliance report.
 - Documented workflow in `docs/regional-compliance.md` and updated task status.
+
+## PR <pending> - Schema migrations from designer
+
+- Orchestrator compares posted schemas and writes SQL migrations to `packages/codegen-templates/migrations`.
+- New `tools/run-migrations.js` CLI applies migrations to a Postgres database.
+- Documented workflow in `docs/schema-designer.md` and listed tool in `tools/README.md`.

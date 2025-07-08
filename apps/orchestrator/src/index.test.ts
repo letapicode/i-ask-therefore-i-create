@@ -35,6 +35,14 @@ afterEach(() => {
   for (const key of Object.keys(jobMem)) delete jobMem[key];
   for (const key of Object.keys(connMem)) delete connMem[key];
   for (const key of Object.keys(pluginMem)) delete pluginMem[key];
+  const fs = require('fs');
+  if (fs.existsSync('schema.json')) fs.unlinkSync('schema.json');
+  const migDir = 'packages/codegen-templates/migrations';
+  if (fs.existsSync(migDir)) {
+    for (const f of fs.readdirSync(migDir)) {
+      if (f !== 'README.md') fs.unlinkSync(`${migDir}/${f}`);
+    }
+  }
 });
 
 test('status endpoint returns 404 for missing job', async () => {
@@ -94,6 +102,19 @@ test('schema endpoints persist data', async () => {
     .send({ tables: [{ name: 't' }] });
   const res = await request(app).get('/api/schema');
   expect(res.body.tables[0].name).toBe('t');
+});
+
+test('schema POST generates migrations', async () => {
+  const fs = require('fs');
+  const dir = 'packages/codegen-templates/migrations';
+  await request(app)
+    .post('/api/schema')
+    .send({ models: [{ name: 'a', fields: [{ name: 'id', type: 'int' }] }] });
+  await request(app)
+    .post('/api/schema')
+    .send({ models: [{ name: 'a', fields: [{ name: 'id', type: 'int' }, { name: 'name', type: 'string' }] }] });
+  const files = fs.readdirSync(dir).filter((f: string) => f.endsWith('.sql'));
+  expect(files.length).toBe(1);
 });
 
 test('connectors API stores and retrieves config', async () => {

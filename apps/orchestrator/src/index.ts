@@ -22,6 +22,7 @@ import {
 import * as tf from '@tensorflow/tfjs';
 import { generateSchema } from '../../packages/codegen-templates/src/graphqlBuilder';
 import { runTemplateHooks } from '../../packages/codegen-templates/src/marketplace';
+import { diffSchemas, Model } from './migration';
 
 export const app = express();
 app.use(express.json());
@@ -39,6 +40,8 @@ const ARTIFACTS_BUCKET = process.env.ARTIFACTS_BUCKET;
 const TENANT_HEADER = 'x-tenant-id';
 const WORKFLOW_FILE = process.env.WORKFLOW_FILE || 'workflow.json';
 const SCHEMA_FILE = process.env.SCHEMA_FILE || 'schema.json';
+const MIGRATIONS_DIR =
+  process.env.MIGRATIONS_DIR || 'packages/codegen-templates/migrations';
 const CONNECTORS_TABLE = process.env.CONNECTORS_TABLE || 'connectors';
 const PLUGINS_TABLE = process.env.PLUGINS_TABLE || 'plugins';
 const PLUGIN_SERVICE_URL =
@@ -164,7 +167,23 @@ app.get('/api/schema', (_req, res) => {
 });
 
 app.post('/api/schema', (req, res) => {
+  const newSchema = req.body as { models: Model[] } | Model[];
+  const models = Array.isArray(newSchema) ? (newSchema as Model[]) : (newSchema as any).models;
+  let oldModels: Model[] = [];
+  if (fs.existsSync(SCHEMA_FILE)) {
+    const prev = JSON.parse(fs.readFileSync(SCHEMA_FILE, 'utf-8'));
+    oldModels = Array.isArray(prev) ? prev : prev.models;
+  }
   fs.writeFileSync(SCHEMA_FILE, JSON.stringify(req.body, null, 2));
+  const changes = diffSchemas(oldModels || [], models || []);
+  if (changes.length > 0) {
+    if (!fs.existsSync(MIGRATIONS_DIR)) fs.mkdirSync(MIGRATIONS_DIR, { recursive: true });
+    const name = `${Date.now()}.sql`;
+    fs.writeFileSync(
+      `${MIGRATIONS_DIR}/${name}`,
+      changes.join('\n') + '\n'
+    );
+  }
   res.json({ ok: true });
 });
 
