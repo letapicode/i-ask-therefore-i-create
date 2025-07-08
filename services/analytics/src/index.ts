@@ -14,6 +14,8 @@ app.use((req, _res, next) => {
 
 const DB_FILE = process.env.EVENT_DB || '.events.json';
 const EXP_FILE = process.env.EXPERIMENT_DB || '.experiments.json';
+const UI_FILE = process.env.UI_EVENTS_DB || '.ui-events.json';
+const SUGG_FILE = process.env.UI_SUGGESTIONS_DB || '.ui-suggestions.json';
 const ALERT_THRESHOLD = Number(process.env.ALERT_THRESHOLD || '1000');
 
 function readEvents(): any[] {
@@ -34,10 +36,36 @@ function saveExperiments(data: any[]) {
   fs.writeFileSync(EXP_FILE, JSON.stringify(data, null, 2));
 }
 
+function readUiEvents(): any[] {
+  if (!fs.existsSync(UI_FILE)) return [];
+  return JSON.parse(fs.readFileSync(UI_FILE, 'utf-8'));
+}
+
+function saveUiEvents(data: any[]) {
+  fs.writeFileSync(UI_FILE, JSON.stringify(data, null, 2));
+}
+
+function readSuggestions(): any[] {
+  if (!fs.existsSync(SUGG_FILE)) return [];
+  return JSON.parse(fs.readFileSync(SUGG_FILE, 'utf-8'));
+}
+
+function saveSuggestions(data: any[]) {
+  fs.writeFileSync(SUGG_FILE, JSON.stringify(data, null, 2));
+}
+
 app.post('/events', (req, res) => {
   const events = readEvents();
   events.push({ ...req.body, time: Date.now() });
   saveEvents(events);
+  res.status(201).json({ ok: true });
+});
+
+app.post('/uiEvent', (req, res) => {
+  const list = readUiEvents();
+  list.push({ ...req.body, time: Date.now() });
+  saveUiEvents(list);
+  updateSuggestions();
   res.status(201).json({ ok: true });
 });
 
@@ -82,6 +110,22 @@ app.get('/summary', (_req, res) => {
   res.json(summary);
 });
 
+app.get('/uxSuggestions', (_req, res) => {
+  const suggestions = updateSuggestions();
+  res.json(suggestions);
+});
+
+app.post('/uxSuggestions/:id/apply', (req, res) => {
+  const suggestions = readSuggestions();
+  const idx = suggestions.findIndex((s: any) => s.id === req.params.id);
+  if (idx >= 0) {
+    suggestions.splice(idx, 1);
+    saveSuggestions(suggestions);
+    return res.json({ ok: true });
+  }
+  res.status(404).json({ error: 'not found' });
+});
+
 function generateRecommendations(events: any[]): string[] {
   const summary: Record<string, number> = {};
   for (const e of events) {
@@ -103,6 +147,44 @@ app.get('/recommendations', (_req, res) => {
   const events = readEvents();
   res.json({ recommendations: generateRecommendations(events) });
 });
+
+function generateUiSuggestions(events: any[]): any[] {
+  const pageCounts: Record<string, number> = {};
+  const elementCounts: Record<string, number> = {};
+  for (const e of events) {
+    pageCounts[e.page] = (pageCounts[e.page] || 0) + 1;
+    if (e.element) {
+      const key = `${e.page}|${e.element}`;
+      elementCounts[key] = (elementCounts[key] || 0) + 1;
+    }
+  }
+  const suggestions: any[] = [];
+  Object.entries(pageCounts).forEach(([page, count]) => {
+    if (count < 5) {
+      suggestions.push({
+        id: `page-${page}`,
+        text: `Users rarely visit ${page}. Consider improving navigation to this page.`,
+      });
+    }
+  });
+  Object.entries(elementCounts).forEach(([key, count]) => {
+    if (count < 3) {
+      const [page, element] = key.split('|');
+      suggestions.push({
+        id: `el-${page}-${element}`,
+        text: `Button ${element} on ${page} has low engagement. Try adjusting its placement or color.`,
+      });
+    }
+  });
+  return suggestions;
+}
+
+function updateSuggestions() {
+  const events = readUiEvents();
+  const suggestions = generateUiSuggestions(events);
+  saveSuggestions(suggestions);
+  return suggestions;
+}
 
 app.get('/complianceReport', (req, res) => {
   const policy = (req as any).policy as any;
