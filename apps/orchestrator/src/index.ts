@@ -13,6 +13,7 @@ import { initSentry } from '../../packages/shared/src/sentry';
 import { startSelfHealing, configure as configureHealing } from './selfHeal';
 import fs from 'fs';
 import path from 'path';
+import { generateMigrations, Schema } from '../../packages/migrations/src';
 import {
   CloudWatchClient,
   GetMetricStatisticsCommand,
@@ -190,7 +191,13 @@ app.get('/api/schema', (_req, res) => {
 });
 
 app.post('/api/schema', (req, res) => {
-  fs.writeFileSync(SCHEMA_FILE, JSON.stringify(req.body, null, 2));
+  const schema = req.body as Schema;
+  fs.writeFileSync(SCHEMA_FILE, JSON.stringify(schema, null, 2));
+  try {
+    generateMigrations(schema);
+  } catch (err) {
+    console.error('migration generation failed', err);
+  }
   res.json({ ok: true });
 });
 
