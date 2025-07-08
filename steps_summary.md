@@ -201,26 +201,26 @@ This file records brief summaries of each pull request.
 - Connectors page and a new portal demo call the prediction API.
 - Documented model formats and limitations in `edge-inference.md`.
 - Updated `tasks_status.md` for task 144.
-  
- ## PR <pending> - RL feedback automation
+
+## PR <pending> - RL feedback automation
+
 - Added scheduled workflow `train-from-ratings.yml` to retrain models nightly.
 - Training script now stores rating snapshots and history under `services/analytics/training` and logs outcomes via `audit.log`.
 - Documented schedule adjustments in `docs/rl-code-quality.md`.
 
 ## PR <pending> - VR preview navigation and assets
+
 - Added OrbitControls and VRButton to `/vr-preview` for immersive navigation.
 - Created `binary-assets/vr` with sample scene placeholder and README.
 - Fetched generated apps and rendered them as WebXR boxes.
 - Documented controls and asset loading in `docs/vr-preview.md`.
 
 ## PR <pending> - Real-time dashboard charts and alerts
+
 - Integrated Chart.js into the portal dashboard and performance pages.
 - Added filtering controls and alert display backed by new `/alerts` endpoint.
 - Analytics service now supports query parameters, alert thresholds and exposes performance and alert data.
 - Documented monitoring options in `dashboard-monitoring.md` and updated task status.
-
-
-
 
 ## PR <pending> - Plugin installation flow
 
@@ -239,3 +239,10 @@ This file records brief summaries of each pull request.
 - Added `/api/exportData` endpoints for region-aware export and deletion.
 - Analytics service now generates a compliance report.
 - Documented workflow in `docs/regional-compliance.md` and updated task status.
+
+## PR <pending> - Multi-cloud provider support
+
+- Added Terraform modules under `infrastructure/aws`, `gcp`, and `azure`.
+- Orchestrator now accepts a `cloudProvider` field and dispatches deployments accordingly.
+- Portal form updated with provider selection and cost estimate.
+- Documented setup in `docs/multi-cloud.md` and referenced in `README.md`.

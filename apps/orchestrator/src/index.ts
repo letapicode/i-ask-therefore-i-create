@@ -34,6 +34,9 @@ app.use((req, _res, next) => {
 const JOBS_TABLE = process.env.JOBS_TABLE || 'jobs';
 const CODEGEN_URL = process.env.CODEGEN_URL || 'http://localhost:3003/generate';
 const DEPLOY_URL = process.env.DEPLOY_URL;
+const DEPLOY_AWS_URL = process.env.DEPLOY_AWS_URL;
+const DEPLOY_GCP_URL = process.env.DEPLOY_GCP_URL;
+const DEPLOY_AZURE_URL = process.env.DEPLOY_AZURE_URL;
 const NOTIFY_EMAIL = process.env.NOTIFY_EMAIL;
 const ARTIFACTS_BUCKET = process.env.ARTIFACTS_BUCKET;
 const TENANT_HEADER = 'x-tenant-id';
@@ -49,20 +52,25 @@ export interface Job {
   tenantId: string;
   description: string;
   language: string;
+  cloudProvider?: string;
   status: 'queued' | 'running' | 'complete' | 'failed';
   created: number;
 }
 
-async function triggerDeploy(jobId: string) {
-  if (!DEPLOY_URL) {
+async function triggerDeploy(jobId: string, provider?: string) {
+  let url = DEPLOY_URL;
+  if (provider === 'aws') url = DEPLOY_AWS_URL || url;
+  if (provider === 'gcp') url = DEPLOY_GCP_URL || url;
+  if (provider === 'azure') url = DEPLOY_AZURE_URL || url;
+  if (!url) {
     console.log('deploy url not configured, skipping deploy');
     return;
   }
   try {
-    await fetch(DEPLOY_URL, {
+    await fetch(url, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ jobId }),
+      body: JSON.stringify({ jobId, provider }),
     });
   } catch (err) {
     console.error('deploy failed', err);
@@ -106,7 +114,7 @@ export async function dispatchJob(job: Job) {
       await uploadObject(ARTIFACTS_BUCKET, `${job.id}.txt`, code);
     }
     await putItem(JOBS_TABLE, { ...job, status: 'complete' });
-    await triggerDeploy(job.id);
+    await triggerDeploy(job.id, job.cloudProvider);
     if (NOTIFY_EMAIL) {
       sendEmail({
         template: 'job-complete',
@@ -131,7 +139,7 @@ configureHealing(dispatchJob);
 app.post('/api/createApp', async (req, res) => {
   const tenantId = req.header(TENANT_HEADER);
   if (!tenantId) return res.status(401).json({ error: 'missing tenant' });
-  const { description, language = 'node' } = req.body;
+  const { description, language = 'node', cloudProvider = 'aws' } = req.body;
   if (!description)
     return res.status(400).json({ error: 'missing description' });
   const id = randomUUID();
@@ -140,6 +148,7 @@ app.post('/api/createApp', async (req, res) => {
     tenantId,
     description,
     language,
+    cloudProvider,
     status: 'queued',
     created: Date.now(),
   };
@@ -299,7 +308,7 @@ app.post('/api/predict', async (req, res) => {
 app.post('/api/redeploy/:id', async (req, res) => {
   const tenantId = req.header(TENANT_HEADER);
   if (!tenantId) return res.status(401).json({ error: 'missing tenant' });
-  const { description, language = 'node' } = req.body;
+  const { description, language = 'node', cloudProvider = 'aws' } = req.body;
   if (!description)
     return res.status(400).json({ error: 'missing description' });
   const id = req.params.id;
@@ -308,6 +317,7 @@ app.post('/api/redeploy/:id', async (req, res) => {
     tenantId,
     description,
     language,
+    cloudProvider,
     status: 'queued',
     created: Date.now(),
   };

@@ -78,14 +78,15 @@ test('lists only tenant jobs', async () => {
   expect(res.body[0].id).toBe('j1');
 });
 
-test('createApp forwards language', async () => {
+test('createApp forwards language and provider', async () => {
   const res = await request(app)
     .post('/api/createApp')
     .set('x-tenant-id', 't1')
-    .send({ description: 'test', language: 'go' });
+    .send({ description: 'test', language: 'go', cloudProvider: 'gcp' });
   expect(res.status).toBe(202);
   const job = jobMem[Object.keys(jobMem)[0]];
   expect(job.language).toBe('go');
+  expect(job.cloudProvider).toBe('gcp');
 });
 
 test('schema endpoints persist data', async () => {
@@ -113,9 +114,7 @@ test('connectors DELETE removes type', async () => {
     .post('/api/connectors')
     .set('x-tenant-id', 't1')
     .send({ stripeKey: 'sk', slackKey: 'sl' });
-  await request(app)
-    .delete('/api/connectors/stripe')
-    .set('x-tenant-id', 't1');
+  await request(app).delete('/api/connectors/stripe').set('x-tenant-id', 't1');
   const res = await request(app)
     .get('/api/connectors')
     .set('x-tenant-id', 't1');

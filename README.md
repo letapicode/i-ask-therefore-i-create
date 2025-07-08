@@ -29,6 +29,10 @@ Infrastructure modules live under `infrastructure/`. Initialize them with `terra
 Local services can also be started via `docker-compose up`.
 Use `./tools/offline.sh` to run the entire pipeline without external services.
 
+Generated apps can be deployed to AWS, GCP or Azure. Choose a provider in the
+portal's **New App** form or pass `cloudProvider` to `/api/createApp`. See
+[docs/multi-cloud.md](./docs/multi-cloud.md) for details.
+
 ### Nx Cloud Caching
 
 Set `NX_CLOUD_ACCESS_TOKEN` in your environment to enable remote caching with Nx Cloud. The

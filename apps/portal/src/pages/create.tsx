@@ -4,6 +4,7 @@ export default function CreateApp() {
   const [description, setDescription] = useState('');
   const [jobId, setJobId] = useState('');
   const [language, setLanguage] = useState('node');
+  const [provider, setProvider] = useState('aws');
   const [listening, setListening] = useState(false);
   const recognitionRef = useRef<any>();
 
@@ -12,7 +13,7 @@ export default function CreateApp() {
     const res = await fetch('http://localhost:3002/api/createApp', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ description, language }),
+      body: JSON.stringify({ description, language, cloudProvider: provider }),
     });
     const data = await res.json();
     setJobId(data.jobId);
@@ -63,6 +64,27 @@ export default function CreateApp() {
             </select>
           </label>
         </div>
+        <div>
+          <label>
+            Provider
+            <select
+              value={provider}
+              onChange={(e) => setProvider(e.target.value)}
+            >
+              <option value="aws">AWS</option>
+              <option value="gcp">GCP</option>
+              <option value="azure">Azure</option>
+            </select>
+          </label>
+        </div>
+        <p>
+          Estimated cost:{' '}
+          {provider === 'aws'
+            ? '$5/mo'
+            : provider === 'gcp'
+              ? '$6/mo'
+              : '$7/mo'}
+        </p>
         <div>
           <button type="button" onClick={listening ? stopVoice : startVoice}>
             {listening ? 'Stop Voice' : 'Voice Input'}
