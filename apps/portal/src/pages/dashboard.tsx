@@ -7,6 +7,7 @@ const fetcher = (u: string) => fetch(u).then(r => r.json());
 export default function Dashboard() {
   const chartRef = useRef<HTMLCanvasElement>(null);
   const { data } = useSWR('/analytics/summary', fetcher);
+  const { data: forecast } = useSWR('/api/costForecast', fetcher);
 
   useEffect(() => {
     if (!data || !chartRef.current) return;
@@ -32,6 +33,11 @@ export default function Dashboard() {
       <h1>Analytics Dashboard</h1>
       {!data && <p>Loading...</p>}
       <canvas ref={chartRef} height={200}></canvas>
+      {forecast && (
+        <p style={{ marginTop: 10 }}>
+          Projected monthly cost: ${'{'}forecast.costForecast.toFixed(2){'}'}
+        </p>
+      )}
     </div>
   );
 }

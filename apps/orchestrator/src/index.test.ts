@@ -1,8 +1,22 @@
 const request = require('supertest');
 const { app } = require('./index');
+const fs = require('fs');
+const path = require('path');
+
+jest.mock('@aws-sdk/client-cloudwatch', () => ({
+  CloudWatchClient: jest.fn().mockImplementation(() => ({
+    send: jest.fn(async () => ({ Datapoints: [{ Average: 40, Timestamp: new Date() }] }))
+  })),
+  GetMetricStatisticsCommand: jest.fn()
+}));
 
 jest.mock('node-fetch', () =>
-  jest.fn(async () => ({ ok: true, json: async () => ({}) }))
+  jest.fn(async (url) => {
+    if (url.includes('/metrics')) {
+      return { ok: true, json: async () => ({ count: 2 }) };
+    }
+    return { ok: true, json: async () => ({}) };
+  })
 );
 
 const jobMem: Record<string, any> = {};
@@ -164,4 +178,11 @@ test('plugins API installs and removes plugin', async () => {
   await request(app).delete('/api/plugins/auth').set('x-tenant-id', 't1');
   res = await request(app).get('/api/plugins').set('x-tenant-id', 't1');
   expect(res.body).not.toContain('auth');
+});
+
+test('costForecast returns projected values', async () => {
+  const res = await request(app).get('/api/costForecast');
+  expect(res.body.events).toBe(2);
+  expect(res.body.cpuForecast).toBeGreaterThan(0);
+  expect(res.body.costForecast).toBeGreaterThan(0);
 });

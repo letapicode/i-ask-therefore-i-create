@@ -12,6 +12,11 @@ import { sendEmail } from '../../services/email/src';
 import { initSentry } from '../../packages/shared/src/sentry';
 import { startSelfHealing, configure as configureHealing } from './selfHeal';
 import fs from 'fs';
+import path from 'path';
+import {
+  CloudWatchClient,
+  GetMetricStatisticsCommand,
+} from '@aws-sdk/client-cloudwatch';
 import { logAudit } from '../../packages/shared/src/audit';
 import { figmaToReact } from '../../packages/shared/src/figma';
 import { policyMiddleware } from '../../packages/shared/src/policyMiddleware';
@@ -44,6 +49,8 @@ const PLUGINS_TABLE = process.env.PLUGINS_TABLE || 'plugins';
 const PLUGIN_SERVICE_URL =
   process.env.PLUGIN_SERVICE_URL || 'http://localhost:3006';
 const TENANTS_TABLE = process.env.TENANTS_TABLE || 'tenants';
+const EVENTS_FILE = path.join(__dirname, '..', '..', 'services', 'analytics', '.events.json');
+const FORECAST_FILE = path.join(__dirname, '..', '..', 'services', 'analytics', '.forecast.json');
 
 async function getProvider(tenantId: string): Promise<'aws' | 'azure' | 'gcp'> {
   const cfg = await getItem<{ id: string; provider?: string }>(TENANTS_TABLE, {
@@ -381,6 +388,58 @@ app.delete('/api/exportData', async (req, res) => {
     await deleteItem(JOBS_TABLE, { id: item.id });
   }
   res.json({ deleted: items.length });
+});
+
+async function fetchAnalyticsCount() {
+  try {
+    const res = await fetch('http://localhost:3001/metrics');
+    const json = await res.json();
+    return json.count || 0;
+  } catch {
+    return 0;
+  }
+}
+
+async function getCpuSeries(days = 14) {
+  const client = new CloudWatchClient({});
+  const end = new Date();
+  const start = new Date(end.getTime() - days * 24 * 60 * 60 * 1000);
+  const cmd = new GetMetricStatisticsCommand({
+    Namespace: 'AWS/EC2',
+    MetricName: 'CPUUtilization',
+    StartTime: start,
+    EndTime: end,
+    Period: 86400,
+    Statistics: ['Average'],
+  });
+  const data = await client.send(cmd);
+  const list = (data.Datapoints || [])
+    .sort((a, b) => (a.Timestamp?.getTime() || 0) - (b.Timestamp?.getTime() || 0))
+    .map((d) => d.Average || 0);
+  return list;
+}
+
+function smooth(values: number[], alpha = 0.5) {
+  if (!values.length) return 0;
+  let forecast = values[0];
+  for (let i = 1; i < values.length; i++) {
+    forecast = alpha * values[i] + (1 - alpha) * forecast;
+  }
+  return forecast;
+}
+
+app.get('/api/costForecast', async (_req, res) => {
+  try {
+    const [count, series] = await Promise.all([
+      fetchAnalyticsCount(),
+      getCpuSeries(),
+    ]);
+    const cpuForecast = smooth(series);
+    const costForecast = cpuForecast * count;
+    res.json({ cpuForecast, events: count, costForecast });
+  } catch {
+    res.status(500).json({ error: 'forecast failed' });
+  }
 });
 
 app.get('/api/policy', (req, res) => {
