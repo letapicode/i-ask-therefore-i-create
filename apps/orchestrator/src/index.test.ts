@@ -108,11 +108,26 @@ test('connectors API stores and retrieves config', async () => {
   expect(res.body.slackKey).toBe('sl');
 });
 
+test('connectors API stores credentials', async () => {
+  await request(app)
+    .post('/api/connectors')
+    .set('x-tenant-id', 't1')
+    .send({ credentials: { kafka: { username: 'u', password: 'p' } } });
+  const res = await request(app)
+    .get('/api/connectors')
+    .set('x-tenant-id', 't1');
+  expect(res.body.credentials.kafka.username).toBe('u');
+});
+
 test('connectors DELETE removes type', async () => {
   await request(app)
     .post('/api/connectors')
     .set('x-tenant-id', 't1')
-    .send({ stripeKey: 'sk', slackKey: 'sl' });
+    .send({
+      stripeKey: 'sk',
+      slackKey: 'sl',
+      credentials: { stripe: { secret: 's' } },
+    });
   await request(app)
     .delete('/api/connectors/stripe')
     .set('x-tenant-id', 't1');
@@ -120,6 +135,7 @@ test('connectors DELETE removes type', async () => {
     .get('/api/connectors')
     .set('x-tenant-id', 't1');
   expect(res.body.stripeKey).toBeUndefined();
+  expect(res.body.credentials.stripe).toBeUndefined();
   expect(res.body.slackKey).toBe('sl');
 });
 

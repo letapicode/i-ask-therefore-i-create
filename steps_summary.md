@@ -239,3 +239,11 @@ This file records brief summaries of each pull request.
 - Added `/api/exportData` endpoints for region-aware export and deletion.
 - Analytics service now generates a compliance report.
 - Documented workflow in `docs/regional-compliance.md` and updated task status.
+
+## PR <pending> - Messaging connector helpers
+
+- Added `kafka.ts` and `kinesis.ts` in `@iac/data-connectors` with simple produce
+  and consume helpers.
+- Extended orchestrator connector routes to persist credentials alongside config
+  in `CONNECTORS_TABLE`.
+- Documented Kafka and Kinesis examples in `docs/edge-connectors.md`.

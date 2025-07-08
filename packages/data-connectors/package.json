@@ -2,5 +2,9 @@
   "name": "@iac/data-connectors",
   "version": "0.1.0",
   "main": "src/index.ts",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "@aws-sdk/client-kinesis": "^3.599.0",
+    "kafkajs": "^2.2.4"
+  }
 }

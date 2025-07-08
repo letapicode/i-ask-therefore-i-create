@@ -187,21 +187,29 @@ app.get('/api/apps', async (req, res) => {
 app.get('/api/connectors', async (req, res) => {
   const tenantId = req.header(TENANT_HEADER);
   if (!tenantId) return res.status(401).json({ error: 'missing tenant' });
-  const item = await getItem<{ tenantId: string; config: Record<string, any> }>(
-    CONNECTORS_TABLE,
-    { tenantId }
-  );
-  res.json(item?.config || {});
+  const item = await getItem<{
+    tenantId: string;
+    config: Record<string, any>;
+    credentials: Record<string, any>;
+  }>(CONNECTORS_TABLE, { tenantId });
+  res.json({ ...(item?.config || {}), credentials: item?.credentials || {} });
 });
 
 app.post('/api/connectors', async (req, res) => {
   const tenantId = req.header(TENANT_HEADER);
   if (!tenantId) return res.status(401).json({ error: 'missing tenant' });
-  const existing = (await getItem<{
-    tenantId: string;
-    config: Record<string, any>;
-  }>(CONNECTORS_TABLE, { tenantId })) || { tenantId, config: {} };
-  existing.config = { ...existing.config, ...req.body };
+  const existing =
+    (await getItem<{
+      tenantId: string;
+      config: Record<string, any>;
+      credentials: Record<string, any>;
+    }>(CONNECTORS_TABLE, { tenantId })) || { tenantId, config: {}, credentials: {} };
+
+  const { credentials, ...config } = req.body;
+  existing.config = { ...existing.config, ...config };
+  if (credentials) {
+    existing.credentials = { ...existing.credentials, ...credentials };
+  }
   await putItem(CONNECTORS_TABLE, existing);
   res.status(201).json({ ok: true });
 });
@@ -209,13 +217,18 @@ app.post('/api/connectors', async (req, res) => {
 app.delete('/api/connectors/:type', async (req, res) => {
   const tenantId = req.header(TENANT_HEADER);
   if (!tenantId) return res.status(401).json({ error: 'missing tenant' });
-  const item = await getItem<{ tenantId: string; config: Record<string, any> }>(
-    CONNECTORS_TABLE,
-    { tenantId }
-  );
-  if (!item || !item.config[req.params.type])
+  const item = await getItem<{
+    tenantId: string;
+    config: Record<string, any>;
+    credentials: Record<string, any>;
+  }>(CONNECTORS_TABLE, { tenantId });
+  if (
+    !item ||
+    (!item.config[req.params.type] && !item.credentials[req.params.type])
+  )
     return res.status(404).json({ error: 'not found' });
   delete item.config[req.params.type];
+  delete item.credentials[req.params.type];
   await putItem(CONNECTORS_TABLE, item);
   res.json({ ok: true });
 });

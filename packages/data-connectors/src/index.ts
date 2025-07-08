@@ -6,6 +6,8 @@ export type Connector = (config: ConnectorConfig) => Promise<void>;
 
 import fetch from 'node-fetch';
 export * from './tfHelper';
+export * from './kafka';
+export * from './kinesis';
 
 export async function stripeConnector(config: ConnectorConfig) {
   const res = await fetch('https://api.stripe.com/v1/charges', {
