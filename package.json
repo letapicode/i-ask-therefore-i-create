@@ -14,7 +14,9 @@
     "test": "turbo run test",
     "format": "prettier --write .",
     "test:e2e": "cypress run",
-    "audit": "audit-ci --moderate"
+    "audit": "audit-ci --moderate",
+    "security:scan": "node tools/security/scan.js",
+    "sbom": "node tools/security/generate-sbom.js"
   },
   "devDependencies": {
     "@aws-sdk/client-cloudwatch": "^3.841.0",

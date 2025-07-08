@@ -154,3 +154,4 @@
 | 150    | Additional SaaS Connectors              | Completed |
 | 151    | Collaborative Workflow Editor          | Completed |
 | 152    | AI-Driven Cost Forecasting               | Completed |
+| 153    | Security Scanning & SBOM Generation      | Completed |
