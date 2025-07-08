@@ -24,4 +24,5 @@ Additional pages:
 - `vr-preview.tsx` – inspect generated interfaces in WebXR
 - `tutorial-builder.tsx` – compose in-app guides
 - `ethics-dashboard.tsx` – transparency metrics overview
+- `ux-optimization.tsx` – view UI/UX suggestions and adopt improvements
 - Translations loaded via `packages/i18n` when `localStorage.lang` is set.
