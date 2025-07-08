@@ -1,15 +1,16 @@
-# Cloud IAM Roles Module
+# GCP IAM Module
 
-This Terraform module creates Cloud IAM roles with attached policies so services can operate with least privilege.
+Creates a service account and optional custom role.
 
 ## Usage
 ```hcl
-module "iam" {
-  source            = "./infrastructure/iam"
-  role_name         = "demo-role"
-  assume_role_service = "lambda.amazonaws.com"
-  policy_json       = file("./policy.json")
+module "gcp_iam" {
+  source       = "./infrastructure/gcp/iam"
+  account_id   = "demo-sa"
+  display_name = "Demo Service Account"
+  role_id      = "demoRole"
+  permissions  = ["storage.objectViewer"]
 }
 ```
 
-Run `terraform init` and `terraform fmt` in this directory before applying.
+Run `terraform init` and `terraform plan` to preview changes.

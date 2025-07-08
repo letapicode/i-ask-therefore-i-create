@@ -279,3 +279,6 @@ This file records brief summaries of each pull request.
 - CI workflow now runs the new scanning tools.
 - Added `docs/security-scanning.md` and updated README.
 - Logged completion of task 153 in `tasks_status.md`.
+- Added multi-cloud Terraform modules for Azure and GCP with container services, networking and IAM.
+- Orchestrator now accepts `provider` parameter and triggers provider-specific deploy webhooks.
+- Documented usage in `docs/multi-cloud.md` and marked task 154 complete.

@@ -1,15 +1,15 @@
-# Azure AD Roles Module
+# Azure IAM Module
 
-This Terraform module creates Azure AD roles with attached policies so services can operate with least privilege.
+Creates a service principal with role assignments.
 
 ## Usage
 ```hcl
-module "iam" {
-  source            = "./infrastructure/iam"
-  role_name         = "demo-role"
-  assume_role_service = "lambda.amazonaws.com"
-  policy_json       = file("./policy.json")
+module "azure_iam" {
+  source          = "./infrastructure/azure/iam"
+  app_name        = "demo-sp"
+  role_definition = "Contributor"
+  resource_group  = "my-rg"
 }
 ```
 
-Run `terraform init` and `terraform fmt` in this directory before applying.
+Run `terraform init` and `terraform plan` before applying.
