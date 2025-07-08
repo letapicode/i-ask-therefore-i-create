@@ -43,10 +43,19 @@ const CONNECTORS_TABLE = process.env.CONNECTORS_TABLE || 'connectors';
 const PLUGINS_TABLE = process.env.PLUGINS_TABLE || 'plugins';
 const PLUGIN_SERVICE_URL =
   process.env.PLUGIN_SERVICE_URL || 'http://localhost:3006';
+const TENANTS_TABLE = process.env.TENANTS_TABLE || 'tenants';
+
+async function getProvider(tenantId: string): Promise<'aws' | 'azure' | 'gcp'> {
+  const cfg = await getItem<{ id: string; provider?: string }>(TENANTS_TABLE, {
+    id: tenantId,
+  });
+  return (cfg?.provider as 'aws' | 'azure' | 'gcp') || 'aws';
+}
 
 export interface Job {
   id: string;
   tenantId: string;
+  provider: 'aws' | 'azure' | 'gcp';
   description: string;
   language: string;
   status: 'queued' | 'running' | 'complete' | 'failed';
@@ -92,6 +101,7 @@ export async function dispatchJob(job: Job) {
         description: job.description,
         language: job.language,
         schema,
+        provider: job.provider,
         plugins:
           (
             await getItem<{ tenantId: string; plugins: string[] }>(
@@ -135,9 +145,11 @@ app.post('/api/createApp', async (req, res) => {
   if (!description)
     return res.status(400).json({ error: 'missing description' });
   const id = randomUUID();
+  const provider = await getProvider(tenantId);
   const job: Job = {
     id,
     tenantId,
+    provider,
     description,
     language,
     status: 'queued',
@@ -303,9 +315,11 @@ app.post('/api/redeploy/:id', async (req, res) => {
   if (!description)
     return res.status(400).json({ error: 'missing description' });
   const id = req.params.id;
+  const provider = await getProvider(tenantId);
   const job: Job = {
     id,
     tenantId,
+    provider,
     description,
     language,
     status: 'queued',
