@@ -104,6 +104,30 @@ app.get('/recommendations', (_req, res) => {
   res.json({ recommendations: generateRecommendations(events) });
 });
 
+function generateBusinessTips(events: any[]): string[] {
+  const tips: string[] = [];
+  const usageCount = events.length;
+  const ratings = events.filter((e) => e.type === 'rating');
+  const avgRating =
+    ratings.reduce((a, r) => a + Number(r.value || 0), 0) /
+    (ratings.length || 1);
+
+  if (usageCount > 100) {
+    tips.push('Consider tiered pricing for heavy usage.');
+  }
+  if (avgRating > 4) {
+    tips.push('Users are satisfied. Promote premium templates.');
+  }
+
+  if (tips.length === 0) tips.push('No business tips available.');
+  return tips;
+}
+
+app.get('/businessTips', (_req, res) => {
+  const events = readEvents();
+  res.json({ tips: generateBusinessTips(events) });
+});
+
 app.get('/complianceReport', (req, res) => {
   const policy = (req as any).policy as any;
   const events = readEvents();

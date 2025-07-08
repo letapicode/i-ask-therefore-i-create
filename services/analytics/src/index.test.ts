@@ -15,3 +15,9 @@ test('create and fetch experiment', async () => {
   expect(res.status).toBe(200);
   expect(res.body.variant).toBe('A');
 });
+
+test('business tips endpoint returns tips', async () => {
+  const res = await request(app).get('/businessTips');
+  expect(res.status).toBe(200);
+  expect(Array.isArray(res.body.tips)).toBe(true);
+});

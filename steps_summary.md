@@ -239,3 +239,9 @@ This file records brief summaries of each pull request.
 - Added `/api/exportData` endpoints for region-aware export and deletion.
 - Analytics service now generates a compliance report.
 - Documented workflow in `docs/regional-compliance.md` and updated task status.
+
+## PR <pending> - Business tips analytics integration
+
+- Added `/businessTips` endpoint in the analytics service to suggest monetization strategies.
+- Dashboard page now fetches and displays these tips.
+- Documented enabling business recommendations in `docs/recommendation-engine.md`.
