@@ -36,7 +36,13 @@ const CODEGEN_URL = process.env.CODEGEN_URL || 'http://localhost:3003/generate';
 const DEPLOY_URL = process.env.DEPLOY_URL;
 const NOTIFY_EMAIL = process.env.NOTIFY_EMAIL;
 const ARTIFACTS_BUCKET = process.env.ARTIFACTS_BUCKET;
+const DEFAULT_CLOUD = process.env.CLOUD_PROVIDER || 'aws';
 const TENANT_HEADER = 'x-tenant-id';
+const CLOUD_TEMPLATE_MAP: Record<string, string> = {
+  aws: 'aws',
+  gcp: 'gcp',
+  azure: 'azure',
+};
 const WORKFLOW_FILE = process.env.WORKFLOW_FILE || 'workflow.json';
 const SCHEMA_FILE = process.env.SCHEMA_FILE || 'schema.json';
 const CONNECTORS_TABLE = process.env.CONNECTORS_TABLE || 'connectors';
@@ -49,6 +55,7 @@ export interface Job {
   tenantId: string;
   description: string;
   language: string;
+  cloud: string;
   status: 'queued' | 'running' | 'complete' | 'failed';
   created: number;
 }
@@ -91,6 +98,8 @@ export async function dispatchJob(job: Job) {
         jobId: job.id,
         description: job.description,
         language: job.language,
+        template: CLOUD_TEMPLATE_MAP[job.cloud] || 'aws',
+        cloud: job.cloud,
         schema,
         plugins:
           (
@@ -131,7 +140,7 @@ configureHealing(dispatchJob);
 app.post('/api/createApp', async (req, res) => {
   const tenantId = req.header(TENANT_HEADER);
   if (!tenantId) return res.status(401).json({ error: 'missing tenant' });
-  const { description, language = 'node' } = req.body;
+  const { description, language = 'node', cloud } = req.body;
   if (!description)
     return res.status(400).json({ error: 'missing description' });
   const id = randomUUID();
@@ -140,6 +149,7 @@ app.post('/api/createApp', async (req, res) => {
     tenantId,
     description,
     language,
+    cloud: cloud || DEFAULT_CLOUD,
     status: 'queued',
     created: Date.now(),
   };
@@ -299,7 +309,7 @@ app.post('/api/predict', async (req, res) => {
 app.post('/api/redeploy/:id', async (req, res) => {
   const tenantId = req.header(TENANT_HEADER);
   if (!tenantId) return res.status(401).json({ error: 'missing tenant' });
-  const { description, language = 'node' } = req.body;
+  const { description, language = 'node', cloud } = req.body;
   if (!description)
     return res.status(400).json({ error: 'missing description' });
   const id = req.params.id;
@@ -308,6 +318,7 @@ app.post('/api/redeploy/:id', async (req, res) => {
     tenantId,
     description,
     language,
+    cloud: cloud || DEFAULT_CLOUD,
     status: 'queued',
     created: Date.now(),
   };

@@ -24,7 +24,10 @@ node apps/api-auth/src/index.ts &
 node services/analytics/src/index.ts &
 ```
 
-Infrastructure modules live under `infrastructure/`. Initialize them with `terraform init`.
+Infrastructure modules live under `infrastructure/`. Modules are grouped by cloud provider.
+Set the `CLOUD_PROVIDER` environment variable ("aws", "gcp" or "azure") when running
+deployment scripts to target the appropriate modules.
+Initialize modules with `terraform init`.
 
 Local services can also be started via `docker-compose up`.
 Use `./tools/offline.sh` to run the entire pipeline without external services.
@@ -45,6 +48,10 @@ node tools/perf-monitor.js -f my-function
 ## Linting and Formatting
 
 Run `pnpm lint` to execute ESLint and `pnpm format` to run Prettier across the repo.
+
+Example Terraform variable files are provided under each cloud directory to help
+configure deployments (`infrastructure/gcp/example.tfvars` and
+`infrastructure/azure/example.tfvars`).
 
 ### Sentry
 

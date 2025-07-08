@@ -239,3 +239,9 @@ This file records brief summaries of each pull request.
 - Added `/api/exportData` endpoints for region-aware export and deletion.
 - Analytics service now generates a compliance report.
 - Documented workflow in `docs/regional-compliance.md` and updated task status.
+
+## PR <pending> - Multi-cloud support
+- Added GCP and Azure Terraform modules under `infrastructure/gcp` and `infrastructure/azure`.
+- Deployment script `tools/deploy.sh` now targets clouds using the `CLOUD_PROVIDER` variable.
+- Orchestrator accepts a `cloud` field and selects templates via `CLOUD_TEMPLATE_MAP`.
+- Provided example tfvars and updated README files with instructions.

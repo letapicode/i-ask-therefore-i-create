@@ -7,4 +7,7 @@ export const templates = [
   { name: 'fastapi', description: 'Python FastAPI boilerplate' },
   { name: 'go', description: 'Go REST API boilerplate' },
   { name: 'mobile', description: 'React Native starter app' },
+  { name: 'aws', description: 'AWS deployment templates' },
+  { name: 'gcp', description: 'GCP deployment templates' },
+  { name: 'azure', description: 'Azure deployment templates' },
 ];

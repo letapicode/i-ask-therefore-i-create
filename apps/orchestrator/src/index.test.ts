@@ -50,6 +50,7 @@ test('cannot access job from another tenant', async () => {
     tenantId: 't1',
     description: 'a',
     language: 'node',
+    cloud: 'aws',
     status: 'complete',
   };
   const res = await request(app)
@@ -64,6 +65,7 @@ test('lists only tenant jobs', async () => {
     tenantId: 't1',
     description: 'a',
     language: 'node',
+    cloud: 'aws',
     status: 'complete',
   };
   jobMem['j2'] = {
@@ -71,6 +73,7 @@ test('lists only tenant jobs', async () => {
     tenantId: 't2',
     description: 'b',
     language: 'node',
+    cloud: 'aws',
     status: 'complete',
   };
   const res = await request(app).get('/api/apps').set('x-tenant-id', 't1');
@@ -86,6 +89,7 @@ test('createApp forwards language', async () => {
   expect(res.status).toBe(202);
   const job = jobMem[Object.keys(jobMem)[0]];
   expect(job.language).toBe('go');
+  expect(job.cloud).toBe('aws');
 });
 
 test('schema endpoints persist data', async () => {
@@ -113,9 +117,7 @@ test('connectors DELETE removes type', async () => {
     .post('/api/connectors')
     .set('x-tenant-id', 't1')
     .send({ stripeKey: 'sk', slackKey: 'sl' });
-  await request(app)
-    .delete('/api/connectors/stripe')
-    .set('x-tenant-id', 't1');
+  await request(app).delete('/api/connectors/stripe').set('x-tenant-id', 't1');
   const res = await request(app)
     .get('/api/connectors')
     .set('x-tenant-id', 't1');
