@@ -4,6 +4,8 @@ import {
   CloudWatchClient,
   GetMetricStatisticsCommand,
 } from '@aws-sdk/client-cloudwatch';
+import fs from 'fs';
+import path from 'path';
 
 async function run() {
   console.log('Analyzing costs...');
@@ -27,6 +29,23 @@ async function run() {
   } else {
     console.log('Utilization looks healthy.');
   }
+
+  const eventsPath = path.join(
+    path.dirname(new URL(import.meta.url).pathname),
+    '..',
+    'services',
+    'analytics',
+    '.events.json'
+  );
+  let forecast = 0;
+  if (fs.existsSync(eventsPath)) {
+    const events = JSON.parse(fs.readFileSync(eventsPath, 'utf-8'));
+    const monthAgo = Date.now() - 30 * 24 * 3600 * 1000;
+    const recent = events.filter((e: any) => e.time >= monthAgo);
+    const COST_PER_EVENT = 0.01;
+    forecast = recent.length * COST_PER_EVENT;
+  }
+  console.log(`Projected monthly expense: $${forecast.toFixed(2)}`);
 }
 
 run().catch((err) => console.error('cost analysis failed', err));

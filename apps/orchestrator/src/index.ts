@@ -12,6 +12,7 @@ import { sendEmail } from '../../services/email/src';
 import { initSentry } from '../../packages/shared/src/sentry';
 import { startSelfHealing, configure as configureHealing } from './selfHeal';
 import fs from 'fs';
+import path from 'path';
 import { logAudit } from '../../packages/shared/src/audit';
 import { figmaToReact } from '../../packages/shared/src/figma';
 import { policyMiddleware } from '../../packages/shared/src/policyMiddleware';
@@ -43,6 +44,23 @@ const CONNECTORS_TABLE = process.env.CONNECTORS_TABLE || 'connectors';
 const PLUGINS_TABLE = process.env.PLUGINS_TABLE || 'plugins';
 const PLUGIN_SERVICE_URL =
   process.env.PLUGIN_SERVICE_URL || 'http://localhost:3006';
+const EVENTS_FILE = path.join(
+  __dirname,
+  '..',
+  '..',
+  'services',
+  'analytics',
+  '.events.json'
+);
+
+function calculateForecast(): number {
+  if (!fs.existsSync(EVENTS_FILE)) return 0;
+  const events = JSON.parse(fs.readFileSync(EVENTS_FILE, 'utf-8'));
+  const monthAgo = Date.now() - 30 * 24 * 3600 * 1000;
+  const recent = events.filter((e: any) => e.time >= monthAgo);
+  const COST_PER_EVENT = 0.01;
+  return recent.length * COST_PER_EVENT;
+}
 
 export interface Job {
   id: string;
@@ -345,6 +363,10 @@ app.delete('/api/exportData', async (req, res) => {
     await deleteItem(JOBS_TABLE, { id: item.id });
   }
   res.json({ deleted: items.length });
+});
+
+app.get('/api/costForecast', (_req, res) => {
+  res.json({ monthlyCost: calculateForecast() });
 });
 
 app.get('/api/policy', (req, res) => {

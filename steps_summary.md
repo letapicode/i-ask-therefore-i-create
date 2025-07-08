@@ -239,3 +239,9 @@ This file records brief summaries of each pull request.
 - Added `/api/exportData` endpoints for region-aware export and deletion.
 - Analytics service now generates a compliance report.
 - Documented workflow in `docs/regional-compliance.md` and updated task status.
+
+## PR <pending> - Cost forecasting integration
+
+- Extended `tools/optimize.js` to use analytics event data for monthly cost projections.
+- Added `/api/costForecast` endpoint in the orchestrator service.
+- Documented the new capabilities in `docs/optimization-assistant.md`.
