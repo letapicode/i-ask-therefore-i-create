@@ -29,6 +29,10 @@ Infrastructure modules live under `infrastructure/`. Initialize them with `terra
 Local services can also be started via `docker-compose up`.
 Use `./tools/offline.sh` to run the entire pipeline without external services.
 
+Security scanning scripts are available under `tools/security`. CI runs these
+to generate `security-report.json` and `sbom.json` for each build. See
+`docs/security-scanning.md` for details.
+
 ### Nx Cloud Caching
 
 Set `NX_CLOUD_ACCESS_TOKEN` in your environment to enable remote caching with Nx Cloud. The

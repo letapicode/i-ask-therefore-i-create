@@ -18,3 +18,5 @@ jobs:
           node-version: 18
       - run: pnpm install --frozen-lockfile
       - run: pnpm run audit
+      - run: pnpm run security:scan
+      - run: pnpm run sbom

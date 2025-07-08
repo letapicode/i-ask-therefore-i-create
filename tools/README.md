@@ -21,6 +21,8 @@ node tools/redeploy.js --id abc123 --description "New features" --url http://loc
 
 - `collab-editor.js` – live collaboration CLI for editing description files via WebSockets
 - `security-scan.js` – run ESLint and npm audit to check generated projects
+- `security/scan.js` – perform `npm audit` and OSV queries and write `security-report.json`
+- `security/generate-sbom.js` – output `sbom.json` listing all installed packages
 - `scale-advisor.js` – suggest autoscaling adjustments based on recent CloudWatch metrics
 - `auto-patch.js` – update dependencies using npm-check-updates and install patches
 - `smart-upgrade.js` – upgrade dependencies and revert if tests fail

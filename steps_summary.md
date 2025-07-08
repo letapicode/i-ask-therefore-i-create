@@ -271,3 +271,11 @@ This file records brief summaries of each pull request.
 - Exposed `/api/costForecast` endpoint in the orchestrator using analytics data and CPU metrics.
 - Portal dashboard now displays the projected monthly cost.
 - Documented predictive mode in `docs/optimization-assistant.md` and marked task 152 complete.
+
+## PR <pending> - Security scanning and SBOM generation
+
+- Created `tools/security` folder with `scan.js` and `generate-sbom.js`.
+- Updated `package.json` with `security:scan` and `sbom` scripts.
+- CI workflow now runs the new scanning tools.
+- Added `docs/security-scanning.md` and updated README.
+- Logged completion of task 153 in `tasks_status.md`.
