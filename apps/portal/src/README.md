@@ -25,3 +25,7 @@ Additional pages:
 - `tutorial-builder.tsx` – compose in-app guides
 - `ethics-dashboard.tsx` – transparency metrics overview
 - Translations loaded via `packages/i18n` when `localStorage.lang` is set.
+
+## Collaborative Editing
+
+Run the collab service and open multiple browser windows on `create.tsx` to edit the description together. Changes and cursor positions are synced over WebSockets at `ws://localhost:4000`.

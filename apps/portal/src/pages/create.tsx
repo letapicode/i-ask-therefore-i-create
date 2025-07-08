@@ -1,4 +1,5 @@
 import { useState, useRef } from 'react';
+import CollabEditor from '../components/CollabEditor';
 
 export default function CreateApp() {
   const [description, setDescription] = useState('');
@@ -45,10 +46,7 @@ export default function CreateApp() {
     <div>
       <form onSubmit={handleSubmit}>
         <h1>New App</h1>
-        <textarea
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-        />
+        <CollabEditor value={description} onChange={setDescription} />
         <div>
           <label>
             Language

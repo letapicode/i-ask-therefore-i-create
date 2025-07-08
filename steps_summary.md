@@ -239,3 +239,9 @@ This file records brief summaries of each pull request.
 - Added `/api/exportData` endpoints for region-aware export and deletion.
 - Analytics service now generates a compliance report.
 - Documented workflow in `docs/regional-compliance.md` and updated task status.
+
+## PR <pending> - Collaborative description editing
+
+- Added `collab-service` WebSocket backend for shared editing.
+- Created `CollabEditor` component and integrated it on the create page.
+- Portal README explains how to use the collaborative editor.
