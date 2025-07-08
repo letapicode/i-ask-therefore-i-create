@@ -12,6 +12,8 @@ import { sendEmail } from '../../services/email/src';
 import { initSentry } from '../../packages/shared/src/sentry';
 import { startSelfHealing, configure as configureHealing } from './selfHeal';
 import fs from 'fs';
+import path from 'path';
+import { execSync } from 'child_process';
 import { logAudit } from '../../packages/shared/src/audit';
 import { figmaToReact } from '../../packages/shared/src/figma';
 import { policyMiddleware } from '../../packages/shared/src/policyMiddleware';
@@ -102,8 +104,22 @@ export async function dispatchJob(job: Job) {
       }),
     });
     const { code } = await genRes.json();
-    if (ARTIFACTS_BUCKET && code) {
-      await uploadObject(ARTIFACTS_BUCKET, `${job.id}.txt`, code);
+    if (code) {
+      const artifactDir = path.join('generated-artifacts', job.id);
+      fs.mkdirSync(artifactDir, { recursive: true });
+      fs.writeFileSync(path.join(artifactDir, 'artifact.txt'), code);
+
+      execSync(
+        `node ${path.resolve(
+          __dirname,
+          '../../../tools/security-scan.js'
+        )} --dir ${artifactDir}`,
+        { stdio: 'inherit' }
+      );
+
+      if (ARTIFACTS_BUCKET) {
+        await uploadObject(ARTIFACTS_BUCKET, `${job.id}.txt`, code);
+      }
     }
     await putItem(JOBS_TABLE, { ...job, status: 'complete' });
     await triggerDeploy(job.id);

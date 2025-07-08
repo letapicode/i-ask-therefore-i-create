@@ -239,3 +239,9 @@ This file records brief summaries of each pull request.
 - Added `/api/exportData` endpoints for region-aware export and deletion.
 - Analytics service now generates a compliance report.
 - Documented workflow in `docs/regional-compliance.md` and updated task status.
+
+## PR <pending> - Security scanning integration
+
+- Updated `tools/security-scan.js` to run OWASP dependency checks and license audits.
+- Orchestrator now invokes the security scan during `dispatchJob` before deployment.
+- Added `docs/security-scanning.md` and linked from documentation index.
