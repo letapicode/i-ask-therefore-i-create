@@ -18,3 +18,4 @@ This folder contains user guides and architecture diagrams.
 - [Regional Compliance](./regional-compliance.md)
 - [Localization](./i18n.md)
 - [Dashboard Monitoring](./dashboard-monitoring.md)
+- [Security Compliance](./security-compliance.md)

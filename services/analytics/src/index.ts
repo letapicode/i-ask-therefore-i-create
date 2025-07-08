@@ -3,6 +3,7 @@ import fs from 'fs';
 import { initSentry } from '../../packages/shared/src/sentry';
 import { logAudit } from '../../packages/shared/src/audit';
 import { policyMiddleware } from '../../packages/shared/src/policyMiddleware';
+import path from 'path';
 
 export const app = express();
 app.use(express.json());
@@ -32,6 +33,23 @@ function readExperiments(): any[] {
 
 function saveExperiments(data: any[]) {
   fs.writeFileSync(EXP_FILE, JSON.stringify(data, null, 2));
+}
+
+const SEC_DIR = path.resolve(__dirname, '../security');
+
+function readSecurityReports() {
+  if (!fs.existsSync(SEC_DIR)) return [];
+  const list: any[] = [];
+  for (const name of fs.readdirSync(SEC_DIR)) {
+    const auditPath = path.join(SEC_DIR, name, 'audit.json');
+    if (!fs.existsSync(auditPath)) continue;
+    const audit = JSON.parse(fs.readFileSync(auditPath, 'utf8'));
+    const count = audit.vulnerabilities
+      ? Object.keys(audit.vulnerabilities).length
+      : 0;
+    list.push({ project: name, vulnerabilities: count });
+  }
+  return list;
 }
 
 app.post('/events', (req, res) => {
@@ -118,6 +136,10 @@ app.get('/complianceReport', (req, res) => {
     report.staleEvents = events.filter((e) => e.time < cutoff).length;
   }
   res.json(report);
+});
+
+app.get('/securityReports', (_req, res) => {
+  res.json(readSecurityReports());
 });
 
 app.get('/experiments', (_req, res) => {

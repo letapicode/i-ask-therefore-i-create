@@ -239,3 +239,4 @@ This file records brief summaries of each pull request.
 - Added `/api/exportData` endpoints for region-aware export and deletion.
 - Analytics service now generates a compliance report.
 - Documented workflow in `docs/regional-compliance.md` and updated task status.
+\n## PR <pending> - Security audit automation\n\n- Added `security-audit.js` CLI to run `npm audit` and SBOM generation for each project.\n- Created scheduled GitHub Action and storage folder under analytics.\n- Added portal dashboard page showing vulnerabilities and compliance status.\n- Documented the workflow in `security-compliance.md`.\n
