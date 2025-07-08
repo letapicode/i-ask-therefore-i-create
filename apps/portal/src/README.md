@@ -19,6 +19,7 @@ Additional pages:
 - `apps.tsx` – list all generated apps and their current status.
 - `account.tsx` – update email or password.
 - `dashboard.tsx` – show analytics summaries.
+- `billing.tsx` – manage plans and view subscriber metrics.
 - `logs.tsx` – view build logs.
 - Google Analytics is loaded when `NEXT_PUBLIC_GA_ID` is set.
 - `vr-preview.tsx` – inspect generated interfaces in WebXR

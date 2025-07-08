@@ -13,6 +13,7 @@ This repository uses a monorepo structure as outlined in `implementation_plan.md
 - **services/email** – SES email wrapper
 - **services/analytics** – collect usage metrics
 - **services/marketplace** – community plugin catalog
+- **services/billing** – subscription management
 
 ## Getting Started
 

@@ -7,4 +7,5 @@ export const templates = [
   { name: 'fastapi', description: 'Python FastAPI boilerplate' },
   { name: 'go', description: 'Go REST API boilerplate' },
   { name: 'mobile', description: 'React Native starter app' },
+  { name: 'billing', description: 'Subscription billing with Stripe' },
 ];

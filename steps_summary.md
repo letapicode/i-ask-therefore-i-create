@@ -239,3 +239,10 @@ This file records brief summaries of each pull request.
 - Added `/api/exportData` endpoints for region-aware export and deletion.
 - Analytics service now generates a compliance report.
 - Documented workflow in `docs/regional-compliance.md` and updated task status.
+
+## PR <pending> - Billing service and templates
+
+- Added `services/billing` exposing plan, subscribe and webhook endpoints with metrics.
+- New `billing` code generation template scaffolds Stripe subscription logic.
+- Portal now includes a Billing settings page for managing plans and viewing subscribers.
+- Documented API usage in `docs/billing-toolkit.md` and linked from docs README.
