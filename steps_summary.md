@@ -239,3 +239,4 @@ This file records brief summaries of each pull request.
 - Added `/api/exportData` endpoints for region-aware export and deletion.
 - Analytics service now generates a compliance report.
 - Documented workflow in `docs/regional-compliance.md` and updated task status.
+\n## PR <pending> - Multi-cloud modules and provider selection\n\n- Added Terraform modules for networking, IAM and container services under `infrastructure/gcp` and `infrastructure/azure`.\n- Orchestrator now accepts a `provider` field and calls deployment hooks per provider.\n- Portal create form includes a provider dropdown.\n- Documented usage in `docs/multi-cloud.md`.\n
