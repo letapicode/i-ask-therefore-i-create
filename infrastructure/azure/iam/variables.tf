@@ -1,14 +1,14 @@
-variable "role_name" {
-  description = "Name of the IAM role"
+variable "app_name" {
+  description = "Name for the app registration"
   type        = string
 }
 
-variable "assume_role_service" {
-  description = "Service that can assume this role"
+variable "role_definition" {
+  description = "Built-in role name"
   type        = string
 }
 
-variable "policy_json" {
-  description = "JSON policy document"
+variable "resource_group" {
+  description = "Resource group to scope the role to"
   type        = string
 }

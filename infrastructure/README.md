@@ -1,22 +1,27 @@
 # Infrastructure Modules
 
-This folder contains Terraform modules used to provision cloud resources for the platform. Modules under the root of `infrastructure/` target AWS. Two additional folders provide equivalent modules for Azure and GCP.
-
-```
-infrastructure/
-  azure/      # Azure implementations
-  gcp/        # Google Cloud implementations
-  <aws modules>
-```
+This folder contains Terraform modules used to provision cloud resources for the platform.
 
 ## Deployment
 
-Choose the folder that matches your cloud provider, then run Terraform as usual. For example to deploy on Azure:
+Run the following commands from this directory to deploy the infrastructure:
 
 ```bash
-cd infrastructure/azure/terraform
 terraform init
 terraform plan
 ```
 
-The module interfaces are kept consistent so switching providers only requires pointing Terraform at the desired directory.
+Apply the plan with `terraform apply` when you're ready to create or update resources.
+
+Each subfolder under `infrastructure/` represents a reusable module. Before
+running the commands above ensure your AWS credentials are configured and any
+required variables are set either via `terraform.tfvars` or environment
+variables.
+
+Example for the VPC module:
+
+```bash
+cd vpc
+terraform init
+terraform plan -var-file=example.tfvars
+```

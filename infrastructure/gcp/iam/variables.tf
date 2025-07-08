@@ -1,14 +1,21 @@
-variable "role_name" {
-  description = "Name of the IAM role"
+variable "account_id" {
+  description = "Service account ID"
   type        = string
 }
 
-variable "assume_role_service" {
-  description = "Service that can assume this role"
+variable "display_name" {
+  description = "Display name"
   type        = string
 }
 
-variable "policy_json" {
-  description = "JSON policy document"
+variable "role_id" {
+  description = "Custom role ID"
   type        = string
+  default     = "customRole"
+}
+
+variable "permissions" {
+  description = "Permissions for the custom role"
+  type        = list(string)
+  default     = []
 }
