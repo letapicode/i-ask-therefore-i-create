@@ -32,6 +32,11 @@ export default function Dashboard() {
       <h1>Analytics Dashboard</h1>
       {!data && <p>Loading...</p>}
       <canvas ref={chartRef} height={200}></canvas>
+      <p>
+        <a href="/artifacts/sbom.json" target="_blank">
+          Download SBOM
+        </a>
+      </p>
     </div>
   );
 }

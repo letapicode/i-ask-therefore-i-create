@@ -239,3 +239,9 @@ This file records brief summaries of each pull request.
 - Added `/api/exportData` endpoints for region-aware export and deletion.
 - Analytics service now generates a compliance report.
 - Documented workflow in `docs/regional-compliance.md` and updated task status.
+
+## PR <pending> - Automated security scanning
+
+- Extended `tools/security-scan.js` to check for OSS vulnerabilities and generate an SBOM file.
+- The orchestrator now runs this scan before deployment and saves results under `artifacts/`.
+- Portal log and dashboard pages surface the security log and SBOM download link.

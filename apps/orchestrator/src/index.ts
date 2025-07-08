@@ -12,6 +12,7 @@ import { sendEmail } from '../../services/email/src';
 import { initSentry } from '../../packages/shared/src/sentry';
 import { startSelfHealing, configure as configureHealing } from './selfHeal';
 import fs from 'fs';
+import { execSync } from 'child_process';
 import { logAudit } from '../../packages/shared/src/audit';
 import { figmaToReact } from '../../packages/shared/src/figma';
 import { policyMiddleware } from '../../packages/shared/src/policyMiddleware';
@@ -36,6 +37,7 @@ const CODEGEN_URL = process.env.CODEGEN_URL || 'http://localhost:3003/generate';
 const DEPLOY_URL = process.env.DEPLOY_URL;
 const NOTIFY_EMAIL = process.env.NOTIFY_EMAIL;
 const ARTIFACTS_BUCKET = process.env.ARTIFACTS_BUCKET;
+const ARTIFACTS_DIR = process.env.ARTIFACTS_DIR || 'artifacts';
 const TENANT_HEADER = 'x-tenant-id';
 const WORKFLOW_FILE = process.env.WORKFLOW_FILE || 'workflow.json';
 const SCHEMA_FILE = process.env.SCHEMA_FILE || 'schema.json';
@@ -104,6 +106,17 @@ export async function dispatchJob(job: Job) {
     const { code } = await genRes.json();
     if (ARTIFACTS_BUCKET && code) {
       await uploadObject(ARTIFACTS_BUCKET, `${job.id}.txt`, code);
+    }
+    if (!fs.existsSync(ARTIFACTS_DIR)) {
+      fs.mkdirSync(ARTIFACTS_DIR, { recursive: true });
+    }
+    try {
+      execSync(
+        `node tools/security-scan.js --sbom ${ARTIFACTS_DIR}/sbom.json --log ${ARTIFACTS_DIR}/security.log`,
+        { stdio: 'inherit' }
+      );
+    } catch (err) {
+      console.error('security scan failed', err);
     }
     await putItem(JOBS_TABLE, { ...job, status: 'complete' });
     await triggerDeploy(job.id);
