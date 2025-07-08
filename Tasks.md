@@ -239,3 +239,22 @@ This file lists actionable tasks derived from `implementation_plan.md` and the e
 147. **Plugin Marketplace Installation Flow** – enable installing/removing plugins with ratings stored in `services/plugins`.
 148. **Real-Time Dashboard Charts & Alerts** – visualize metrics with charts and trigger alerts from `services/analytics`.
 149. **Compliance Enforcement Hooks** – enforce region policies and provide export endpoints for user data.
+
+### Additional Proposed Features
+150. **Additional SaaS Connectors** – create Shopify, QuickBooks and Zendesk connectors in `packages/data-connectors` and expose them through the connectors API.
+151. **Collaborative Workflow Editor** – enable multi-user editing of workflows in real time via WebSockets with conflict resolution.
+152. **AI-Driven Cost Forecasting** – extend the Optimization Assistant to predict monthly cloud spend from analytics data.
+153. **Security Scanning & SBOM Generation** – automatically scan generated projects for vulnerabilities and output a Software Bill of Materials.
+154. **Multi-Cloud Deployment Templates** – add Terraform modules for Azure and GCP so deployments aren't limited to AWS.
+155. **Automatic Data Migrations** – generate and apply migration scripts when schemas change to preserve existing data.
+156. **Billing Service & Stripe Integration** – implement subscription management endpoints and integrate Stripe for payments.
+157. **AI-Powered UI/UX Optimization** – analyze usage metrics to suggest interface improvements automatically.
+158. **Security & Compliance Dashboard** – provide a portal page summarizing scan results and compliance status across projects.
+159. **AI Pair Programming Chat** – add a conversational assistant in the portal to refine code iteratively.
+160. **On-Demand Preview Environments** – spin up disposable preview instances for each build without full deployment.
+161. **Monetized Plugin Marketplace** – support paid plugins with Stripe checkout and license enforcement.
+162. **Real-Time Stream Processing Connectors** – offer Kafka and Kinesis connectors to build streaming apps.
+163. **AI Business & Monetization Recommendations** – suggest pricing models and marketing copy based on analytics.
+164. **Multi-Cloud Pricing Advisor** – compare AWS, GCP and Azure costs and recommend deployment targets.
+165. **App Store Deployment Automation** – automate publishing React Native apps to Apple and Google stores.
+166. **E-Commerce Starter Template** – provide a template with cart, checkout and subscription logic ready to deploy.
