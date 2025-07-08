@@ -239,3 +239,9 @@ This file records brief summaries of each pull request.
 - Added `/api/exportData` endpoints for region-aware export and deletion.
 - Analytics service now generates a compliance report.
 - Documented workflow in `docs/regional-compliance.md` and updated task status.
+
+## PR <pending> - E-commerce template and wizard update
+
+- Added `e-commerce` template with product, cart and checkout components using the Stripe connector.
+- Portal create wizard now lets you choose a template when generating an app.
+- Documented the marketplace changes and mobile storefront tutorial.

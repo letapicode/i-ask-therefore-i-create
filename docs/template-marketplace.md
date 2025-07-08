@@ -1,3 +1,4 @@
 # GraphQL Builder & Template Marketplace
 
-A new `graphql` template enables generating a simple GraphQL API from your models. Templates can be browsed in the portal under `/templates`.
+Templates can be browsed in the portal under `/templates` and selected when creating a new app.
+A `graphql` template provides a simple API server and the marketplace now includes an `e-commerce` option that scaffolds a storefront with product, cart and checkout components wired to Stripe.

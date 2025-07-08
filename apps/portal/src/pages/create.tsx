@@ -1,10 +1,15 @@
 import { useState, useRef } from 'react';
+import useSWR from 'swr';
+
+const fetcher = (u: string) => fetch(u).then(r => r.json());
 
 export default function CreateApp() {
   const [description, setDescription] = useState('');
   const [jobId, setJobId] = useState('');
   const [language, setLanguage] = useState('node');
+  const [template, setTemplate] = useState('crud');
   const [listening, setListening] = useState(false);
+  const { data: templates } = useSWR('/marketplace/templates', fetcher);
   const recognitionRef = useRef<any>();
 
   async function handleSubmit(e: React.FormEvent) {
@@ -12,7 +17,7 @@ export default function CreateApp() {
     const res = await fetch('http://localhost:3002/api/createApp', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ description, language }),
+      body: JSON.stringify({ description, language, template }),
     });
     const data = await res.json();
     setJobId(data.jobId);
@@ -60,6 +65,19 @@ export default function CreateApp() {
               <option value="fastapi">FastAPI</option>
               <option value="go">Go</option>
               <option value="mobile">Mobile</option>
+            </select>
+          </label>
+        </div>
+        <div>
+          <label>
+            Template
+            <select value={template} onChange={(e) => setTemplate(e.target.value)}>
+              {templates &&
+                templates.map((t: any) => (
+                  <option key={t.name} value={t.name}>
+                    {t.name}
+                  </option>
+                ))}
             </select>
           </label>
         </div>
