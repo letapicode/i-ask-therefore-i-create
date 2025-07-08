@@ -15,3 +15,9 @@ test('create and fetch experiment', async () => {
   expect(res.status).toBe(200);
   expect(res.body.variant).toBe('A');
 });
+
+test('chat history persists', async () => {
+  await request(app).post('/chat').send({ role: 'user', content: 'hi' });
+  const res = await request(app).get('/chat');
+  expect(res.body.pop().content).toBe('hi');
+});

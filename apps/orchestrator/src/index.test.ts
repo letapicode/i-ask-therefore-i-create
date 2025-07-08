@@ -113,9 +113,7 @@ test('connectors DELETE removes type', async () => {
     .post('/api/connectors')
     .set('x-tenant-id', 't1')
     .send({ stripeKey: 'sk', slackKey: 'sl' });
-  await request(app)
-    .delete('/api/connectors/stripe')
-    .set('x-tenant-id', 't1');
+  await request(app).delete('/api/connectors/stripe').set('x-tenant-id', 't1');
   const res = await request(app)
     .get('/api/connectors')
     .set('x-tenant-id', 't1');
@@ -133,4 +131,18 @@ test('plugins API installs and removes plugin', async () => {
   await request(app).delete('/api/plugins/auth').set('x-tenant-id', 't1');
   res = await request(app).get('/api/plugins').set('x-tenant-id', 't1');
   expect(res.body).not.toContain('auth');
+});
+import WebSocket from 'ws';
+
+test('chat websocket responds', (done) => {
+  const server = require('./index').start(0);
+  const address = (server.address() as any).port;
+  const ws = new WebSocket(`ws://localhost:${address}/chat`);
+  ws.on('open', () => ws.send('hi'));
+  ws.on('message', (msg) => {
+    expect(typeof msg).toBe('string');
+    ws.close();
+    server.close();
+    done();
+  });
 });

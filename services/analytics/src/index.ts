@@ -15,6 +15,7 @@ app.use((req, _res, next) => {
 const DB_FILE = process.env.EVENT_DB || '.events.json';
 const EXP_FILE = process.env.EXPERIMENT_DB || '.experiments.json';
 const ALERT_THRESHOLD = Number(process.env.ALERT_THRESHOLD || '1000');
+const CHAT_FILE = process.env.CHAT_DB || '.chat.json';
 
 function readEvents(): any[] {
   if (!fs.existsSync(DB_FILE)) return [];
@@ -32,6 +33,15 @@ function readExperiments(): any[] {
 
 function saveExperiments(data: any[]) {
   fs.writeFileSync(EXP_FILE, JSON.stringify(data, null, 2));
+}
+
+function readChats(): any[] {
+  if (!fs.existsSync(CHAT_FILE)) return [];
+  return JSON.parse(fs.readFileSync(CHAT_FILE, 'utf-8'));
+}
+
+function saveChats(data: any[]) {
+  fs.writeFileSync(CHAT_FILE, JSON.stringify(data, null, 2));
 }
 
 app.post('/events', (req, res) => {
@@ -70,6 +80,17 @@ app.get('/alerts', (req, res) => {
   if (app) events = events.filter((e) => e.app === app);
   const alerts = events.filter((e) => e.value > ALERT_THRESHOLD);
   res.json(alerts.slice(-20));
+});
+
+app.post('/chat', (req, res) => {
+  const chats = readChats();
+  chats.push({ ...req.body, time: Date.now() });
+  saveChats(chats);
+  res.status(201).json({ ok: true });
+});
+
+app.get('/chat', (_req, res) => {
+  res.json(readChats().slice(-100));
 });
 
 app.get('/summary', (_req, res) => {
