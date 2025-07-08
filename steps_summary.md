@@ -239,3 +239,8 @@ This file records brief summaries of each pull request.
 - Added `/api/exportData` endpoints for region-aware export and deletion.
 - Analytics service now generates a compliance report.
 - Documented workflow in `docs/regional-compliance.md` and updated task status.
+
+## PR <pending> - Collaborative workflow builder
+
+- Added `collab-workflow` service that uses WebSockets to broadcast workflow updates and persist them via the orchestrator API.
+- Workflow builder page now connects to the WebSocket server to sync edits in real time.
