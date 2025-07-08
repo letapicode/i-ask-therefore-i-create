@@ -99,9 +99,36 @@ function generateRecommendations(events: any[]): string[] {
   return recs;
 }
 
+function generateBusinessTips(events: any[]): string[] {
+  const users = new Set<string>();
+  let purchases = 0;
+  let trials = 0;
+  let conversions = 0;
+  for (const e of events) {
+    if (e.userId) users.add(e.userId);
+    if (e.type === 'purchase') purchases++;
+    if (e.type === 'trialStart') trials++;
+    if (e.type === 'conversion') conversions++;
+  }
+  const tips: string[] = [];
+  if (users.size > 10 && purchases === 0) {
+    tips.push('Consider adding paid plans to monetize active users.');
+  }
+  if (trials > 0 && conversions / trials < 0.2) {
+    tips.push('Improve onboarding to boost trial conversions.');
+  }
+  if (tips.length === 0) tips.push('No monetization tips at this time.');
+  return tips;
+}
+
 app.get('/recommendations', (_req, res) => {
   const events = readEvents();
   res.json({ recommendations: generateRecommendations(events) });
+});
+
+app.get('/businessTips', (_req, res) => {
+  const events = readEvents();
+  res.json({ tips: generateBusinessTips(events) });
 });
 
 app.get('/complianceReport', (req, res) => {

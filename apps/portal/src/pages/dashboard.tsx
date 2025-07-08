@@ -7,6 +7,7 @@ const fetcher = (u: string) => fetch(u).then(r => r.json());
 export default function Dashboard() {
   const chartRef = useRef<HTMLCanvasElement>(null);
   const { data } = useSWR('/analytics/summary', fetcher);
+  const { data: tips } = useSWR('/analytics/businessTips', fetcher);
 
   useEffect(() => {
     if (!data || !chartRef.current) return;
@@ -32,6 +33,15 @@ export default function Dashboard() {
       <h1>Analytics Dashboard</h1>
       {!data && <p>Loading...</p>}
       <canvas ref={chartRef} height={200}></canvas>
+      <h2>Business Tips</h2>
+      {!tips && <p>Loading...</p>}
+      {tips && (
+        <ul>
+          {(tips.tips || []).map((t: string, i: number) => (
+            <li key={i}>{t}</li>
+          ))}
+        </ul>
+      )}
     </div>
   );
 }
