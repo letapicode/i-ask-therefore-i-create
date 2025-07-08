@@ -203,7 +203,18 @@ app.get('/api/connectors', async (req, res) => {
     CONNECTORS_TABLE,
     { tenantId }
   );
-  res.json(item?.config || {});
+  const allowed = [
+    'stripeKey',
+    'slackKey',
+    'shopifyKey',
+    'quickbooksKey',
+    'zendeskKey',
+  ];
+  const result: Record<string, any> = {};
+  for (const key of allowed) {
+    if (item?.config[key]) result[key] = item.config[key];
+  }
+  res.json(result);
 });
 
 app.post('/api/connectors', async (req, res) => {
@@ -213,7 +224,18 @@ app.post('/api/connectors', async (req, res) => {
     tenantId: string;
     config: Record<string, any>;
   }>(CONNECTORS_TABLE, { tenantId })) || { tenantId, config: {} };
-  existing.config = { ...existing.config, ...req.body };
+  const allowed = [
+    'stripeKey',
+    'slackKey',
+    'shopifyKey',
+    'quickbooksKey',
+    'zendeskKey',
+  ];
+  for (const key of allowed) {
+    if (req.body[key] !== undefined) {
+      existing.config[key] = req.body[key];
+    }
+  }
   await putItem(CONNECTORS_TABLE, existing);
   res.status(201).json({ ok: true });
 });

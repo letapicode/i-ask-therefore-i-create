@@ -118,30 +118,40 @@ test('schema endpoints persist data', async () => {
 });
 
 test('connectors API stores and retrieves config', async () => {
-  await request(app)
-    .post('/api/connectors')
-    .set('x-tenant-id', 't1')
-    .send({ stripeKey: 'sk', slackKey: 'sl' });
+  await request(app).post('/api/connectors').set('x-tenant-id', 't1').send({
+    stripeKey: 'sk',
+    slackKey: 'sl',
+    shopifyKey: 'sh',
+    quickbooksKey: 'qb',
+    zendeskKey: 'zd',
+  });
   const res = await request(app)
     .get('/api/connectors')
     .set('x-tenant-id', 't1');
   expect(res.body.stripeKey).toBe('sk');
   expect(res.body.slackKey).toBe('sl');
+  expect(res.body.shopifyKey).toBe('sh');
+  expect(res.body.quickbooksKey).toBe('qb');
+  expect(res.body.zendeskKey).toBe('zd');
 });
 
 test('connectors DELETE removes type', async () => {
-  await request(app)
-    .post('/api/connectors')
-    .set('x-tenant-id', 't1')
-    .send({ stripeKey: 'sk', slackKey: 'sl' });
-  await request(app)
-    .delete('/api/connectors/stripe')
-    .set('x-tenant-id', 't1');
+  await request(app).post('/api/connectors').set('x-tenant-id', 't1').send({
+    stripeKey: 'sk',
+    slackKey: 'sl',
+    shopifyKey: 'sh',
+    quickbooksKey: 'qb',
+    zendeskKey: 'zd',
+  });
+  await request(app).delete('/api/connectors/stripe').set('x-tenant-id', 't1');
   const res = await request(app)
     .get('/api/connectors')
     .set('x-tenant-id', 't1');
   expect(res.body.stripeKey).toBeUndefined();
   expect(res.body.slackKey).toBe('sl');
+  expect(res.body.shopifyKey).toBe('sh');
+  expect(res.body.quickbooksKey).toBe('qb');
+  expect(res.body.zendeskKey).toBe('zd');
 });
 
 test('plugins API installs and removes plugin', async () => {

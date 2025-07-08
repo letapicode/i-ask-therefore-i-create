@@ -3,6 +3,9 @@ import { useState, useEffect } from 'react';
 export default function Connectors() {
   const [stripeKey, setStripeKey] = useState('');
   const [slackKey, setSlackKey] = useState('');
+  const [shopifyKey, setShopifyKey] = useState('');
+  const [quickbooksKey, setQuickbooksKey] = useState('');
+  const [zendeskKey, setZendeskKey] = useState('');
   const [demoResult, setDemoResult] = useState<number[]>([]);
 
   useEffect(() => {
@@ -11,6 +14,9 @@ export default function Connectors() {
       .then((data) => {
         setStripeKey(data.stripeKey || '');
         setSlackKey(data.slackKey || '');
+        setShopifyKey(data.shopifyKey || '');
+        setQuickbooksKey(data.quickbooksKey || '');
+        setZendeskKey(data.zendeskKey || '');
       });
   }, []);
 
@@ -18,7 +24,13 @@ export default function Connectors() {
     await fetch('/api/connectors', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ stripeKey, slackKey }),
+      body: JSON.stringify({
+        stripeKey,
+        slackKey,
+        shopifyKey,
+        quickbooksKey,
+        zendeskKey,
+      }),
     });
     alert('saved');
   };
@@ -48,6 +60,27 @@ export default function Connectors() {
           placeholder="Slack Key"
           value={slackKey}
           onChange={(e) => setSlackKey(e.target.value)}
+        />
+      </div>
+      <div>
+        <input
+          placeholder="Shopify Key"
+          value={shopifyKey}
+          onChange={(e) => setShopifyKey(e.target.value)}
+        />
+      </div>
+      <div>
+        <input
+          placeholder="QuickBooks Key"
+          value={quickbooksKey}
+          onChange={(e) => setQuickbooksKey(e.target.value)}
+        />
+      </div>
+      <div>
+        <input
+          placeholder="Zendesk Key"
+          value={zendeskKey}
+          onChange={(e) => setZendeskKey(e.target.value)}
         />
       </div>
       <button onClick={save}>Save</button>

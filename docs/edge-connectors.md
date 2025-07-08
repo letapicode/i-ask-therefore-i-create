@@ -1,11 +1,14 @@
 # Edge Inference & Data Connectors
 
-Connectors for services like Stripe and Slack can be configured in the portal under `/connectors`. Keys are stored via the orchestrator and used by packages in `@iac/data-connectors`. The connectors now perform real API calls.
+Connectors for services like Stripe, Slack, Shopify, QuickBooks and Zendesk can be configured in the portal under `/connectors`. Keys are stored via the orchestrator and used by packages in `@iac/data-connectors`. The connectors now perform real API calls.
 
 ## Available Connectors
 
 - **stripe** – provide `stripeKey` from your account
 - **slack** – provide a bot `slackKey`
+- **shopify** – provide `shopifyKey`
+- **quickbooks** – provide `quickbooksKey`
+- **zendesk** – provide `zendeskKey`
 
 Keys are managed via the `/api/connectors` endpoints:
 
