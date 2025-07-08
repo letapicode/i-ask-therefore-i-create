@@ -256,4 +256,11 @@ This file records brief summaries of each pull request.
 - Added Shopify, QuickBooks and Zendesk connectors in `@iac/data-connectors`.
 - Orchestrator connector endpoints now persist `shopifyKey`, `quickbooksKey` and `zendeskKey`.
 - Portal connectors page updated with fields for the new keys.
-- Documentation and tests revised to cover added connectors.
+
+## PR <pending> - Collaborative workflow editing
+
+- Added `collab-workflow-service` WebSocket server for real-time workflow updates.
+- Portal workflow page connects to the service and broadcasts changes.
+- Updated `docs/workflow-builder.md` with collaboration details.
+- Logged completion of task 151 in `tasks_status.md`.
+
