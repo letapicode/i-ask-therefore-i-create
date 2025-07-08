@@ -7,16 +7,18 @@ export default function Plugins() {
   const { data, mutate } = useSWR('/marketplace/plugins', fetcher);
   const [name, setName] = useState('');
   const [desc, setDesc] = useState('');
+  const [price, setPrice] = useState('');
   const [ratings, setRatings] = useState<Record<string, number>>({});
 
   const add = async () => {
     await fetch('/marketplace/plugins', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ name, description: desc }),
+      body: JSON.stringify({ name, description: desc, price: Number(price) || 0 }),
     });
     setName('');
     setDesc('');
+    setPrice('');
     mutate();
   };
 
@@ -32,6 +34,15 @@ export default function Plugins() {
   const remove = async (plugin: string) => {
     await fetch(`/api/plugins/${plugin}`, { method: 'DELETE' });
     alert('removed');
+  };
+
+  const buy = async (plugin: string) => {
+    await fetch('/marketplace/purchase', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name: plugin }),
+    });
+    alert('purchased');
   };
 
   const rate = async (plugin: string) => {
@@ -56,12 +67,19 @@ export default function Plugins() {
         value={desc}
         onChange={(e) => setDesc(e.target.value)}
       />
+      <input
+        placeholder="Price"
+        value={price}
+        type="number"
+        onChange={(e) => setPrice(e.target.value)}
+      />
       <button onClick={add}>Publish</button>
       <ul>
         {data &&
           data.map((p: any, i: number) => (
             <li key={i}>
-              {p.name} - {p.description}{' '}
+              {p.name} - {p.description} ($
+              {p.price}) purchased {p.purchaseCount || 0} times{' '}
               <button onClick={() => install(p.name)}>Install</button>{' '}
               <button onClick={() => remove(p.name)}>Remove</button>{' '}
               <input
@@ -74,6 +92,7 @@ export default function Plugins() {
                 }
               />
               <button onClick={() => rate(p.name)}>Rate</button>
+              <button onClick={() => buy(p.name)}>Buy</button>
             </li>
           ))}
       </ul>

@@ -239,3 +239,10 @@ This file records brief summaries of each pull request.
 - Added `/api/exportData` endpoints for region-aware export and deletion.
 - Analytics service now generates a compliance report.
 - Documented workflow in `docs/regional-compliance.md` and updated task status.
+
+## PR <pending> - Paid plugin support
+
+- Marketplace service now tracks purchases via the Stripe connector.
+- Plugin schema includes `price` and `purchaseCount` fields.
+- Portal marketplace lists prices and allows users to buy plugins securely.
+- Added submission instructions for paid plugins in `docs/plugin-marketplace.md`.

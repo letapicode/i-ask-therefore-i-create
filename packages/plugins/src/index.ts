@@ -1,5 +1,9 @@
 export interface Plugin {
   name: string;
+  /** optional marketplace price */
+  price?: number;
+  /** tracked purchase count */
+  purchaseCount?: number;
   init(): void | Promise<void>;
 }
 

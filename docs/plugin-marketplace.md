@@ -10,7 +10,21 @@ A central catalog for sharing and rating plugins built with `@iac/plugins`. User
 ```bash
 curl -X POST http://localhost:3005/plugins \
   -H 'Content-Type: application/json' \
-  -d '{"name":"my-plugin","description":"Adds auth"}'
+ -d '{"name":"my-plugin","description":"Adds auth"}'
 ```
 
 3. The plugin will appear on the `/plugins` page where others can install and rate it.
+
+## Paid Plugins
+
+Plugins can include a `price` field to enable purchases. When submitting a paid
+plugin provide the price in US dollars:
+
+```bash
+curl -X POST http://localhost:3005/plugins \
+  -H 'Content-Type: application/json' \
+  -d '{"name":"pro-plugin","description":"Adds magic","price":10}'
+```
+
+Purchases are processed securely using the configured Stripe connector and the
+service tracks a running `purchaseCount` for each plugin.

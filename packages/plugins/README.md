@@ -5,6 +5,10 @@ This package defines a simple plugin interface so third parties can extend the s
 ```ts
 export interface Plugin {
   name: string;
+  /** optional marketplace price */
+  price?: number;
+  /** tracked purchase count */
+  purchaseCount?: number;
   init(): void | Promise<void>;
 }
 ```
