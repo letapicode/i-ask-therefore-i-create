@@ -282,3 +282,4 @@ This file records brief summaries of each pull request.
 - Added multi-cloud Terraform modules for Azure and GCP with container services, networking and IAM.
 - Orchestrator now accepts `provider` parameter and triggers provider-specific deploy webhooks.
 - Documented usage in `docs/multi-cloud.md` and marked task 154 complete.
+- Implemented automatic schema migration generation. Added new package `packages/migrations` with diff logic and integrated into orchestrator `/api/schema` endpoint. Documented usage in `docs/automatic-data-migrations.md` and marked task 155 complete.
