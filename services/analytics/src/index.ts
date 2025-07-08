@@ -3,6 +3,7 @@ import fs from 'fs';
 import { initSentry } from '../../packages/shared/src/sentry';
 import { logAudit } from '../../packages/shared/src/audit';
 import { policyMiddleware } from '../../packages/shared/src/policyMiddleware';
+import path from 'path';
 
 export const app = express();
 app.use(express.json());
@@ -17,6 +18,7 @@ const EXP_FILE = process.env.EXPERIMENT_DB || '.experiments.json';
 const UI_FILE = process.env.UI_EVENTS_DB || '.ui-events.json';
 const SUGG_FILE = process.env.UI_SUGGESTIONS_DB || '.ui-suggestions.json';
 const ALERT_THRESHOLD = Number(process.env.ALERT_THRESHOLD || '1000');
+const SEC_DIR = path.resolve(__dirname, '../security');
 
 function readEvents(): any[] {
   if (!fs.existsSync(DB_FILE)) return [];
@@ -52,6 +54,20 @@ function readSuggestions(): any[] {
 
 function saveSuggestions(data: any[]) {
   fs.writeFileSync(SUGG_FILE, JSON.stringify(data, null, 2));
+}
+function readSecurityReports() {
+  if (!fs.existsSync(SEC_DIR)) return [];
+  const list = [];
+  for (const name of fs.readdirSync(SEC_DIR)) {
+    const auditPath = path.join(SEC_DIR, name, 'audit.json');
+    if (!fs.existsSync(auditPath)) continue;
+    const audit = JSON.parse(fs.readFileSync(auditPath, 'utf8'));
+    const count = audit.vulnerabilities
+      ? Object.keys(audit.vulnerabilities).length
+      : 0;
+    list.push({ project: name, vulnerabilities: count });
+  }
+  return list;
 }
 
 app.post('/events', (req, res) => {
@@ -200,6 +216,10 @@ app.get('/complianceReport', (req, res) => {
     report.staleEvents = events.filter((e) => e.time < cutoff).length;
   }
   res.json(report);
+});
+
+app.get('/securityReports', (_req, res) => {
+  res.json(readSecurityReports());
 });
 
 app.get('/experiments', (_req, res) => {
