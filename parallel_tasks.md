@@ -1874,3 +1874,208 @@ This file expands on each item in `Tasks.md` with a short description of the exp
     3. Add CLI commands for exporting data by region.
     4. Document onboarding steps for new regions.
 
+
+### Additional Proposed Features
+150. **Additional SaaS Connectors**
+
+   - Expand the data connector package with integrations for Shopify, QuickBooks and Zendesk.
+   - Update `/api/connectors` to handle new types and document configuration.
+   - Provide end-to-end tests for each connector using mocked API responses.
+   - Task details: Build production-ready connectors in `packages/data-connectors` so generated apps can interact with these popular SaaS platforms out of the box. Ensure authentication methods, rate limits and error handling follow provider guidelines and expose clear examples in the docs.
+  - Steps:
+    1. Review each service's API and authentication requirements.
+    2. Implement TypeScript modules exporting standardized connector functions.
+    3. Extend orchestrator validation logic for new connector types.
+    4. Add usage examples and troubleshooting tips to `docs/edge-connectors.md`.
+
+151. **Collaborative Workflow Editor**
+
+   - Leverage WebSockets to allow multiple users to edit workflows simultaneously.
+   - Integrate presence indicators and basic conflict resolution in the portal UI.
+   - Persist edits through the orchestrator so sessions can reconnect seamlessly.
+   - Task details: Enhance the existing workflow builder with real-time collaboration, combining the collab-editor.js approach with workflow-specific models. This requires careful state management so concurrent updates merge cleanly while showing who is editing each step.
+  - Steps:
+    1. Create a collaboration service using Socket.IO or similar library.
+    2. Update the workflow builder React components to broadcast and receive changes.
+    3. Maintain a shared CRDT or operational transform log on the server.
+    4. Document reconnection logic and edge cases in the portal README.
+
+152. **AI-Driven Cost Forecasting**
+
+   - Extend the Optimization Assistant to analyze historical usage metrics.
+   - Predict monthly cloud spend and display projections in the dashboard.
+   - Offer recommendations on scaling or offloading workloads to reduce costs.
+   - Task details: Build a small forecasting module that consumes analytics data from `services/analytics` and applies regression or time-series models. Output is surfaced through the portal so users see expected costs before deploying new features.
+  - Steps:
+    1. Gather sample metrics and design the forecasting algorithm.
+    2. Implement a script or Lambda that computes predictions nightly.
+    3. Add API endpoints and portal components to fetch and display results.
+    4. Provide documentation explaining model assumptions and limitations.
+
+153. **Security Scanning & SBOM Generation**
+
+   - Integrate static analysis and dependency scanning into the code generation pipeline.
+   - Output a Software Bill of Materials for each build and store results with artifacts.
+   - Fail deployments if critical vulnerabilities are detected.
+   - Task details: Automate security checks using tools like npm audit and OSV. Generate an SPDX-compliant SBOM and include it in build reports so users can verify compliance with industry standards.
+  - Steps:
+    1. Add scanning scripts in `tools/security` and call them from CI workflows.
+    2. Parse results to produce human-readable summaries and JSON outputs.
+    3. Store SBOM files alongside artifacts in S3 or the chosen storage.
+    4. Document remediation steps and how to override failing builds.
+
+154. **Multi-Cloud Deployment Templates**
+
+   - Provide Terraform modules for Azure and GCP mirroring the existing AWS stack.
+   - Update deployment scripts to choose a provider based on configuration.
+   - Document prerequisites such as service accounts and credentials for each cloud.
+   - Task details: Ensure generated apps can be deployed seamlessly to multiple providers. Each template should create equivalent resources (compute, database, networking) using best practices for the specific cloud platform.
+  - Steps:
+    1. Study current AWS modules under `infrastructure/` and replicate them for Azure and GCP.
+    2. Abstract provider-specific variables so orchestrator deployment logic remains consistent.
+    3. Test by deploying sample apps to all three clouds.
+    4. Update README files with step-by-step setup instructions.
+
+155. **Automatic Data Migrations**
+
+   - Detect schema changes from the designer or voice modeling features.
+   - Generate SQL or DynamoDB migration scripts automatically.
+   - Apply migrations during deployment while preserving existing data.
+   - Task details: Build tooling that compares previous and new schema definitions, then outputs idempotent migration scripts. Integrate with the orchestrator so migrations run before code updates, ensuring user data stays intact across upgrades.
+  - Steps:
+    1. Store previous schemas and track revisions in the orchestrator database.
+    2. Implement a diff algorithm to determine required changes.
+    3. Generate migration scripts for supported databases and verify them against a test instance.
+    4. Provide rollback guidelines and document manual override options.
+
+156. **Billing Service & Stripe Integration**
+
+   - Create a dedicated billing microservice handling subscriptions and invoices.
+   - Use Stripe APIs for payment processing and webhook notifications.
+   - Allow the portal to manage plans, trials and billing history.
+   - Task details: This toolkit enables users to monetize generated apps by embedding subscription flows. It must securely store customer info, handle webhooks for payment events and expose an admin UI for plan management.
+  - Steps:
+    1. Set up Stripe credentials and local webhook forwarding for development.
+    2. Implement billing APIs with proper validation and error handling.
+    3. Build portal pages to subscribe, upgrade and view invoices.
+    4. Add extensive documentation on configuring products and testing payments.
+
+157. **AI-Powered UI/UX Optimization**
+
+   - Analyze user interaction metrics to identify confusing or unused areas of the UI.
+   - Provide automated suggestions for layout changes, color adjustments or feature placement.
+   - Surface these recommendations directly in the portal with one-click adoption.
+   - Task details: Combine analytics data with heuristic or ML-based evaluation to propose interface improvements. The system should learn over time which suggestions increase engagement and adapt accordingly.
+  - Steps:
+    1. Collect detailed click and navigation events in `services/analytics`.
+    2. Implement analysis routines and store recommended actions.
+    3. Display suggestions in a dedicated portal page with preview capability.
+    4. Document metrics captured and how to opt out.
+
+158. **Security & Compliance Dashboard**
+
+   - Centralize results from security scans and compliance checks.
+   - Visualize SBOM status, vulnerability counts and policy adherence per project.
+   - Provide exportable reports for auditors.
+   - Task details: Extend the portal dashboard with a new tab summarizing security posture across all generated apps. This includes charts, trend lines and quick links to remediation guides.
+  - Steps:
+    1. Aggregate scan data in a reporting database.
+    2. Build API endpoints to query results per project and time period.
+    3. Create React components for graphs, summaries and export buttons.
+    4. Document how to trigger manual scans and interpret the findings.
+
+159. **AI Pair Programming Chat**
+
+   - Embed a conversational assistant in the portal that can read project files and suggest code changes.
+   - Allow users to commit accepted suggestions directly from chat.
+   - Support context-aware explanations of generated code sections.
+   - Task details: Leverage the existing OpenAI integration to provide pair-programming style help. Chat messages should maintain history and reference specific files or lines, enabling incremental improvements without leaving the portal.
+  - Steps:
+    1. Build a chat backend that streams responses from the language model.
+    2. Implement UI components with syntax-highlighted suggestions.
+    3. Create endpoints to apply patches to the repository and trigger new builds.
+    4. Document privacy considerations and token usage limits.
+
+160. **On-Demand Preview Environments**
+
+   - Spin up ephemeral preview deployments for each pull request or build.
+   - Automatically destroy previews after a configurable time period.
+   - Provide shareable URLs for stakeholders to test features early.
+   - Task details: Use lightweight container orchestration to start disposable instances of generated apps. Integrate with CI so previews launch on new builds and are cleaned up to minimize cost.
+  - Steps:
+    1. Define infrastructure templates for temporary environments.
+    2. Add CI scripts that deploy previews and post links to the portal.
+    3. Implement a cleanup routine that runs on schedule or after merge.
+    4. Document how to enable previews for a project.
+
+161. **Monetized Plugin Marketplace**
+
+   - Extend the existing plugin marketplace with support for paid plugins.
+   - Integrate Stripe checkout and licensing verification for purchases.
+   - Track sales metrics and payout information for plugin developers.
+   - Task details: Transform the marketplace into a revenue channel by adding payment flows, license keys and management dashboards. Plugins should declare pricing and the system must enforce access based on purchase status.
+  - Steps:
+    1. Update plugin metadata schema to include pricing details.
+    2. Implement purchase APIs and secure download endpoints.
+    3. Provide a developer dashboard for sales reports and payout settings.
+    4. Document revenue share terms and setup instructions.
+
+162. **Real-Time Stream Processing Connectors**
+
+   - Add Kafka and Kinesis connectors to the connector API and templates.
+   - Allow generated apps to consume and produce messages from these streams.
+   - Include sample workflows demonstrating event-driven architectures.
+   - Task details: Provide robust streaming connectors that handle authentication, partitioning and fault tolerance. Example configurations should help users build real-time dashboards or ETL pipelines quickly.
+  - Steps:
+    1. Implement connector modules with configuration validation.
+    2. Write orchestrator logic to provision and test stream access.
+    3. Create portal guides showing how to integrate streaming features.
+    4. Add integration tests with local Kafka/Kinesis emulators.
+
+163. **AI Business & Monetization Recommendations**
+
+   - Use analytics data and generative models to propose revenue streams and pricing options for each generated app.
+   - Generate marketing copy snippets that highlight unique selling points.
+   - Present these insights in a new portal section alongside cost forecasts.
+   - Task details: Build a recommendation engine focused on business strategy rather than technical features. By analyzing usage patterns and market data, it can suggest subscription levels, one-time purchase ideas or ad-supported approaches.
+  - Steps:
+    1. Extend the analytics schema to capture monetization signals.
+    2. Train or fine tune a model that maps app characteristics to business models.
+    3. Expose a REST API returning recommendations with confidence scores.
+    4. Document how to interpret and apply these suggestions.
+
+164. **Multi-Cloud Pricing Advisor**
+
+   - Compare deployment costs across AWS, GCP and Azure for a given workload.
+   - Recommend the most cost-effective region and provider.
+   - Support optional failover configurations spanning multiple clouds.
+   - Task details: Build on the multi-cloud templates to analyze service pricing APIs and compute monthly estimates. Provide a wizard where users can select priority regions, uptime requirements and see resulting cost trade-offs.
+  - Steps:
+    1. Gather pricing data using official provider APIs or price lists.
+    2. Implement a calculation engine and caching layer.
+    3. Create portal UI components with interactive charts and region selectors.
+    4. Document assumptions and update examples regularly.
+
+165. **App Store Deployment Automation**
+
+   - Automate the packaging and submission of React Native apps to the Apple App Store and Google Play.
+   - Handle certificate management, screenshot uploads and versioning.
+   - Provide status updates and error messages in the portal.
+   - Task details: Streamline mobile release processes by integrating with Apple and Google command-line tools. The system should manage build artifacts, credentials and release notes so users can publish with minimal manual steps.
+  - Steps:
+    1. Create scripts that invoke `fastlane` or equivalent tooling for both stores.
+    2. Store API keys securely in the orchestrator's secrets manager.
+    3. Expose a portal page where users trigger and monitor submissions.
+    4. Document prerequisite accounts and review guidelines.
+
+166. **E-Commerce Starter Template**
+
+   - Provide a ready-made storefront template including shopping cart, checkout and subscription management.
+   - Integrate analytics for conversion tracking and optional marketing emails.
+   - Offer customization hooks for styling and product catalog setup.
+   - Task details: Build a fully functional e-commerce application template that leverages the Stripe connector and analytics service. This accelerates entrepreneurs who want to start selling immediately using the platform.
+  - Steps:
+    1. Create template code in `packages/codegen-templates/ecommerce` with React and API routes.
+    2. Implement analytics hooks for purchase events and funnels.
+    3. Add configuration options for products, shipping and taxes.
+    4. Document setup steps and example deployment flow.

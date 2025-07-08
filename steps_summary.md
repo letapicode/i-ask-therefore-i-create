@@ -239,7 +239,15 @@ This file records brief summaries of each pull request.
 - Added `/api/exportData` endpoints for region-aware export and deletion.
 - Analytics service now generates a compliance report.
 - Documented workflow in `docs/regional-compliance.md` and updated task status.
-\n## PR 442f85a - Multi-cloud modules
+
+
+## PR <pending> - Additional proposed features tasks
+
+- Added tasks 150-166 to `Tasks.md` covering SaaS connectors, collaborative workflows, cost forecasting, security scanning with SBOM, multi-cloud templates, automatic migrations and more.
+- Expanded `parallel_tasks.md` with detailed instructions for each new task so contributors understand implementation steps.
+
+## PR 442f85a - Multi-cloud modules
 - Added placeholder Terraform modules under infrastructure/azure and infrastructure/gcp.
 - Orchestrator now selects a cloud provider per tenant using the TENANTS_TABLE.
 - Documentation updated with multi-cloud instructions.
+
