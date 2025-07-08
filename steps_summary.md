@@ -264,3 +264,10 @@ This file records brief summaries of each pull request.
 - Updated `docs/workflow-builder.md` with collaboration details.
 - Logged completion of task 151 in `tasks_status.md`.
 
+
+## PR <pending> - Cost forecasting feature
+
+- Added `updateForecast.js` to compute monthly cost projections.
+- Exposed `/api/costForecast` endpoint in the orchestrator using analytics data and CPU metrics.
+- Portal dashboard now displays the projected monthly cost.
+- Documented predictive mode in `docs/optimization-assistant.md` and marked task 152 complete.
