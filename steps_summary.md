@@ -201,26 +201,26 @@ This file records brief summaries of each pull request.
 - Connectors page and a new portal demo call the prediction API.
 - Documented model formats and limitations in `edge-inference.md`.
 - Updated `tasks_status.md` for task 144.
-  
- ## PR <pending> - RL feedback automation
+
+## PR <pending> - RL feedback automation
+
 - Added scheduled workflow `train-from-ratings.yml` to retrain models nightly.
 - Training script now stores rating snapshots and history under `services/analytics/training` and logs outcomes via `audit.log`.
 - Documented schedule adjustments in `docs/rl-code-quality.md`.
 
 ## PR <pending> - VR preview navigation and assets
+
 - Added OrbitControls and VRButton to `/vr-preview` for immersive navigation.
 - Created `binary-assets/vr` with sample scene placeholder and README.
 - Fetched generated apps and rendered them as WebXR boxes.
 - Documented controls and asset loading in `docs/vr-preview.md`.
 
 ## PR <pending> - Real-time dashboard charts and alerts
+
 - Integrated Chart.js into the portal dashboard and performance pages.
 - Added filtering controls and alert display backed by new `/alerts` endpoint.
 - Analytics service now supports query parameters, alert thresholds and exposes performance and alert data.
 - Documented monitoring options in `dashboard-monitoring.md` and updated task status.
-
-
-
 
 ## PR <pending> - Plugin installation flow
 
@@ -240,14 +240,20 @@ This file records brief summaries of each pull request.
 - Analytics service now generates a compliance report.
 - Documented workflow in `docs/regional-compliance.md` and updated task status.
 
-
 ## PR <pending> - Additional proposed features tasks
 
 - Added tasks 150-166 to `Tasks.md` covering SaaS connectors, collaborative workflows, cost forecasting, security scanning with SBOM, multi-cloud templates, automatic migrations and more.
 - Expanded `parallel_tasks.md` with detailed instructions for each new task so contributors understand implementation steps.
 
 ## PR 442f85a - Multi-cloud modules
+
 - Added placeholder Terraform modules under infrastructure/azure and infrastructure/gcp.
 - Orchestrator now selects a cloud provider per tenant using the TENANTS_TABLE.
 - Documentation updated with multi-cloud instructions.
 
+## PR <pending> - Additional data connectors
+
+- Added Shopify, QuickBooks and Zendesk connectors in `@iac/data-connectors`.
+- Orchestrator connector endpoints now persist `shopifyKey`, `quickbooksKey` and `zendeskKey`.
+- Portal connectors page updated with fields for the new keys.
+- Documentation and tests revised to cover added connectors.
