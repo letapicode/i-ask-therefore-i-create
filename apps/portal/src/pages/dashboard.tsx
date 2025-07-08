@@ -2,11 +2,12 @@ import { useRef, useEffect } from 'react';
 import useSWR from 'swr';
 import Chart from 'chart.js/auto';
 
-const fetcher = (u: string) => fetch(u).then(r => r.json());
+const fetcher = (u: string) => fetch(u).then((r) => r.json());
 
 export default function Dashboard() {
   const chartRef = useRef<HTMLCanvasElement>(null);
   const { data } = useSWR('/analytics/summary', fetcher);
+  const { data: recs } = useSWR('/analytics/recommendations', fetcher);
 
   useEffect(() => {
     if (!data || !chartRef.current) return;
@@ -32,6 +33,16 @@ export default function Dashboard() {
       <h1>Analytics Dashboard</h1>
       {!data && <p>Loading...</p>}
       <canvas ref={chartRef} height={200}></canvas>
+      {recs && (
+        <div>
+          <h2>Recommendations</h2>
+          <ul>
+            {recs.recommendations.map((r: string, i: number) => (
+              <li key={i}>{r}</li>
+            ))}
+          </ul>
+        </div>
+      )}
     </div>
   );
 }

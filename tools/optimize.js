@@ -5,11 +5,10 @@ import {
   GetMetricStatisticsCommand,
 } from '@aws-sdk/client-cloudwatch';
 
-async function run() {
-  console.log('Analyzing costs...');
+export async function getCpuAverage(days = 7) {
   const client = new CloudWatchClient({});
   const end = new Date();
-  const start = new Date(end.getTime() - 7 * 24 * 60 * 60 * 1000);
+  const start = new Date(end.getTime() - days * 24 * 60 * 60 * 1000);
   const cmd = new GetMetricStatisticsCommand({
     Namespace: 'AWS/EC2',
     MetricName: 'CPUUtilization',
@@ -22,6 +21,12 @@ async function run() {
   const avg =
     data.Datapoints?.reduce((a, b) => a + (b.Average || 0), 0) /
     (data.Datapoints?.length || 1);
+  return avg || 0;
+}
+
+async function run() {
+  console.log('Analyzing costs...');
+  const avg = await getCpuAverage();
   if (avg < 20) {
     console.log('Low CPU usage detected. Consider downsizing instances.');
   } else {

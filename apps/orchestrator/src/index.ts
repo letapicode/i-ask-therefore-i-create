@@ -20,6 +20,10 @@ import {
   predict,
 } from '../../packages/data-connectors/src/tfHelper';
 import * as tf from '@tensorflow/tfjs';
+import {
+  CloudWatchClient,
+  GetMetricStatisticsCommand,
+} from '@aws-sdk/client-cloudwatch';
 import { generateSchema } from '../../packages/codegen-templates/src/graphqlBuilder';
 import { runTemplateHooks } from '../../packages/codegen-templates/src/marketplace';
 
@@ -345,6 +349,60 @@ app.delete('/api/exportData', async (req, res) => {
     await deleteItem(JOBS_TABLE, { id: item.id });
   }
   res.json({ deleted: items.length });
+});
+
+async function fetchAnalyticsCount() {
+  try {
+    const res = await fetch('http://localhost:3001/metrics');
+    const json = await res.json();
+    return json.count || 0;
+  } catch {
+    return 0;
+  }
+}
+
+async function getCpuSeries(days = 14) {
+  const client = new CloudWatchClient({});
+  const end = new Date();
+  const start = new Date(end.getTime() - days * 24 * 60 * 60 * 1000);
+  const cmd = new GetMetricStatisticsCommand({
+    Namespace: 'AWS/EC2',
+    MetricName: 'CPUUtilization',
+    StartTime: start,
+    EndTime: end,
+    Period: 86400,
+    Statistics: ['Average'],
+  });
+  const data = await client.send(cmd);
+  const list = (data.Datapoints || [])
+    .sort(
+      (a, b) => (a.Timestamp?.getTime() || 0) - (b.Timestamp?.getTime() || 0)
+    )
+    .map((d) => d.Average || 0);
+  return list;
+}
+
+function smooth(values: number[], alpha = 0.5) {
+  if (!values.length) return 0;
+  let forecast = values[0];
+  for (let i = 1; i < values.length; i++) {
+    forecast = alpha * values[i] + (1 - alpha) * forecast;
+  }
+  return forecast;
+}
+
+app.get('/api/costForecast', async (_req, res) => {
+  try {
+    const [count, series] = await Promise.all([
+      fetchAnalyticsCount(),
+      getCpuSeries(),
+    ]);
+    const cpuForecast = smooth(series);
+    const costForecast = cpuForecast * count;
+    res.json({ cpuForecast, events: count, costForecast });
+  } catch (err: any) {
+    res.status(500).json({ error: 'forecast failed' });
+  }
 });
 
 app.get('/api/policy', (req, res) => {
