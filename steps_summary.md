@@ -239,3 +239,4 @@ This file records brief summaries of each pull request.
 - Added `/api/exportData` endpoints for region-aware export and deletion.
 - Analytics service now generates a compliance report.
 - Documented workflow in `docs/regional-compliance.md` and updated task status.
+\n## PR <pending> - Preview environments support\n\n- Orchestrator now launches short-lived Docker containers when preview mode is requested. Preview URLs are returned from status endpoints and cleaned up automatically. Portal pages display links and docs added under `docs/preview-environments.md`.\n

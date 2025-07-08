@@ -22,6 +22,7 @@ import {
 import * as tf from '@tensorflow/tfjs';
 import { generateSchema } from '../../packages/codegen-templates/src/graphqlBuilder';
 import { runTemplateHooks } from '../../packages/codegen-templates/src/marketplace';
+import { startPreview, getPreview, cleanupPreviews } from './preview';
 
 export const app = express();
 app.use(express.json());
@@ -51,6 +52,8 @@ export interface Job {
   language: string;
   status: 'queued' | 'running' | 'complete' | 'failed';
   created: number;
+  previewUrl?: string;
+  previewExpires?: number;
 }
 
 async function triggerDeploy(jobId: string) {
@@ -131,7 +134,7 @@ configureHealing(dispatchJob);
 app.post('/api/createApp', async (req, res) => {
   const tenantId = req.header(TENANT_HEADER);
   if (!tenantId) return res.status(401).json({ error: 'missing tenant' });
-  const { description, language = 'node' } = req.body;
+  const { description, language = 'node', preview } = req.body;
   if (!description)
     return res.status(400).json({ error: 'missing description' });
   const id = randomUUID();
@@ -143,6 +146,15 @@ app.post('/api/createApp', async (req, res) => {
     status: 'queued',
     created: Date.now(),
   };
+  if (preview) {
+    try {
+      const info = await startPreview(id);
+      job.previewUrl = info.url;
+      job.previewExpires = info.expires;
+    } catch (err) {
+      console.error('preview start failed', err);
+    }
+  }
   await putItem(JOBS_TABLE, job);
   dispatchJob(job); // fire and forget
   res.status(202).json({ jobId: id });
@@ -174,6 +186,11 @@ app.get('/api/status/:id', async (req, res) => {
   const job = await getItem<Job>(JOBS_TABLE, { id: req.params.id });
   if (!job || job.tenantId !== tenantId)
     return res.status(404).json({ error: 'not found' });
+  const preview = getPreview(job.id);
+  if (preview) {
+    job.previewUrl = preview.url;
+    job.previewExpires = preview.expires;
+  }
   res.json(job);
 });
 
@@ -181,7 +198,15 @@ app.get('/api/apps', async (req, res) => {
   const tenantId = req.header(TENANT_HEADER);
   if (!tenantId) return res.status(401).json({ error: 'missing tenant' });
   const jobs = await scanTable<Job>(JOBS_TABLE);
-  res.json(jobs.filter((j) => j.tenantId === tenantId));
+  const tenantJobs = jobs.filter((j) => j.tenantId === tenantId);
+  for (const j of tenantJobs) {
+    const preview = getPreview(j.id);
+    if (preview) {
+      j.previewUrl = preview.url;
+      j.previewExpires = preview.expires;
+    }
+  }
+  res.json(tenantJobs);
 });
 
 app.get('/api/connectors', async (req, res) => {
@@ -357,6 +382,7 @@ export function start(port = 3002) {
   if (process.env.SELF_HEAL) {
     startSelfHealing();
   }
+  cleanupPreviews();
 }
 
 if (require.main === module) {

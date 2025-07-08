@@ -9,7 +9,15 @@ export default function Apps() {
       <h1>Your Apps</h1>
       <ul>
         {data?.map((app: any) => (
-          <li key={app.id}>{app.description} - {app.status}</li>
+          <li key={app.id}>
+            {app.description} - {app.status}
+            {app.previewUrl && (
+              <>
+                {' '}
+                <a href={app.previewUrl}>preview</a>
+              </>
+            )}
+          </li>
         ))}
       </ul>
     </div>

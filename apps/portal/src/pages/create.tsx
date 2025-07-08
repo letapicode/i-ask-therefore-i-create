@@ -4,6 +4,7 @@ export default function CreateApp() {
   const [description, setDescription] = useState('');
   const [jobId, setJobId] = useState('');
   const [language, setLanguage] = useState('node');
+  const [preview, setPreview] = useState(false);
   const [listening, setListening] = useState(false);
   const recognitionRef = useRef<any>();
 
@@ -12,7 +13,7 @@ export default function CreateApp() {
     const res = await fetch('http://localhost:3002/api/createApp', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ description, language }),
+      body: JSON.stringify({ description, language, preview }),
     });
     const data = await res.json();
     setJobId(data.jobId);
@@ -61,6 +62,16 @@ export default function CreateApp() {
               <option value="go">Go</option>
               <option value="mobile">Mobile</option>
             </select>
+          </label>
+        </div>
+        <div>
+          <label>
+            <input
+              type="checkbox"
+              checked={preview}
+              onChange={(e) => setPreview(e.target.checked)}
+            />
+            Preview Environment
           </label>
         </div>
         <div>

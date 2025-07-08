@@ -5,6 +5,12 @@ jest.mock('node-fetch', () =>
   jest.fn(async () => ({ ok: true, json: async () => ({}) }))
 );
 
+jest.mock('./preview', () => ({
+  startPreview: jest.fn(async () => ({ url: 'http://preview', expires: Date.now() + 1000, id: 'c1' })),
+  getPreview: jest.fn(() => ({ url: 'http://preview', expires: Date.now() + 1000, id: 'c1' })),
+  cleanupPreviews: jest.fn(),
+}));
+
 const jobMem: Record<string, any> = {};
 const connMem: Record<string, any> = {};
 const pluginMem: Record<string, any> = {};
@@ -86,6 +92,21 @@ test('createApp forwards language', async () => {
   expect(res.status).toBe(202);
   const job = jobMem[Object.keys(jobMem)[0]];
   expect(job.language).toBe('go');
+});
+
+test('createApp with preview stores preview info', async () => {
+  const res = await request(app)
+    .post('/api/createApp')
+    .set('x-tenant-id', 't1')
+    .send({ description: 'test', preview: true });
+  expect(res.status).toBe(202);
+  const id = res.body.jobId;
+  const job = jobMem[id];
+  expect(job.previewUrl).toBe('http://preview');
+  const status = await request(app)
+    .get(`/api/status/${id}`)
+    .set('x-tenant-id', 't1');
+  expect(status.body.previewUrl).toBe('http://preview');
 });
 
 test('schema endpoints persist data', async () => {
