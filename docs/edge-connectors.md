@@ -6,6 +6,8 @@ Connectors for services like Stripe and Slack can be configured in the portal un
 
 - **stripe** – provide `stripeKey` from your account
 - **slack** – provide a bot `slackKey`
+- **apple** – provide `appleKey` to publish iOS builds
+- **google** – provide `googleKey` to publish Android builds
 
 Keys are managed via the `/api/connectors` endpoints:
 

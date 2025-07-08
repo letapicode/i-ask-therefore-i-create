@@ -4,6 +4,7 @@ const { app } = require('./index');
 jest.mock('node-fetch', () =>
   jest.fn(async () => ({ ok: true, json: async () => ({}) }))
 );
+const fetch = require('node-fetch');
 
 const jobMem: Record<string, any> = {};
 const connMem: Record<string, any> = {};
@@ -100,19 +101,21 @@ test('connectors API stores and retrieves config', async () => {
   await request(app)
     .post('/api/connectors')
     .set('x-tenant-id', 't1')
-    .send({ stripeKey: 'sk', slackKey: 'sl' });
+    .send({ stripeKey: 'sk', slackKey: 'sl', appleKey: 'ak', googleKey: 'gk' });
   const res = await request(app)
     .get('/api/connectors')
     .set('x-tenant-id', 't1');
   expect(res.body.stripeKey).toBe('sk');
   expect(res.body.slackKey).toBe('sl');
+  expect(res.body.appleKey).toBe('ak');
+  expect(res.body.googleKey).toBe('gk');
 });
 
 test('connectors DELETE removes type', async () => {
   await request(app)
     .post('/api/connectors')
     .set('x-tenant-id', 't1')
-    .send({ stripeKey: 'sk', slackKey: 'sl' });
+    .send({ stripeKey: 'sk', slackKey: 'sl', appleKey: 'ak', googleKey: 'gk' });
   await request(app)
     .delete('/api/connectors/stripe')
     .set('x-tenant-id', 't1');
@@ -121,6 +124,8 @@ test('connectors DELETE removes type', async () => {
     .set('x-tenant-id', 't1');
   expect(res.body.stripeKey).toBeUndefined();
   expect(res.body.slackKey).toBe('sl');
+  expect(res.body.appleKey).toBe('ak');
+  expect(res.body.googleKey).toBe('gk');
 });
 
 test('plugins API installs and removes plugin', async () => {
@@ -133,4 +138,27 @@ test('plugins API installs and removes plugin', async () => {
   await request(app).delete('/api/plugins/auth').set('x-tenant-id', 't1');
   res = await request(app).get('/api/plugins').set('x-tenant-id', 't1');
   expect(res.body).not.toContain('auth');
+});
+
+test('publishMobile triggers store calls', async () => {
+  jobMem['j1'] = {
+    id: 'j1',
+    tenantId: 't1',
+    description: 'm',
+    language: 'node',
+    status: 'complete',
+  };
+  connMem['t1'] = { tenantId: 't1', config: { appleKey: 'a', googleKey: 'g' } };
+  const res = await request(app)
+    .post('/api/publishMobile/j1')
+    .set('x-tenant-id', 't1');
+  expect(res.status).toBe(200);
+  expect(fetch).toHaveBeenCalledWith(
+    'https://api.appstoreconnect.apple.com/v1/apps',
+    expect.any(Object)
+  );
+  expect(fetch).toHaveBeenCalledWith(
+    expect.stringContaining('androidpublisher'),
+    expect.any(Object)
+  );
 });

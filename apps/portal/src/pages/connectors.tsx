@@ -3,6 +3,8 @@ import { useState, useEffect } from 'react';
 export default function Connectors() {
   const [stripeKey, setStripeKey] = useState('');
   const [slackKey, setSlackKey] = useState('');
+  const [appleKey, setAppleKey] = useState('');
+  const [googleKey, setGoogleKey] = useState('');
   const [demoResult, setDemoResult] = useState<number[]>([]);
 
   useEffect(() => {
@@ -11,6 +13,8 @@ export default function Connectors() {
       .then((data) => {
         setStripeKey(data.stripeKey || '');
         setSlackKey(data.slackKey || '');
+        setAppleKey(data.appleKey || '');
+        setGoogleKey(data.googleKey || '');
       });
   }, []);
 
@@ -18,7 +22,7 @@ export default function Connectors() {
     await fetch('/api/connectors', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ stripeKey, slackKey }),
+      body: JSON.stringify({ stripeKey, slackKey, appleKey, googleKey }),
     });
     alert('saved');
   };
@@ -48,6 +52,20 @@ export default function Connectors() {
           placeholder="Slack Key"
           value={slackKey}
           onChange={(e) => setSlackKey(e.target.value)}
+        />
+      </div>
+      <div>
+        <input
+          placeholder="Apple Key"
+          value={appleKey}
+          onChange={(e) => setAppleKey(e.target.value)}
+        />
+      </div>
+      <div>
+        <input
+          placeholder="Google Key"
+          value={googleKey}
+          onChange={(e) => setGoogleKey(e.target.value)}
         />
       </div>
       <button onClick={save}>Save</button>

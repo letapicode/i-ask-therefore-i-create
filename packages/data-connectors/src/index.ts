@@ -28,3 +28,30 @@ export async function slackConnector(config: ConnectorConfig) {
   const data = await res.json();
   if (!data.ok) throw new Error('Slack request failed');
 }
+
+export async function appleConnector(config: ConnectorConfig) {
+  const res = await fetch('https://api.appstoreconnect.apple.com/v1/apps', {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${config.apiKey}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ placeholder: true }),
+  });
+  if (!res.ok) throw new Error('Apple publish failed');
+}
+
+export async function googleConnector(config: ConnectorConfig) {
+  const res = await fetch(
+    'https://androidpublisher.googleapis.com/androidpublisher/v3/applications',
+    {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${config.apiKey}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ placeholder: true }),
+    }
+  );
+  if (!res.ok) throw new Error('Google publish failed');
+}
