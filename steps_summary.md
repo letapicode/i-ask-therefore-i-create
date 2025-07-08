@@ -283,3 +283,5 @@ This file records brief summaries of each pull request.
 - Orchestrator now accepts `provider` parameter and triggers provider-specific deploy webhooks.
 - Documented usage in `docs/multi-cloud.md` and marked task 154 complete.
 - Implemented automatic schema migration generation. Added new package `packages/migrations` with diff logic and integrated into orchestrator `/api/schema` endpoint. Documented usage in `docs/automatic-data-migrations.md` and marked task 155 complete.
+\n## PR <pending> - Billing service and portal integration\n\n- Added new `billing-service` microservice with subscription and invoice endpoints.\n- Created portal billing page to manage plans and view invoices.\n- Documented configuration in `docs/billing-service.md`.\n- Updated task tracker for task 156.
+
