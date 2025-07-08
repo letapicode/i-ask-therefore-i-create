@@ -33,6 +33,7 @@ Use `./tools/offline.sh` to run the entire pipeline without external services.
 Security scanning scripts are available under `tools/security`. CI runs these
 to generate `security-report.json` and `sbom.json` for each build. See
 `docs/security-scanning.md` for details.
+A daily security audit workflow runs `tools/security-audit.js` to collect vulnerability reports for the dashboard.
 
 ### Nx Cloud Caching
 

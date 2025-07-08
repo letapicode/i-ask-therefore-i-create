@@ -25,3 +25,22 @@ test('ui events produce suggestions', async () => {
   expect(Array.isArray(res.body)).toBe(true);
   expect(res.body[0]).toHaveProperty('text');
 });
+
+test('aggregates security reports', async () => {
+  const fs = require('fs');
+  const path = require('path');
+  const dir = path.join(__dirname, '../security/testproj');
+  fs.mkdirSync(dir, { recursive: true });
+  fs.writeFileSync(
+    path.join(dir, 'audit.json'),
+    JSON.stringify({ vulnerabilities: { a: {}, b: {} } })
+  );
+  const res = await request(app).get('/securityReports');
+  expect(res.status).toBe(200);
+  expect(Array.isArray(res.body)).toBe(true);
+  expect(res.body[0]).toHaveProperty('vulnerabilities');
+  fs.rmSync(path.join(__dirname, '../security'), {
+    recursive: true,
+    force: true,
+  });
+});
