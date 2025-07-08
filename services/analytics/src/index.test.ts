@@ -15,3 +15,10 @@ test('create and fetch experiment', async () => {
   expect(res.status).toBe(200);
   expect(res.body.variant).toBe('A');
 });
+
+test('records click events', async () => {
+  const res = await request(app)
+    .post('/click')
+    .send({ path: '/test' });
+  expect(res.status).toBe(201);
+});

@@ -22,6 +22,8 @@ import {
 import * as tf from '@tensorflow/tfjs';
 import { generateSchema } from '../../packages/codegen-templates/src/graphqlBuilder';
 import { runTemplateHooks } from '../../packages/codegen-templates/src/marketplace';
+import { readEvents } from '../../services/analytics/src';
+import { rankUIAdjustments } from '../../packages/analytics-utils/src';
 
 export const app = express();
 app.use(express.json());
@@ -182,6 +184,12 @@ app.get('/api/apps', async (req, res) => {
   if (!tenantId) return res.status(401).json({ error: 'missing tenant' });
   const jobs = await scanTable<Job>(JOBS_TABLE);
   res.json(jobs.filter((j) => j.tenantId === tenantId));
+});
+
+app.get('/api/ui-recommendations', (_req, res) => {
+  const events = readEvents();
+  const recs = rankUIAdjustments(events);
+  res.json({ recommendations: recs });
 });
 
 app.get('/api/connectors', async (req, res) => {

@@ -7,6 +7,7 @@ const fetcher = (u: string) => fetch(u).then(r => r.json());
 export default function Dashboard() {
   const chartRef = useRef<HTMLCanvasElement>(null);
   const { data } = useSWR('/analytics/summary', fetcher);
+  const { data: recs } = useSWR('/api/ui-recommendations', fetcher);
 
   useEffect(() => {
     if (!data || !chartRef.current) return;
@@ -32,6 +33,16 @@ export default function Dashboard() {
       <h1>Analytics Dashboard</h1>
       {!data && <p>Loading...</p>}
       <canvas ref={chartRef} height={200}></canvas>
+      {recs && recs.recommendations && (
+        <div>
+          <h2>UI Suggestions</h2>
+          <ul>
+            {recs.recommendations.map((r: any, i: number) => (
+              <li key={i}>{r.suggestion || r}</li>
+            ))}
+          </ul>
+        </div>
+      )}
     </div>
   );
 }

@@ -31,6 +31,19 @@ jest.mock('../../packages/shared/src/dynamo', () => ({
   }),
 }));
 
+jest.mock('../../services/analytics/src', () => ({
+  readEvents: jest.fn(() => [
+    { type: 'click', path: '/a' },
+    { type: 'sessionDuration', duration: 1000 },
+  ]),
+}));
+
+jest.mock('../../packages/analytics-utils/src', () => ({
+  rankUIAdjustments: jest.fn(() => [
+    { suggestion: 'test', score: 0.5 },
+  ]),
+}));
+
 afterEach(() => {
   for (const key of Object.keys(jobMem)) delete jobMem[key];
   for (const key of Object.keys(connMem)) delete connMem[key];
@@ -133,4 +146,10 @@ test('plugins API installs and removes plugin', async () => {
   await request(app).delete('/api/plugins/auth').set('x-tenant-id', 't1');
   res = await request(app).get('/api/plugins').set('x-tenant-id', 't1');
   expect(res.body).not.toContain('auth');
+});
+
+test('ui recommendations endpoint returns list', async () => {
+  const res = await request(app).get('/api/ui-recommendations');
+  expect(res.status).toBe(200);
+  expect(Array.isArray(res.body.recommendations)).toBe(true);
 });

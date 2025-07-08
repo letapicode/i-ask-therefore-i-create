@@ -16,7 +16,9 @@ const DB_FILE = process.env.EVENT_DB || '.events.json';
 const EXP_FILE = process.env.EXPERIMENT_DB || '.experiments.json';
 const ALERT_THRESHOLD = Number(process.env.ALERT_THRESHOLD || '1000');
 
-function readEvents(): any[] {
+const sessions: Record<string, number> = {};
+
+export function readEvents(): any[] {
   if (!fs.existsSync(DB_FILE)) return [];
   return JSON.parse(fs.readFileSync(DB_FILE, 'utf-8'));
 }
@@ -46,6 +48,36 @@ app.post('/ratings', (req, res) => {
   events.push({ type: 'rating', value: req.body.value, time: Date.now() });
   saveEvents(events);
   res.status(201).json({ ok: true });
+});
+
+app.post('/click', (req, res) => {
+  const events = readEvents();
+  events.push({ type: 'click', path: req.body.path, time: Date.now() });
+  saveEvents(events);
+  res.status(201).json({ ok: true });
+});
+
+app.post('/session/start', (req, res) => {
+  const id = req.body.sessionId;
+  if (id) sessions[id] = Date.now();
+  res.json({ ok: true });
+});
+
+app.post('/session/end', (req, res) => {
+  const id = req.body.sessionId;
+  const start = sessions[id];
+  if (start) {
+    const events = readEvents();
+    events.push({
+      type: 'sessionDuration',
+      sessionId: id,
+      duration: Date.now() - start,
+      time: Date.now(),
+    });
+    saveEvents(events);
+    delete sessions[id];
+  }
+  res.json({ ok: true });
 });
 
 app.get('/metrics', (_req, res) => {

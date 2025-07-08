@@ -239,3 +239,10 @@ This file records brief summaries of each pull request.
 - Added `/api/exportData` endpoints for region-aware export and deletion.
 - Analytics service now generates a compliance report.
 - Documented workflow in `docs/regional-compliance.md` and updated task status.
+
+## PR <pending> - UI analytics and recommendations
+
+- Extended analytics service with `/click` and session tracking endpoints.
+- Created `analytics-utils` package providing `rankUIAdjustments` heuristic.
+- Added `/api/ui-recommendations` in orchestrator and surfaced results on the dashboard.
+- Documented the process in `docs/ui-optimization.md`.
