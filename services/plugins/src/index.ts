@@ -1,5 +1,6 @@
 import express from 'express';
 import fs from 'fs';
+import fetch from 'node-fetch';
 import { logAudit } from '../../packages/shared/src/audit';
 import { policyMiddleware } from '../../packages/shared/src/policyMiddleware';
 
@@ -12,6 +13,7 @@ app.use((req, _res, next) => {
 });
 
 const DB = process.env.PLUGINS_DB || '.plugin-meta.json';
+const MARKETPLACE_URL = process.env.MARKETPLACE_URL || 'http://localhost:3005';
 
 interface PluginMeta {
   name: string;
@@ -37,9 +39,22 @@ function find(name: string, list: PluginMeta[]) {
   return p;
 }
 
-app.post('/install', (req, res) => {
+app.post('/install', async (req, res) => {
+  const { name, licenseKey } = req.body as { name?: string; licenseKey?: string };
+  if (!name) return res.status(400).json({ error: 'missing name' });
+  // verify license if plugin has a price
+  try {
+    const check = await fetch(
+      `${MARKETPLACE_URL}/license?name=${encodeURIComponent(name)}&key=${encodeURIComponent(
+        licenseKey || ''
+      )}`
+    ).then((r) => r.json());
+    if (!check.valid) return res.status(403).json({ error: 'invalid license' });
+  } catch (err) {
+    return res.status(500).json({ error: 'license check failed' });
+  }
   const list = read();
-  const p = find(req.body.name, list);
+  const p = find(name, list);
   p.installs++;
   save(list);
   res.status(201).json({ ok: true });

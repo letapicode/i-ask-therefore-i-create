@@ -365,6 +365,7 @@ app.post('/api/plugins', async (req, res) => {
   const tenantId = req.header(TENANT_HEADER);
   if (!tenantId) return res.status(401).json({ error: 'missing tenant' });
   const name = req.body.name;
+  const licenseKey = req.body.licenseKey;
   if (!name) return res.status(400).json({ error: 'missing name' });
   const existing = (await getItem<{ tenantId: string; plugins: string[] }>(
     PLUGINS_TABLE,
@@ -378,7 +379,7 @@ app.post('/api/plugins', async (req, res) => {
     await fetch(`${PLUGIN_SERVICE_URL}/install`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ name }),
+      body: JSON.stringify({ name, licenseKey }),
     });
   } catch (err) {
     console.error('plugin service error', err);
