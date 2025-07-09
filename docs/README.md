@@ -21,3 +21,4 @@ This folder contains user guides and architecture diagrams.
 - [Dashboard Monitoring](./dashboard-monitoring.md)
 - [Automatic Data Migrations](./automatic-data-migrations.md)
 - [Preview Environments](./preview-environments.md)
+- [Business Tips](./business-tips.md)

@@ -25,4 +25,5 @@ Additional pages:
 - `tutorial-builder.tsx` – compose in-app guides
 - `ethics-dashboard.tsx` – transparency metrics overview
 - `ux-optimization.tsx` – view UI/UX suggestions and adopt improvements
-- Translations loaded via `packages/i18n` when `localStorage.lang` is set.
+- `business.tsx` – monetization tips and marketing copy with cost forecasts
+ - Translations loaded via `packages/i18n` when `localStorage.lang` is set.

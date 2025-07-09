@@ -1,5 +1,6 @@
 import express from 'express';
 import fs from 'fs';
+import fetch from 'node-fetch';
 import { initSentry } from '../../packages/shared/src/sentry';
 import { logAudit } from '../../packages/shared/src/audit';
 import { policyMiddleware } from '../../packages/shared/src/policyMiddleware';
@@ -183,6 +184,78 @@ function generateRecommendations(events: any[]): string[] {
 app.get('/recommendations', (_req, res) => {
   const events = readEvents();
   res.json({ recommendations: generateRecommendations(events) });
+});
+
+function summarizeEvents(events: any[]): Record<string, number> {
+  const summary: Record<string, number> = {};
+  for (const e of events) {
+    const type = e.type || 'unknown';
+    summary[type] = (summary[type] || 0) + 1;
+  }
+  return summary;
+}
+
+function generateBusinessTips(events: any[]): string[] {
+  const users = new Set<string>();
+  let purchases = 0;
+  let trials = 0;
+  let conversions = 0;
+  for (const e of events) {
+    if (e.userId) users.add(e.userId);
+    if (e.type === 'purchase') purchases++;
+    if (e.type === 'trialStart') trials++;
+    if (e.type === 'conversion') conversions++;
+  }
+  const tips: string[] = [];
+  if (users.size > 10 && purchases === 0) {
+    tips.push('Consider adding paid plans to monetize active users.');
+  }
+  if (trials > 0 && conversions / trials < 0.2) {
+    tips.push('Improve onboarding to boost trial conversions.');
+  }
+  if (tips.length === 0) tips.push('No monetization tips at this time.');
+  return tips;
+}
+
+async function generateMarketingCopy(summary: Record<string, number>) {
+  if (!process.env.OPENAI_API_KEY) {
+    return 'Promote your app\'s key features to attract users.';
+  }
+  try {
+    const res = await fetch('https://api.openai.com/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
+      },
+      body: JSON.stringify({
+        model: 'gpt-3.5-turbo',
+        messages: [
+          {
+            role: 'user',
+            content: `Given the following event summary: ${JSON.stringify(
+              summary
+            )}, suggest short marketing copy highlighting unique selling points`,
+          },
+        ],
+      }),
+    });
+    const data: any = await res.json();
+    return (
+      data.choices?.[0]?.message?.content ||
+      'Promote your app\'s key features to attract users.'
+    );
+  } catch {
+    return 'Promote your app\'s key features to attract users.';
+  }
+}
+
+app.get('/businessTips', async (_req, res) => {
+  const events = readEvents();
+  const summary = summarizeEvents(events);
+  const tips = generateBusinessTips(events);
+  const marketing = await generateMarketingCopy(summary);
+  res.json({ tips, marketing });
 });
 
 function generateUiSuggestions(events: any[]): any[] {

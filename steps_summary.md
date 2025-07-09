@@ -315,3 +315,8 @@ This file records brief summaries of each pull request.
 - Portal connectors page updated with fields for broker, topic and stream info.
 - Documentation enhanced with sample workflow diagram.
 - Marked task 162 complete.
+
+## PR <pending> - Business monetization recommendations
+- Analytics service now exposes `/businessTips` returning revenue ideas and marketing copy.
+- Portal page `business.tsx` displays tips alongside cost forecasts.
+- Added documentation in `docs/business-tips.md` and updated task tracker for task 163.
