@@ -5,9 +5,11 @@ const path = require('path');
 
 jest.mock('@aws-sdk/client-cloudwatch', () => ({
   CloudWatchClient: jest.fn().mockImplementation(() => ({
-    send: jest.fn(async () => ({ Datapoints: [{ Average: 40, Timestamp: new Date() }] }))
+    send: jest.fn(async () => ({
+      Datapoints: [{ Average: 40, Timestamp: new Date() }],
+    })),
   })),
-  GetMetricStatisticsCommand: jest.fn()
+  GetMetricStatisticsCommand: jest.fn(),
 }));
 
 jest.mock('node-fetch', () =>
@@ -185,4 +187,19 @@ test('costForecast returns projected values', async () => {
   expect(res.body.events).toBe(2);
   expect(res.body.cpuForecast).toBeGreaterThan(0);
   expect(res.body.costForecast).toBeGreaterThan(0);
+});
+
+import WebSocket from 'ws';
+
+test('chat websocket responds', (done) => {
+  const server = require('./index').start(0);
+  const address = (server.address() as any).port;
+  const ws = new WebSocket(`ws://localhost:${address}/chat`);
+  ws.on('open', () => ws.send('hi'));
+  ws.on('message', (msg) => {
+    expect(typeof msg).toBe('string');
+    ws.close();
+    server.close();
+    done();
+  });
 });

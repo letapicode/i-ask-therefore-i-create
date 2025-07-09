@@ -2,6 +2,7 @@ import type { AppProps } from 'next/app';
 import Script from 'next/script';
 import { useEffect } from 'react';
 import { loadTranslations } from '../lib/i18n';
+import ChatWidget from '../components/ChatWidget';
 
 export default function MyApp({ Component, pageProps }: AppProps) {
   useEffect(() => {
@@ -15,14 +16,21 @@ export default function MyApp({ Component, pageProps }: AppProps) {
         fetch('/analytics/uiEvent', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ page: window.location.pathname, element: id, action: 'click' }),
+          body: JSON.stringify({
+            page: window.location.pathname,
+            element: id,
+            action: 'click',
+          }),
         });
       };
       document.addEventListener('click', handleClick);
       fetch('/analytics/uiEvent', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ page: window.location.pathname, action: 'navigate' }),
+        body: JSON.stringify({
+          page: window.location.pathname,
+          action: 'navigate',
+        }),
       });
       return () => document.removeEventListener('click', handleClick);
     }
@@ -41,6 +49,7 @@ export default function MyApp({ Component, pageProps }: AppProps) {
         </Script>
       )}
       <Component {...pageProps} />
+      <ChatWidget />
     </>
   );
 }
