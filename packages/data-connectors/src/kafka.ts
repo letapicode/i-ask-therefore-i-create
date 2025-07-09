@@ -7,8 +7,17 @@ export interface KafkaOptions {
   sasl?: SASLOptions;
 }
 
-export async function produceKafka(opts: KafkaOptions, message: string): Promise<void> {
-  if (!opts.brokers.length) throw new Error('missing brokers');
+function validateKafkaOptions(opts: KafkaOptions) {
+  if (!opts.brokers || opts.brokers.length === 0)
+    throw new Error('missing brokers');
+  if (!opts.topic) throw new Error('missing topic');
+}
+
+export async function produceKafka(
+  opts: KafkaOptions,
+  message: string
+): Promise<void> {
+  validateKafkaOptions(opts);
   const kafka = new Kafka({
     brokers: opts.brokers,
     ssl: opts.ssl,
@@ -25,7 +34,7 @@ export async function consumeKafka(
   opts: KafkaOptions,
   onMessage: (msg: string) => Promise<void>
 ): Promise<void> {
-  if (!opts.brokers.length) throw new Error('missing brokers');
+  validateKafkaOptions(opts);
   const kafka = new Kafka({
     brokers: opts.brokers,
     ssl: opts.ssl,
