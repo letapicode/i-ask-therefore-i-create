@@ -300,3 +300,4 @@ This file records brief summaries of each pull request.
 - Documented workflow in `docs/security-compliance.md`.
 - Updated task tracker for task 158.
 \n## PR <pending> - Pair programmer chat\n- Added WebSocket /chat endpoint in orchestrator with LLM forwarding.\n- Chat widget integrated into portal.\n- Analytics service stores conversations for fine-tuning.\n- Documented setup and privacy in docs/pair-programmer.md.
+\n## PR <pending> - Preview environments\n- Added Terraform module `infrastructure/preview` for ephemeral ECS services.\n- Implemented preview management in orchestrator with new `preview.ts`.\n- Created CI workflow `ci/preview.yml` and helper script.\n- Documented usage in `docs/preview-environments.md`.\n- Marked task 160 complete.

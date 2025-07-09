@@ -20,3 +20,4 @@ This folder contains user guides and architecture diagrams.
 - [Localization](./i18n.md)
 - [Dashboard Monitoring](./dashboard-monitoring.md)
 - [Automatic Data Migrations](./automatic-data-migrations.md)
+- [Preview Environments](./preview-environments.md)
