@@ -327,3 +327,8 @@ This file records brief summaries of each pull request.
 - Sample price data cached in `.cache.json` under `services/pricing`.
 - Documented usage in `services/pricing/README.md` and referenced in portal README.
 \n## PR <pending> - App Store Deployment Automation\n- Added Apple and Google publishing connectors and new /api/publishMobile endpoint.\n- Portal page mobile-publish.tsx triggers submissions.\n- Script publish-mobile.js wraps fastlane commands.\n- Documentation and task tracker updated for task 165.
+
+## PR <pending> - E-Commerce Starter Template
+- Added new `ecommerce` template under `packages/codegen-templates` with React components and example API routes.
+- Template integrates Stripe payments and posts purchase events to the analytics service.
+- Updated template registry and marked task 166 complete.
