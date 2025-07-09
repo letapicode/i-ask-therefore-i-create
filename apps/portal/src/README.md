@@ -26,4 +26,5 @@ Additional pages:
 - `ethics-dashboard.tsx` – transparency metrics overview
 - `ux-optimization.tsx` – view UI/UX suggestions and adopt improvements
 - `business.tsx` – monetization tips and marketing copy with cost forecasts
+- `pricing.tsx` – multi-cloud pricing advisor comparing AWS, GCP and Azure
  - Translations loaded via `packages/i18n` when `localStorage.lang` is set.
