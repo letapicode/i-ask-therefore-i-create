@@ -6,6 +6,10 @@ export default function Connectors() {
   const [shopifyKey, setShopifyKey] = useState('');
   const [quickbooksKey, setQuickbooksKey] = useState('');
   const [zendeskKey, setZendeskKey] = useState('');
+  const [kafkaBrokers, setKafkaBrokers] = useState('');
+  const [kafkaTopic, setKafkaTopic] = useState('');
+  const [kinesisStream, setKinesisStream] = useState('');
+  const [kinesisRegion, setKinesisRegion] = useState('');
   const [demoResult, setDemoResult] = useState<number[]>([]);
 
   useEffect(() => {
@@ -17,6 +21,10 @@ export default function Connectors() {
         setShopifyKey(data.shopifyKey || '');
         setQuickbooksKey(data.quickbooksKey || '');
         setZendeskKey(data.zendeskKey || '');
+        setKafkaBrokers(data.kafkaBrokers || '');
+        setKafkaTopic(data.kafkaTopic || '');
+        setKinesisStream(data.kinesisStream || '');
+        setKinesisRegion(data.kinesisRegion || '');
       });
   }, []);
 
@@ -30,6 +38,10 @@ export default function Connectors() {
         shopifyKey,
         quickbooksKey,
         zendeskKey,
+        kafkaBrokers,
+        kafkaTopic,
+        kinesisStream,
+        kinesisRegion,
       }),
     });
     alert('saved');
@@ -81,6 +93,34 @@ export default function Connectors() {
           placeholder="Zendesk Key"
           value={zendeskKey}
           onChange={(e) => setZendeskKey(e.target.value)}
+        />
+      </div>
+      <div>
+        <input
+          placeholder="Kafka Brokers"
+          value={kafkaBrokers}
+          onChange={(e) => setKafkaBrokers(e.target.value)}
+        />
+      </div>
+      <div>
+        <input
+          placeholder="Kafka Topic"
+          value={kafkaTopic}
+          onChange={(e) => setKafkaTopic(e.target.value)}
+        />
+      </div>
+      <div>
+        <input
+          placeholder="Kinesis Stream"
+          value={kinesisStream}
+          onChange={(e) => setKinesisStream(e.target.value)}
+        />
+      </div>
+      <div>
+        <input
+          placeholder="Kinesis Region"
+          value={kinesisRegion}
+          onChange={(e) => setKinesisRegion(e.target.value)}
         />
       </div>
       <button onClick={save}>Save</button>

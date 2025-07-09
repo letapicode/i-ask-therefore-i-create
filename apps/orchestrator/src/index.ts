@@ -25,6 +25,7 @@ import {
   loadModel,
   predict,
 } from '../../packages/data-connectors/src/tfHelper';
+import { produceKafka, putKinesis } from '../../packages/data-connectors/src';
 import * as tf from '@tensorflow/tfjs';
 import { generateSchema } from '../../packages/codegen-templates/src/graphqlBuilder';
 import { runTemplateHooks } from '../../packages/codegen-templates/src/marketplace';
@@ -306,6 +307,10 @@ app.get('/api/connectors', async (req, res) => {
     'shopifyKey',
     'quickbooksKey',
     'zendeskKey',
+    'kafkaBrokers',
+    'kafkaTopic',
+    'kinesisStream',
+    'kinesisRegion',
   ];
   const result: Record<string, any> = {};
   for (const key of allowed) {
@@ -327,6 +332,10 @@ app.post('/api/connectors', async (req, res) => {
     'shopifyKey',
     'quickbooksKey',
     'zendeskKey',
+    'kafkaBrokers',
+    'kafkaTopic',
+    'kinesisStream',
+    'kinesisRegion',
   ];
   for (const key of allowed) {
     if (req.body[key] !== undefined) {
@@ -425,6 +434,41 @@ app.post('/api/predict', async (req, res) => {
     res.json({ result: Array.from((output as any).dataSync()) });
   } catch (err) {
     res.status(500).json({ error: 'prediction failed' });
+  }
+});
+
+app.post('/api/testStream', async (req, res) => {
+  const tenantId = req.header(TENANT_HEADER);
+  if (!tenantId) return res.status(401).json({ error: 'missing tenant' });
+  const { type, message = 'test' } = req.body;
+  const cfg = await getItem<{ tenantId: string; config: Record<string, any> }>(
+    CONNECTORS_TABLE,
+    { tenantId }
+  );
+  if (!cfg) return res.status(400).json({ error: 'no config' });
+  try {
+    if (type === 'kafka') {
+      await produceKafka(
+        {
+          brokers: (cfg.config.kafkaBrokers || '').split(',').filter(Boolean),
+          topic: cfg.config.kafkaTopic,
+        },
+        message
+      );
+    } else if (type === 'kinesis') {
+      await putKinesis(
+        {
+          streamName: cfg.config.kinesisStream,
+          region: cfg.config.kinesisRegion,
+        },
+        message
+      );
+    } else {
+      return res.status(400).json({ error: 'unknown type' });
+    }
+    res.json({ ok: true });
+  } catch (err) {
+    res.status(500).json({ error: 'stream test failed' });
   }
 });
 
