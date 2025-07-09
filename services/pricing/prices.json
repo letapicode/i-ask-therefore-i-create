@@ -1,0 +1,14 @@
+{
+  "aws": {
+    "us-east-1": { "cpu": 0.031, "memory": 0.004 },
+    "us-west-2": { "cpu": 0.032, "memory": 0.0041 }
+  },
+  "gcp": {
+    "us-central1": { "cpu": 0.033, "memory": 0.0042 },
+    "europe-west1": { "cpu": 0.034, "memory": 0.0043 }
+  },
+  "azure": {
+    "eastus": { "cpu": 0.035, "memory": 0.0044 },
+    "westeurope": { "cpu": 0.036, "memory": 0.0045 }
+  }
+}
