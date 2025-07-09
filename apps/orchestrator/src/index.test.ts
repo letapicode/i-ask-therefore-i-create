@@ -153,6 +153,10 @@ test('connectors API stores and retrieves config', async () => {
     shopifyKey: 'sh',
     quickbooksKey: 'qb',
     zendeskKey: 'zd',
+    kafkaBrokers: 'localhost:9092',
+    kafkaTopic: 't',
+    kinesisStream: 's',
+    kinesisRegion: 'us-east-1',
   });
   const res = await request(app)
     .get('/api/connectors')
@@ -162,6 +166,10 @@ test('connectors API stores and retrieves config', async () => {
   expect(res.body.shopifyKey).toBe('sh');
   expect(res.body.quickbooksKey).toBe('qb');
   expect(res.body.zendeskKey).toBe('zd');
+  expect(res.body.kafkaBrokers).toBe('localhost:9092');
+  expect(res.body.kafkaTopic).toBe('t');
+  expect(res.body.kinesisStream).toBe('s');
+  expect(res.body.kinesisRegion).toBe('us-east-1');
 });
 
 test('connectors DELETE removes type', async () => {
@@ -171,6 +179,10 @@ test('connectors DELETE removes type', async () => {
     shopifyKey: 'sh',
     quickbooksKey: 'qb',
     zendeskKey: 'zd',
+    kafkaBrokers: 'localhost:9092',
+    kafkaTopic: 't',
+    kinesisStream: 's',
+    kinesisRegion: 'us-east-1',
   });
   await request(app).delete('/api/connectors/stripe').set('x-tenant-id', 't1');
   const res = await request(app)
@@ -181,6 +193,10 @@ test('connectors DELETE removes type', async () => {
   expect(res.body.shopifyKey).toBe('sh');
   expect(res.body.quickbooksKey).toBe('qb');
   expect(res.body.zendeskKey).toBe('zd');
+  expect(res.body.kafkaBrokers).toBe('localhost:9092');
+  expect(res.body.kafkaTopic).toBe('t');
+  expect(res.body.kinesisStream).toBe('s');
+  expect(res.body.kinesisRegion).toBe('us-east-1');
 });
 
 test('plugins API installs and removes plugin', async () => {
