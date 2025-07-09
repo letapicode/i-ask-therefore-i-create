@@ -2297,3 +2297,64 @@ This file expands on each item in `Tasks.md` with a short description of the exp
     2. Add an orchestrator endpoint calling the script and inserting data.
     3. Build a portal page `seed-data.tsx` to trigger generation.
     4. Document the feature in `docs/automatic-data-seeding.md`.
+
+185. **Collaborative AR Sessions**
+
+   - Allow multiple users to join the AR preview and edit layouts together.
+   - Sync changes across participants in real time via WebRTC.
+   - Persist session history for later replay.
+   - Task details: Expand `portal/ar` with collaborative features and manage session state in the orchestrator.
+  - Steps:
+    1. Add WebRTC signaling routes in `apps/orchestrator`.
+    2. Store session data in `services/analytics` or a new `ar-session` service.
+    3. Update `portal/ar` to broadcast layout changes to all peers.
+    4. Document setup in `docs/collaborative-ar.md`.
+
+186. **Community Model Sharing Hub**
+
+   - Publish aggregated model checkpoints for users who opt in.
+   - Track versions and allow rollbacks from the portal.
+   - Provide a page for browsing and selecting community models.
+   - Task details: Extend `services/federated-training` to store shared models on S3 and expose listing APIs.
+  - Steps:
+    1. Add storage helpers in `services/federated-training/storage.ts`.
+    2. Implement `/api/communityModels` endpoints in the orchestrator.
+    3. Build `portal/models.tsx` to list and activate models.
+    4. Document privacy notes in `docs/community-models.md`.
+
+187. **Accessibility Score Tracking**
+
+   - Maintain an accessibility score for each generated project.
+   - Display score trends over time in the portal dashboard.
+   - Trigger automatic rescans when major changes are deployed.
+   - Task details: Record audit results in the analytics service and compute scores per build.
+  - Steps:
+    1. Add score calculation utilities in `services/a11y-assistant`.
+    2. Persist scores with timestamps in the analytics database.
+    3. Create `portal/a11y-score.tsx` to visualize trends.
+    4. Document thresholds in `docs/accessibility-scoring.md`.
+
+188. **Plugin Resale Marketplace**
+
+   - Let plugin owners list licenses for resale or subscription.
+   - Verify ownership transfers on-chain when purchases occur.
+   - Show available listings in the marketplace page.
+   - Task details: Add resale endpoints and smart contract helpers under `services/plugins`.
+  - Steps:
+    1. Extend `packages/data-connectors/blockchain.ts` with transfer functions.
+    2. Implement listing APIs in `services/plugins` and a portal resale view.
+    3. Update smart contract samples in `infrastructure/blockchain`.
+    4. Document the workflow in `docs/plugin-resale.md`.
+
+189. **Offline LLM Optimization Pipeline**
+
+   - Benchmark local model performance on supported hardware.
+   - Provide scripts to quantize or prune models for speed.
+   - Allow fine-tuning on small datasets with limited resources.
+   - Task details: Add optimization utilities under `tools/llm-optimization` and update the offline model Dockerfile.
+  - Steps:
+    1. Add `benchmark.ts` in `tools/llm-optimization` for performance tests.
+    2. Include `optimize.sh` with quantization and pruning commands.
+    3. Modify `offline-model/Dockerfile` to accept optimized weights.
+    4. Document usage in `docs/offline-llm-optimization.md`.
+
