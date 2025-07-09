@@ -345,3 +345,4 @@ This file records brief summaries of each pull request.
 - Added `tools/run-migrations.js` and npm script `migrate` for applying schema
   migrations. Updated documentation in `docs/automatic-data-migrations.md` and
   `tools/README.md`.
+- Added option validation for Kafka and Kinesis connectors with accompanying tests.
