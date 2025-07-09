@@ -232,3 +232,28 @@ test('chat websocket responds', (done) => {
     done();
   });
 });
+
+test('publishMobile triggers store calls', async () => {
+  jobMem['j1'] = {
+    id: 'j1',
+    tenantId: 't1',
+    provider: 'aws',
+    description: 'm',
+    language: 'node',
+    status: 'complete',
+    created: Date.now(),
+  };
+  connMem['t1'] = { tenantId: 't1', config: { appleKey: 'a', googleKey: 'g' } };
+  const res = await request(app)
+    .post('/api/publishMobile/j1')
+    .set('x-tenant-id', 't1');
+  expect(res.status).toBe(200);
+  expect(fetch).toHaveBeenCalledWith(
+    'https://api.appstoreconnect.apple.com/v1/apps',
+    expect.any(Object)
+  );
+  expect(fetch).toHaveBeenCalledWith(
+    expect.stringContaining('androidpublisher'),
+    expect.any(Object)
+  );
+});

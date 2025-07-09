@@ -25,7 +25,12 @@ import {
   loadModel,
   predict,
 } from '../../packages/data-connectors/src/tfHelper';
-import { produceKafka, putKinesis } from '../../packages/data-connectors/src';
+import {
+  produceKafka,
+  putKinesis,
+  appleConnector,
+  googleConnector,
+} from '../../packages/data-connectors/src';
 import * as tf from '@tensorflow/tfjs';
 import { generateSchema } from '../../packages/codegen-templates/src/graphqlBuilder';
 import { runTemplateHooks } from '../../packages/codegen-templates/src/marketplace';
@@ -145,6 +150,21 @@ async function triggerDeploy(jobId: string, provider: string) {
   } catch (err) {
     console.error('deploy failed', err);
   }
+}
+
+export async function publishMobile(jobId: string, tenantId: string) {
+  const creds =
+    (
+      await getItem<{ tenantId: string; config: Record<string, any> }>(
+        CONNECTORS_TABLE,
+        { tenantId }
+      )
+    )?.config || {};
+  if (!creds.appleKey || !creds.googleKey) {
+    throw new Error('missing store credentials');
+  }
+  await appleConnector({ apiKey: creds.appleKey });
+  await googleConnector({ apiKey: creds.googleKey });
 }
 
 export async function dispatchJob(job: Job) {
@@ -307,6 +327,8 @@ app.get('/api/connectors', async (req, res) => {
     'shopifyKey',
     'quickbooksKey',
     'zendeskKey',
+    'appleKey',
+    'googleKey',
     'kafkaBrokers',
     'kafkaTopic',
     'kinesisStream',
@@ -332,6 +354,8 @@ app.post('/api/connectors', async (req, res) => {
     'shopifyKey',
     'quickbooksKey',
     'zendeskKey',
+    'appleKey',
+    'googleKey',
     'kafkaBrokers',
     'kafkaTopic',
     'kinesisStream',
@@ -493,6 +517,21 @@ app.post('/api/redeploy/:id', async (req, res) => {
   await putItem(JOBS_TABLE, job);
   dispatchJob(job);
   res.status(202).json({ jobId: id });
+});
+
+app.post('/api/publishMobile/:id', async (req, res) => {
+  const tenantId = req.header(TENANT_HEADER);
+  if (!tenantId) return res.status(401).json({ error: 'missing tenant' });
+  const job = await getItem<Job>(JOBS_TABLE, { id: req.params.id });
+  if (!job || job.tenantId !== tenantId)
+    return res.status(404).json({ error: 'not found' });
+  try {
+    await publishMobile(job.id, tenantId);
+    res.json({ ok: true });
+  } catch (err) {
+    console.error('publish failed', err);
+    res.status(500).json({ error: 'publish failed' });
+  }
 });
 
 app.get('/api/exportData', async (req, res) => {
