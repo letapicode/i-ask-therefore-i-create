@@ -2079,3 +2079,221 @@ This file expands on each item in `Tasks.md` with a short description of the exp
     2. Implement analytics hooks for purchase events and funnels.
     3. Add configuration options for products, shipping and taxes.
     4. Document setup steps and example deployment flow.
+
+### Next-Generation Features
+
+167. **Augmented Reality App Preview**
+
+   - Render generated UIs as AR overlays using WebXR.
+   - Allow basic layout adjustments through AR gestures.
+   - Save modifications back to the orchestrator service.
+   - Task details: Provide an AR viewer page under `portal/ar` that loads components from generated apps. Changes made in AR should update layout metadata stored by the orchestrator.
+  - Steps:
+    1. Create `portal/ar/index.tsx` with WebXR AR setup.
+    2. Add `/api/arLayout` routes in `apps/orchestrator` to read and write layouts.
+    3. Persist layout updates in `services/analytics` for history.
+    4. Document the workflow in `docs/ar-preview.md`.
+
+168. **Federated Model Training Service**
+
+   - Collect local model updates from users without sharing raw data.
+   - Apply differential privacy when aggregating updates.
+   - Provide an opt-in setting for community model sharing.
+   - Task details: Introduce `services/federated-training` to merge weight updates and periodically publish new model checkpoints.
+  - Steps:
+    1. Scaffold a NestJS service under `services/federated-training`.
+    2. Implement update aggregation and privacy noise routines.
+    3. Expose `/api/modelUpdate` endpoints in the orchestrator.
+    4. Add documentation and opt-in instructions in `docs/federated-training.md`.
+
+169. **Accessibility Audit Pipeline**
+
+   - Run axe-core against generated projects to report WCAG issues.
+   - Expose results via an API endpoint and portal page.
+   - Suggest automated fixes when possible.
+   - Task details: Build a script in `tools/a11y-scan.ts` and wire it into the orchestrator so users can request audits on demand.
+  - Steps:
+    1. Add the scanner script under `tools` with axe-core.
+    2. Create `/api/a11yReport` in `apps/orchestrator` invoking the script.
+    3. Implement `portal/a11y.tsx` to display findings and fix buttons.
+    4. Document usage in `docs/accessibility-audits.md`.
+
+170. **Synthetic Data Generation Service**
+
+   - Generate anonymized test data using a generative model.
+   - Offer a CLI and microservice for on-demand dataset creation.
+   - Provide domain-specific templates for common industries.
+   - Task details: Place dataset logic in `services/synthetic-data` and integrate with the orchestrator for easy seeding.
+  - Steps:
+    1. Create a CLI tool `tools/synthetic-data.ts` for local generation.
+    2. Build a REST API in `services/synthetic-data` for remote requests.
+    3. Add `packages/codegen-templates/data-templates` with sample schemas.
+    4. Document privacy considerations in `docs/synthetic-data.md`.
+
+171. **Blockchain Plugin Licensing**
+
+   - Record plugin purchases on a blockchain ledger to verify ownership.
+   - Validate licenses when installing plugins from the marketplace.
+   - Support resale or subscription models via smart contracts.
+   - Task details: Extend `services/plugins` so purchases are written to Ethereum or Polygon and checked during plugin installation.
+  - Steps:
+    1. Add a blockchain helper module under `packages/data-connectors/blockchain`.
+    2. Update marketplace APIs in `services/plugins` to write purchase records.
+    3. Implement license checks in the plugin installer logic.
+    4. Document setup of wallet keys in `docs/blockchain-licensing.md`.
+
+172. **Offline LLM Support**
+
+   - Package an open-source language model for use without internet access.
+   - Provide a configuration option to toggle between remote and local models.
+   - Include acceleration and fine-tuning scripts for custom data.
+   - Task details: Enhance `tools/offline.sh` and the codegen service so generation works entirely offline when configured.
+  - Steps:
+    1. Add a Dockerfile under `offline-model` building the chosen model.
+    2. Expose a flag in `apps/codegen` to select the local model path.
+    3. Provide tuning scripts in `tools/fine-tune-local.sh`.
+    4. Document hardware requirements in `docs/offline-llm.md`.
+
+173. **AI-Based Accessibility Assistant**
+
+   - Analyze generated UIs for accessibility issues and suggest fixes.
+   - Surface recommendations directly in the portal editing pages.
+   - Use previous audit data to improve suggestions over time.
+   - Task details: Implement a lightweight recommendation engine in `services/a11y-assistant` that consumes audit results and provides remediation tips.
+  - Steps:
+    1. Create a service folder `services/a11y-assistant` with basic endpoints.
+    2. Store audit histories in a small database for trend analysis.
+    3. Display inline tips in `portal/editor` using a new React component.
+    4. Document workflows in `docs/a11y-assistant.md`.
+
+174. **Data Anonymization Tools**
+
+   - Provide CLI commands to anonymize exports before sharing.
+   - Integrate anonymization steps into orchestrator workflows.
+   - Automatically detect PII fields for common schemas.
+   - Task details: Add `tools/anonymize-data.ts` and orchestrator hooks to scrub datasets or logs before download.
+  - Steps:
+    1. Implement the CLI using transformers for CSV and JSON formats.
+    2. Register an orchestrator middleware that runs anonymization on exports.
+    3. Maintain a list of detected PII patterns in `packages/shared/pii.ts`.
+    4. Document best practices in `docs/data-privacy.md`.
+
+175. **Prompt Versioning and Management**
+
+   - Track prompt templates used for code generation.
+   - Allow editing and history review from the portal.
+   - Optimize prompts over time using analytics feedback.
+   - Task details: Store prompt versions in `services/prompt-store` and expose an editing UI so changes trigger new generation runs.
+  - Steps:
+    1. Add a small database schema in `services/prompt-store`.
+    2. Build REST endpoints for CRUD operations on prompts.
+    3. Create `portal/prompts.tsx` for editing and diff views.
+    4. Document versioning workflow in `docs/prompt-management.md`.
+
+176. **AI-Driven Query Optimization**
+
+   - Profile generated applications for slow database queries.
+   - Suggest index additions or query rewrites automatically.
+   - Apply approved optimizations during deployments.
+   - Task details: Introduce `services/query-optimizer` leveraging collected metrics to propose improvements.
+  - Steps:
+    1. Gather query stats via middleware in generated apps.
+    2. Analyze stats in `services/query-optimizer` and store recommendations.
+    3. Show findings in a portal dashboard with apply buttons.
+    4. Document how to enable profiling in `docs/query-optimization.md`.
+
+177. **Blockchain Connectors**
+
+   - Add connectors for blockchain networks alongside existing Stripe and Slack integrations.
+   - Enable generated apps to read or write on-chain data easily.
+   - Provide sample usage and authentication instructions.
+   - Task details: Extend `packages/data-connectors` with modules for Ethereum and Polygon RPC calls.
+  - Steps:
+    1. Implement connector functions in `packages/data-connectors/blockchain.ts`.
+    2. Update the connector registry in `packages/data-connectors/src/index.ts`.
+    3. Include examples in `docs/blockchain-connectors.md`.
+    4. Add tests mocking RPC responses under `tests/blockchain`.
+
+178. **Graph Database Templates**
+
+   - Offer code generation templates for Neo4j or Amazon Neptune.
+   - Provide connectors and schema examples for graph models.
+   - Integrate with the portal wizard so users can select graph databases.
+   - Task details: Expand `packages/codegen-templates` with a `graph-db` folder and supporting orchestrator logic.
+  - Steps:
+    1. Create sample graph schemas and CRUD operations in `packages/codegen-templates/graph-db`.
+    2. Add connector utilities in `packages/data-connectors/graph.ts`.
+    3. Expose a wizard option in the portal's new app page.
+    4. Document limitations and deployment steps in `docs/graph-databases.md`.
+
+179. **Multi-Region Disaster Recovery**
+
+   - Replicate backups across regions to reduce downtime risk.
+   - Automate failover and restoration procedures.
+   - Provide monitoring of replication status.
+   - Task details: Add Terraform scripts in `infrastructure/disaster-recovery` and orchestrator hooks to trigger cross-region backups.
+  - Steps:
+    1. Define S3 or blob storage replication in Terraform modules.
+    2. Schedule backup jobs in the orchestrator using existing cron logic.
+    3. Monitor replication metrics in `services/analytics`.
+    4. Document recovery steps in `docs/disaster-recovery.md`.
+
+180. **AI-Driven Code Review Service**
+
+   - Automatically analyze pull requests for quality and security issues.
+   - Comment suggestions directly on GitHub or the portal.
+   - Integrate with existing RL feedback loops to improve checks.
+   - Task details: Implement `services/code-review` that runs on CI and posts results to PRs using the GitHub API.
+  - Steps:
+    1. Create a review service under `services/code-review` with lint and security rules.
+    2. Add GitHub webhook handling in `apps/orchestrator` to trigger reviews.
+    3. Display review summaries in the portal activity feed.
+    4. Document configuration in `docs/ai-code-review.md`.
+
+181. **OpenTelemetry Tracing**
+
+   - Collect distributed traces across microservices for end-to-end visibility.
+   - Deploy an OpenTelemetry collector alongside existing monitoring tools.
+   - Visualize traces in the observability stack.
+   - Task details: Create an `observability` package configuring OpenTelemetry and integrate it with main services.
+  - Steps:
+    1. Add tracer initialization in `apps/orchestrator` and `services/analytics`.
+    2. Set up a collector under `infrastructure/observability` using Terraform.
+    3. Export traces to the preferred backend (Jaeger or Zipkin).
+    4. Document viewing instructions in `infrastructure/observability/README.md`.
+
+182. **Edge Deployment & CDN Integration**
+
+   - Support deploying generated apps to edge networks like Cloudflare Workers.
+   - Provide a codegen template for edge functions.
+   - Allow selecting edge deployment in the orchestrator.
+   - Task details: Create `infrastructure/edge` modules and a template under `packages/codegen-templates/edge` for low-latency deployments.
+  - Steps:
+    1. Write Terraform scripts for Cloudflare and Lambda@Edge in `infrastructure/edge`.
+    2. Add an edge option to the orchestrator job dispatcher.
+    3. Include an example template in `packages/codegen-templates/edge`.
+    4. Document usage in `docs/edge-deployments.md`.
+
+183. **AI ChatOps Assistant**
+
+   - Provide chat-based commands to manage deployments via Slack.
+   - Expose orchestrator actions like redeploy or status through the bot.
+   - Maintain conversation context for smoother interactions.
+   - Task details: Build `services/plugins/chatops` connecting to Slack webhooks and calling orchestrator APIs.
+  - Steps:
+    1. Implement the bot service in `services/plugins/chatops`.
+    2. Register Slack credentials and command routes in the orchestrator.
+    3. Add a setup guide in `services/plugins/chatops/README.md`.
+    4. Update `docs/plugin-marketplace.md` with installation steps.
+
+184. **AI-Generated Seed Data**
+
+   - Use an LLM to create realistic sample data based on the schema.
+   - Allow requesting seed data from the portal after app creation.
+   - Store generated rows in the app's database for demos.
+   - Task details: Add a `seedData` script in `packages/codegen-templates` and expose `/api/seedData` in the orchestrator.
+  - Steps:
+    1. Implement the generation script `packages/codegen-templates/seedData.ts`.
+    2. Add an orchestrator endpoint calling the script and inserting data.
+    3. Build a portal page `seed-data.tsx` to trigger generation.
+    4. Document the feature in `docs/automatic-data-seeding.md`.
