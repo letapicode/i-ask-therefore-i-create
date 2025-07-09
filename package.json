@@ -18,7 +18,8 @@
     "security:scan": "node tools/security/scan.js",
     "sbom": "node tools/security/generate-sbom.js",
     "security:audit": "node tools/security-audit.js",
-    "preview": "node tools/start-preview.js"
+    "preview": "node tools/start-preview.js",
+    "migrate": "node tools/run-migrations.js"
   },
   "devDependencies": {
     "@aws-sdk/client-cloudwatch": "^3.841.0",
