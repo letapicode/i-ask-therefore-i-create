@@ -308,3 +308,10 @@ This file records brief summaries of each pull request.
 - Portal marketplace page handles buying and installing with license keys.
 - Plugin service verifies licenses before install.
 - Documentation updated and task 161 completed.
+
+## PR <pending> - Real-Time Stream Processing Connectors
+- Added Kafka and Kinesis helpers in `@iac/data-connectors` with basic validation.
+- Orchestrator connector API now stores stream settings and exposes `/api/testStream`.
+- Portal connectors page updated with fields for broker, topic and stream info.
+- Documentation enhanced with sample workflow diagram.
+- Marked task 162 complete.
