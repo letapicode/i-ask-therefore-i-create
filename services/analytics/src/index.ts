@@ -213,6 +213,9 @@ function generateBusinessTips(events: any[]): string[] {
   if (trials > 0 && conversions / trials < 0.2) {
     tips.push('Improve onboarding to boost trial conversions.');
   }
+  if (trials >= 5 && purchases < trials / 10) {
+    tips.push('Offer incentives like discounts to convert trial users.');
+  }
   if (tips.length === 0) tips.push('No monetization tips at this time.');
   return tips;
 }

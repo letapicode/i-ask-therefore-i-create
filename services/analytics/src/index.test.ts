@@ -52,9 +52,17 @@ test('chat history persists', async () => {
 });
 
 test('business tips endpoint returns tips', async () => {
-  await request(app).post('/events').send({ type: 'trialStart', userId: 'u1' });
-  await request(app).post('/events').send({ type: 'trialStart', userId: 'u2' });
+  for (let i = 0; i < 5; i++) {
+    await request(app)
+      .post('/events')
+      .send({ type: 'trialStart', userId: `u${i}` });
+  }
   const res = await request(app).get('/businessTips');
   expect(res.status).toBe(200);
   expect(Array.isArray(res.body.tips)).toBe(true);
+  expect(
+    res.body.tips.includes(
+      'Offer incentives like discounts to convert trial users.'
+    )
+  ).toBe(true);
 });

@@ -346,3 +346,4 @@ This file records brief summaries of each pull request.
   migrations. Updated documentation in `docs/automatic-data-migrations.md` and
   `tools/README.md`.
 - Added option validation for Kafka and Kinesis connectors with accompanying tests.
+- Refined business tip generation with discount suggestion.

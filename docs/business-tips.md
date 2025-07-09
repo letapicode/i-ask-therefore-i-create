@@ -18,6 +18,9 @@ Tips are generated from event counts including `purchase`, `trialStart` and
 `conversion` types. When `OPENAI_API_KEY` is configured, a short marketing blurb
 is produced using the OpenAI API.
 
+Additional heuristics suggest discounts when many trials have little purchase
+activity.
+
 ## Portal
 
 The portal page `business.tsx` displays the returned tips next to the cost
