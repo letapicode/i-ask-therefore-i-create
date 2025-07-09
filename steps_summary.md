@@ -299,10 +299,12 @@ This file records brief summaries of each pull request.
 - Created portal page `security.tsx` displaying vulnerability data and policy info.
 - Documented workflow in `docs/security-compliance.md`.
 - Updated task tracker for task 158.
-\n## PR <pending> - Pair programmer chat\n- Added WebSocket /chat endpoint in orchestrator with LLM forwarding.\n- Chat widget integrated into portal.\n- Analytics service stores conversations for fine-tuning.\n- Documented setup and privacy in docs/pair-programmer.md.
-\n## PR <pending> - Preview environments\n- Added Terraform module `infrastructure/preview` for ephemeral ECS services.\n- Implemented preview management in orchestrator with new `preview.ts`.\n- Created CI workflow `ci/preview.yml` and helper script.\n- Documented usage in `docs/preview-environments.md`.\n- Marked task 160 complete.
-\n
+  \n## PR <pending> - Pair programmer chat\n- Added WebSocket /chat endpoint in orchestrator with LLM forwarding.\n- Chat widget integrated into portal.\n- Analytics service stores conversations for fine-tuning.\n- Documented setup and privacy in docs/pair-programmer.md.
+  \n## PR <pending> - Preview environments\n- Added Terraform module `infrastructure/preview` for ephemeral ECS services.\n- Implemented preview management in orchestrator with new `preview.ts`.\n- Created CI workflow `ci/preview.yml` and helper script.\n- Documented usage in `docs/preview-environments.md`.\n- Marked task 160 complete.
+  \n
+
 ## PR <pending> - Monetized plugin marketplace
+
 - Marketplace service supports paid plugins with `/purchase` and license validation.
 - Plugin interface updated with pricing fields.
 - Portal marketplace page handles buying and installing with license keys.
@@ -310,6 +312,7 @@ This file records brief summaries of each pull request.
 - Documentation updated and task 161 completed.
 
 ## PR <pending> - Real-Time Stream Processing Connectors
+
 - Added Kafka and Kinesis helpers in `@iac/data-connectors` with basic validation.
 - Orchestrator connector API now stores stream settings and exposes `/api/testStream`.
 - Portal connectors page updated with fields for broker, topic and stream info.
@@ -317,21 +320,28 @@ This file records brief summaries of each pull request.
 - Marked task 162 complete.
 
 ## PR <pending> - Business monetization recommendations
+
 - Analytics service now exposes `/businessTips` returning revenue ideas and marketing copy.
 - Portal page `business.tsx` displays tips alongside cost forecasts.
 - Added documentation in `docs/business-tips.md` and updated task tracker for task 163.
 
 ## PR <pending> - Multi-cloud pricing advisor
+
 - Created `pricing-service` with `/estimate` and `/recommend` endpoints.
 - Added `pricing.tsx` portal page for interactive cost comparisons.
 - Sample price data cached in `.cache.json` under `services/pricing`.
 - Documented usage in `services/pricing/README.md` and referenced in portal README.
-\n## PR <pending> - App Store Deployment Automation\n- Added Apple and Google publishing connectors and new /api/publishMobile endpoint.\n- Portal page mobile-publish.tsx triggers submissions.\n- Script publish-mobile.js wraps fastlane commands.\n- Documentation and task tracker updated for task 165.
+  \n## PR <pending> - App Store Deployment Automation\n- Added Apple and Google publishing connectors and new /api/publishMobile endpoint.\n- Portal page mobile-publish.tsx triggers submissions.\n- Script publish-mobile.js wraps fastlane commands.\n- Documentation and task tracker updated for task 165.
 
 ## PR <pending> - E-Commerce Starter Template
+
 - Added new `ecommerce` template under `packages/codegen-templates` with React components and example API routes.
 - Template integrates Stripe payments and posts purchase events to the analytics service.
 - Updated template registry and marked task 166 complete.
 
 ## Maintenance
+
 - Locked react-flow-renderer version to ^10.3.17 to avoid installation failure.
+- Added `tools/run-migrations.js` and npm script `migrate` for applying schema
+  migrations. Updated documentation in `docs/automatic-data-migrations.md` and
+  `tools/README.md`.

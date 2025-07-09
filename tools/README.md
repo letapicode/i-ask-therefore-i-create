@@ -11,6 +11,7 @@ Utility scripts for local development and deployment.
 - `offline.sh` – spin up all services locally without external dependencies
 - `audit-log.js` – append audit events to a log file
 - `export-data.js` – export or delete tenant data for GDPR requests
+- `run-migrations.js` – apply generated SQL files to a Postgres database
 
 - `loadtest/basic.js` – example k6 script
 
@@ -18,4 +19,12 @@ Utility scripts for local development and deployment.
 
 ```
 node tools/redeploy.js --id abc123 --description "New features" --url http://localhost:3002
+```
+
+### Run Migrations
+
+Apply pending migrations to a local Postgres database:
+
+```
+pnpm run migrate -- --connection postgres://user:pass@localhost:5432/db
 ```
