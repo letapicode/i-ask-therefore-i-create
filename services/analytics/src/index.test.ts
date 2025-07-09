@@ -50,3 +50,11 @@ test('chat history persists', async () => {
   const res = await request(app).get('/chat');
   expect(res.body.pop().content).toBe('hi');
 });
+
+test('business tips endpoint returns tips', async () => {
+  await request(app).post('/events').send({ type: 'trialStart', userId: 'u1' });
+  await request(app).post('/events').send({ type: 'trialStart', userId: 'u2' });
+  const res = await request(app).get('/businessTips');
+  expect(res.status).toBe(200);
+  expect(Array.isArray(res.body.tips)).toBe(true);
+});
