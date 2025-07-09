@@ -19,3 +19,4 @@ This folder contains user guides and architecture diagrams.
 - [Localization](./i18n.md)
 - [Dashboard Monitoring](./dashboard-monitoring.md)
 - [Automatic Data Migrations](./automatic-data-migrations.md)
+- [AI Pair Programming Chat](./pair-programming-chat.md)
