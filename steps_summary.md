@@ -299,3 +299,4 @@ This file records brief summaries of each pull request.
 - Created portal page `security.tsx` displaying vulnerability data and policy info.
 - Documented workflow in `docs/security-compliance.md`.
 - Updated task tracker for task 158.
+\n## PR <pending> - Pair programmer chat\n- Added WebSocket /chat endpoint in orchestrator with LLM forwarding.\n- Chat widget integrated into portal.\n- Analytics service stores conversations for fine-tuning.\n- Documented setup and privacy in docs/pair-programmer.md.

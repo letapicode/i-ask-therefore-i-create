@@ -28,6 +28,8 @@ import {
 import * as tf from '@tensorflow/tfjs';
 import { generateSchema } from '../../packages/codegen-templates/src/graphqlBuilder';
 import { runTemplateHooks } from '../../packages/codegen-templates/src/marketplace';
+import { createServer } from 'http';
+import { WebSocketServer } from 'ws';
 
 export const app = express();
 app.use(express.json());
@@ -52,8 +54,57 @@ const PLUGINS_TABLE = process.env.PLUGINS_TABLE || 'plugins';
 const PLUGIN_SERVICE_URL =
   process.env.PLUGIN_SERVICE_URL || 'http://localhost:3006';
 const TENANTS_TABLE = process.env.TENANTS_TABLE || 'tenants';
-const EVENTS_FILE = path.join(__dirname, '..', '..', 'services', 'analytics', '.events.json');
-const FORECAST_FILE = path.join(__dirname, '..', '..', 'services', 'analytics', '.forecast.json');
+const EVENTS_FILE = path.join(
+  __dirname,
+  '..',
+  '..',
+  'services',
+  'analytics',
+  '.events.json'
+);
+const FORECAST_FILE = path.join(
+  __dirname,
+  '..',
+  '..',
+  'services',
+  'analytics',
+  '.forecast.json'
+);
+
+async function chatCompletion(message: string): Promise<string> {
+  if (process.env.CUSTOM_MODEL_URL) {
+    try {
+      const res = await fetch(process.env.CUSTOM_MODEL_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ prompt: message }),
+      });
+      const data = await res.json();
+      return data.result || '';
+    } catch {
+      return 'Model unavailable';
+    }
+  }
+  const apiKey = process.env.OPENAI_API_KEY;
+  if (!apiKey) return 'Model unavailable';
+  try {
+    const res = await fetch('https://api.openai.com/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${apiKey}`,
+      },
+      body: JSON.stringify({
+        model: 'gpt-3.5-turbo',
+        messages: [{ role: 'user', content: message }],
+      }),
+    });
+    const data: any = await res.json();
+    return data.choices?.[0]?.message?.content || '';
+  } catch {
+    return 'Model unavailable';
+  }
+}
 
 async function getProvider(tenantId: string): Promise<'aws' | 'azure' | 'gcp'> {
   const cfg = await getItem<{ id: string; provider?: string }>(TENANTS_TABLE, {
@@ -429,7 +480,9 @@ async function getCpuSeries(days = 14) {
   });
   const data = await client.send(cmd);
   const list = (data.Datapoints || [])
-    .sort((a, b) => (a.Timestamp?.getTime() || 0) - (b.Timestamp?.getTime() || 0))
+    .sort(
+      (a, b) => (a.Timestamp?.getTime() || 0) - (b.Timestamp?.getTime() || 0)
+    )
     .map((d) => d.Average || 0);
   return list;
 }
@@ -463,10 +516,33 @@ app.get('/api/policy', (req, res) => {
 
 export function start(port = 3002) {
   initSentry('orchestrator');
-  app.listen(port, () => console.log(`orchestrator listening on ${port}`));
+  const server = createServer(app);
+  const wss = new WebSocketServer({ server, path: '/chat' });
+  wss.on('connection', (ws) => {
+    ws.on('message', async (data) => {
+      const text = data.toString();
+      const reply = await chatCompletion(text);
+      ws.send(reply);
+      const url = process.env.ANALYTICS_URL;
+      if (url) {
+        fetch(`${url}/chat`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ role: 'user', content: text }),
+        }).catch(() => {});
+        fetch(`${url}/chat`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ role: 'assistant', content: reply }),
+        }).catch(() => {});
+      }
+    });
+  });
+  server.listen(port, () => console.log(`orchestrator listening on ${port}`));
   if (process.env.SELF_HEAL) {
     startSelfHealing();
   }
+  return server;
 }
 
 if (require.main === module) {
