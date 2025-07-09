@@ -332,3 +332,6 @@ This file records brief summaries of each pull request.
 - Added new `ecommerce` template under `packages/codegen-templates` with React components and example API routes.
 - Template integrates Stripe payments and posts purchase events to the analytics service.
 - Updated template registry and marked task 166 complete.
+
+## Maintenance
+- Locked react-flow-renderer version to ^10.3.17 to avoid installation failure.
