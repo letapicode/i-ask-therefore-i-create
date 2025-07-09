@@ -25,3 +25,4 @@ cd vpc
 terraform init
 terraform plan -var-file=example.tfvars
 ```
+- `preview` – short-lived ECS preview environments

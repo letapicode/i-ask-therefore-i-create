@@ -125,6 +125,19 @@ test('provider selection uses tenant table', async () => {
   expect(job.provider).toBe('gcp');
 });
 
+test('preview flag stores preview info', async () => {
+  const res = await request(app)
+    .post('/api/createApp')
+    .set('x-tenant-id', 't1')
+    .send({ description: 'p', preview: true });
+  expect(res.status).toBe(202);
+  const id = res.body.jobId;
+  const status = await request(app)
+    .get(`/api/status/${id}`)
+    .set('x-tenant-id', 't1');
+  expect(status.body.previewUrl).toBeDefined();
+});
+
 test('schema endpoints persist data', async () => {
   await request(app)
     .post('/api/schema')

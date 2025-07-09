@@ -15,11 +15,12 @@ jest.mock('../../packages/shared/src/s3', () => ({
 }));
 
 test('create app flow completes', async () => {
-  const res = await request(app).post('/api/createApp').send({ description: 'test app' });
+  const res = await request(app).post('/api/createApp').send({ description: 'test app', preview: true });
   expect(res.status).toBe(202);
   const id = res.body.jobId;
   expect(id).toBeTruthy();
   await new Promise(r => setTimeout(r, 10));
   const status = await request(app).get(`/api/status/${id}`);
   expect(status.body.status).toBe('complete');
+  expect(status.body.previewUrl).toBeDefined();
 });
