@@ -2358,3 +2358,75 @@ This file expands on each item in `Tasks.md` with a short description of the exp
     3. Modify `offline-model/Dockerfile` to accept optimized weights.
     4. Document usage in `docs/offline-llm-optimization.md`.
 
+190. **Natural Language ChatOps**
+
+   - Parse human requests in Slack into orchestrator commands.
+   - Maintain conversation memory to clarify ambiguous input.
+   - Log interactions for analytics.
+   - Task details: Enhance `services/plugins/chatops` with NLP parsing using a lightweight model.
+  - Steps:
+    1. Add `nlp.ts` helper in `services/plugins/chatops`.
+    2. Expose `/api/chatops/nlp` for processing messages.
+    3. Persist conversation context in `services/analytics`.
+    4. Document new commands in `services/plugins/chatops/README.md`.
+
+191. **Reusable AR Gesture Library**
+
+   - Provide a shared set of gestures for AR layout editing.
+   - Importable by any AR-enabled portal page.
+   - Allow customization of gesture sensitivity.
+   - Task details: Implement `packages/ar-gestures` and update `portal/ar` to use it.
+  - Steps:
+    1. Create the library `packages/ar-gestures/index.ts`.
+    2. Define common gestures with TypeScript types.
+    3. Update `portal/ar` to load gestures from the package.
+    4. Document extension points in `packages/ar-gestures/README.md`.
+
+192. **Federated Training Privacy Dashboard**
+
+   - Visualize aggregation metrics and privacy noise levels.
+   - Show opt-in statistics across tenants.
+   - Provide alerts if thresholds are exceeded.
+   - Task details: Extend `services/federated-training` with metric storage and a portal dashboard.
+  - Steps:
+    1. Record noise levels in `services/federated-training/metrics.ts`.
+    2. Add `/api/privacyStats` endpoints in the orchestrator.
+    3. Build `portal/privacy-dashboard.tsx` to display charts.
+    4. Document interpretation guidance in `docs/federated-privacy.md`.
+
+193. **Cross-Chain Plugin License Sync**
+
+   - Mirror plugin license records across multiple blockchains.
+   - Handle chain failures gracefully with retries.
+   - Provide a CLI to resync past transactions.
+   - Task details: Update blockchain helpers to support bridging between Ethereum and Polygon.
+  - Steps:
+    1. Expand `packages/data-connectors/blockchain.ts` with bridge APIs.
+    2. Queue sync jobs in `services/plugins` for new purchases.
+    3. Implement a `tools/resync-licenses.ts` script.
+    4. Document configuration in `docs/cross-chain-licensing.md`.
+
+194. **Edge Auto-Scaling**
+
+   - Dynamically scale edge deployments based on request metrics.
+   - Integrate scaling policies with the orchestrator.
+   - Provide dashboards showing active edge instances.
+   - Task details: Add auto-scaling Terraform modules and orchestrator hooks.
+  - Steps:
+    1. Create `infrastructure/edge/auto-scaling.tf` with provider configs.
+    2. Emit usage metrics from edge functions to `services/analytics`.
+    3. Add orchestrator logic to update scaling settings.
+    4. Explain setup in `docs/edge-auto-scaling.md`.
+
+195. **Prompt A/B Testing Platform**
+
+   - Run experiments comparing multiple prompt variants.
+   - Collect success metrics and recommend winners.
+   - Allow exporting results for further analysis.
+   - Task details: Build `services/prompt-experiments` with portal integration.
+  - Steps:
+    1. Scaffold the service under `services/prompt-experiments`.
+    2. Add endpoints `/api/experiments` for CRUD operations.
+    3. Implement `portal/prompt-tests.tsx` to launch and monitor tests.
+    4. Document workflows in `docs/prompt-ab-testing.md`.
+

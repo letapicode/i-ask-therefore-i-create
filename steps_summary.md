@@ -87,7 +87,8 @@ This file records brief summaries of each pull request.
 - Added SHA3-based signing helpers in `packages/shared` and integrated them with the auth service.
 - Created tests for the new crypto module.
 - Updated task tracker for tasks 120-124.
-  \n## PR <pending> - CI improvements and observability updates\n\n- Added release pipeline and dependency scan workflows under `ci/`.\n- Enabled Nx Cloud remote caching via updated `turbo.json`.\n- Enhanced observability Terraform module with log retention and alarms.\n- Documented Sentry DSN usage and added example env vars.\n- Introduced basic Cypress tests and updated package scripts.\n- Updated task tracker for tasks 63-68.
+  
+## PR <pending> - CI improvements and observability updates\n\n- Added release pipeline and dependency scan workflows under `ci/`.\n- Enabled Nx Cloud remote caching via updated `turbo.json`.\n- Enhanced observability Terraform module with log retention and alarms.\n- Documented Sentry DSN usage and added example env vars.\n- Introduced basic Cypress tests and updated package scripts.\n- Updated task tracker for tasks 63-68.
 
 ## PR <pending> - OAuth, analytics and portal pages
 
@@ -282,7 +283,8 @@ This file records brief summaries of each pull request.
 - Orchestrator now accepts `provider` parameter and triggers provider-specific deploy webhooks.
 - Documented usage in `docs/multi-cloud.md` and marked task 154 complete.
 - Implemented automatic schema migration generation. Added new package `packages/migrations` with diff logic and integrated into orchestrator `/api/schema` endpoint. Documented usage in `docs/automatic-data-migrations.md` and marked task 155 complete.
-  \n## PR <pending> - Billing service and portal integration\n\n- Added new `billing-service` microservice with subscription and invoice endpoints.\n- Created portal billing page to manage plans and view invoices.\n- Documented configuration in `docs/billing-service.md`.\n- Updated task tracker for task 156.
+  
+## PR <pending> - Billing service and portal integration\n\n- Added new `billing-service` microservice with subscription and invoice endpoints.\n- Created portal billing page to manage plans and view invoices.\n- Documented configuration in `docs/billing-service.md`.\n- Updated task tracker for task 156.
 
 ## PR <pending> - AI-powered UI/UX optimization
 
@@ -299,8 +301,10 @@ This file records brief summaries of each pull request.
 - Created portal page `security.tsx` displaying vulnerability data and policy info.
 - Documented workflow in `docs/security-compliance.md`.
 - Updated task tracker for task 158.
-  \n## PR <pending> - Pair programmer chat\n- Added WebSocket /chat endpoint in orchestrator with LLM forwarding.\n- Chat widget integrated into portal.\n- Analytics service stores conversations for fine-tuning.\n- Documented setup and privacy in docs/pair-programmer.md.
-  \n## PR <pending> - Preview environments\n- Added Terraform module `infrastructure/preview` for ephemeral ECS services.\n- Implemented preview management in orchestrator with new `preview.ts`.\n- Created CI workflow `ci/preview.yml` and helper script.\n- Documented usage in `docs/preview-environments.md`.\n- Marked task 160 complete.
+  
+## PR <pending> - Pair programmer chat\n- Added WebSocket /chat endpoint in orchestrator with LLM forwarding.\n- Chat widget integrated into portal.\n- Analytics service stores conversations for fine-tuning.\n- Documented setup and privacy in docs/pair-programmer.md.
+  
+## PR <pending> - Preview environments\n- Added Terraform module `infrastructure/preview` for ephemeral ECS services.\n- Implemented preview management in orchestrator with new `preview.ts`.\n- Created CI workflow `ci/preview.yml` and helper script.\n- Documented usage in `docs/preview-environments.md`.\n- Marked task 160 complete.
   \n
 
 ## PR <pending> - Monetized plugin marketplace
@@ -331,7 +335,8 @@ This file records brief summaries of each pull request.
 - Added `pricing.tsx` portal page for interactive cost comparisons.
 - Sample price data cached in `.cache.json` under `services/pricing`.
 - Documented usage in `services/pricing/README.md` and referenced in portal README.
-  \n## PR <pending> - App Store Deployment Automation\n- Added Apple and Google publishing connectors and new /api/publishMobile endpoint.\n- Portal page mobile-publish.tsx triggers submissions.\n- Script publish-mobile.js wraps fastlane commands.\n- Documentation and task tracker updated for task 165.
+  
+## PR <pending> - App Store Deployment Automation\n- Added Apple and Google publishing connectors and new /api/publishMobile endpoint.\n- Portal page mobile-publish.tsx triggers submissions.\n- Script publish-mobile.js wraps fastlane commands.\n- Documentation and task tracker updated for task 165.
 
 ## PR <pending> - E-Commerce Starter Template
 
@@ -350,5 +355,9 @@ This file records brief summaries of each pull request.
 
 ## PR <pending> - Next-Generation Tasks Added
 - Appended tasks 167 through 184 in `parallel_tasks.md` covering AR previews, federated model training, accessibility audits, synthetic data, blockchain licensing, offline LLM support and other innovations.
-\n## PR <pending> - Advanced collaboration tasks
+
+## PR <pending> - Advanced collaboration tasks
 - Added tasks 185-189 describing collaborative AR sessions, community model sharing, accessibility score tracking, plugin resale features, and offline LLM optimization.
+
+## PR <pending> - Expanded Next-Gen Task List
+- Added tasks 190-195 in `parallel_tasks.md` introducing NLP-based ChatOps, AR gesture library, federated training privacy dashboard, cross-chain licensing sync, edge auto-scaling, and prompt A/B testing.
