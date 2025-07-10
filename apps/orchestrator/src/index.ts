@@ -1,3 +1,4 @@
+import 'ts-node/register';
 import express from 'express';
 import { randomUUID } from 'crypto';
 import fetch from 'node-fetch';
@@ -37,6 +38,7 @@ import { runTemplateHooks } from '../../packages/codegen-templates/src/marketpla
 import { createServer } from 'http';
 import { WebSocketServer } from 'ws';
 import { startPreview, getPreview, cleanupPreviews } from './preview';
+import { scan as scanA11y } from '../../../tools/a11y-scan';
 
 export const app = express();
 app.use(express.json());
@@ -652,6 +654,17 @@ app.post('/api/modelUpdate', async (req, res) => {
     res.status(response.status).json(json);
   } catch {
     res.status(500).json({ error: 'federated service unavailable' });
+  }
+});
+
+app.post('/api/a11yReport', async (req, res) => {
+  const path = req.body.path as string;
+  if (!path) return res.status(400).json({ error: 'missing path' });
+  try {
+    const results = await scanA11y(path);
+    res.json({ violations: results.violations });
+  } catch {
+    res.status(500).json({ error: 'scan failed' });
   }
 });
 
