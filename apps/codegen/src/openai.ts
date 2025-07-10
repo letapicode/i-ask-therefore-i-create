@@ -1,5 +1,6 @@
 import fetch from 'node-fetch';
 import { generateWithCustomModel } from './customModel';
+import { generateWithLocalModel } from './localModel';
 
 export interface GenerationOptions {
   description: string;
@@ -7,6 +8,9 @@ export interface GenerationOptions {
 }
 
 export async function generateCode(opts: GenerationOptions): Promise<string> {
+  if (process.env.LOCAL_MODEL_PATH) {
+    return generateWithLocalModel(opts);
+  }
   if (process.env.CUSTOM_MODEL_URL) {
     return generateWithCustomModel(opts);
   }

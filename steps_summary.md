@@ -391,3 +391,11 @@ This file records brief summaries of each pull request.
 - Added blockchain helper module and ledger-based purchase recording.
 - Plugins service now supports `/purchase` and verifies licenses via the ledger.
 - Documented setup in `docs/blockchain-licensing.md` and marked task 171 complete.
+
+## PR <pending> - Offline LLM Support
+
+- Added `offline-model` container with a small Transformers-based API and fine-tuning script.
+- Codegen service now checks `LOCAL_MODEL_PATH` to run generation via the local model.
+- `tools/offline.sh` builds and runs the container automatically and sets `CUSTOM_MODEL_URL`.
+- Created `tools/fine-tune-local.sh` and documented requirements in `docs/offline-llm.md`.
+- Updated task tracker marking task 172 complete.
