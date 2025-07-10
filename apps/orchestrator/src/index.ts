@@ -81,6 +81,7 @@ const FORECAST_FILE = path.join(
 );
 const AR_LAYOUT_FILE = process.env.AR_LAYOUT_FILE || 'ar-layout.json';
 const FED_TRAIN_URL = process.env.FED_TRAIN_URL || 'http://localhost:3010';
+const SYN_DATA_URL = process.env.SYN_DATA_URL || 'http://localhost:3011';
 
 async function chatCompletion(message: string): Promise<string> {
   if (process.env.CUSTOM_MODEL_URL) {
@@ -665,6 +666,22 @@ app.post('/api/a11yReport', async (req, res) => {
     res.json({ violations: results.violations });
   } catch {
     res.status(500).json({ error: 'scan failed' });
+  }
+});
+
+app.post('/api/syntheticData', async (req, res) => {
+  const { template, count } = req.body as { template?: string; count?: number };
+  if (!template) return res.status(400).json({ error: 'missing template' });
+  try {
+    const response = await fetch(`${SYN_DATA_URL}/generate`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ template, count }),
+    });
+    const json = await response.json();
+    res.status(response.status).json(json);
+  } catch {
+    res.status(500).json({ error: 'service unavailable' });
   }
 });
 

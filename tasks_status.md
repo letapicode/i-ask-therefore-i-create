@@ -170,3 +170,5 @@
 | 166    | E-Commerce Starter Template                | Completed |
 | 167    | Augmented Reality App Preview              | Completed |
 | 168    | Federated Model Training Service           | Completed |
+| 169    | Accessibility Audit Pipeline              | Completed |
+| 170    | Synthetic Data Generation Service         | Completed |

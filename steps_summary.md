@@ -380,3 +380,9 @@ This file records brief summaries of each pull request.
 - Added axe-core based scanner `tools/a11y-scan.ts` and `/api/a11yReport` endpoint invoking it.
 - New portal page `a11y.tsx` lists violations and supports marking them fixed.
 - Documented process in `docs/accessibility-audits.md`.
+
+## PR <pending> - Synthetic Data Generation Service
+- Added service `services/synthetic-data` providing dataset generation via `/generate`.
+- New CLI tool `tools/synthetic-data.ts` uses templates under `packages/codegen-templates/data-templates`.
+- Orchestrator endpoint `/api/syntheticData` forwards requests to the service.
+- Documented feature in `docs/synthetic-data.md` and updated tasks list.

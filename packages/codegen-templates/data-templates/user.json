@@ -1,0 +1,9 @@
+{
+  "fields": [
+    { "name": "id", "type": "uuid" },
+    { "name": "firstName", "type": "firstName" },
+    { "name": "lastName", "type": "lastName" },
+    { "name": "email", "type": "email" },
+    { "name": "age", "type": "number" }
+  ]
+}

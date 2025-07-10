@@ -306,3 +306,15 @@ test('a11yReport returns scan results', async () => {
   expect(Array.isArray(res.body.violations)).toBe(true);
   fs.unlinkSync(file);
 });
+
+test('syntheticData forwards to service', async () => {
+  const fetchMock = require('node-fetch') as jest.Mock;
+  const res = await request(app)
+    .post('/api/syntheticData')
+    .send({ template: 'user', count: 1 });
+  expect(res.status).toBe(200);
+  expect(fetchMock).toHaveBeenCalledWith(
+    expect.stringContaining('/generate'),
+    expect.objectContaining({ method: 'POST' })
+  );
+});
