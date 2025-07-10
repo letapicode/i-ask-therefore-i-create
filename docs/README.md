@@ -14,6 +14,7 @@ This folder contains user guides and architecture diagrams.
 - [Edge Inference](./edge-inference.md)
 - [A/B Testing](./ab-testing-toolkit.md)
 - [VR Preview](./vr-preview.md)
+- [AR Preview](./ar-preview.md)
 - [Template Marketplace](./template-marketplace.md)
 - [Pair Programmer Chat](./pair-programmer.md)
 - [Regional Compliance](./regional-compliance.md)
