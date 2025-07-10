@@ -78,6 +78,7 @@ const FORECAST_FILE = path.join(
   '.forecast.json'
 );
 const AR_LAYOUT_FILE = process.env.AR_LAYOUT_FILE || 'ar-layout.json';
+const FED_TRAIN_URL = process.env.FED_TRAIN_URL || 'http://localhost:3010';
 
 async function chatCompletion(message: string): Promise<string> {
   if (process.env.CUSTOM_MODEL_URL) {
@@ -635,6 +636,22 @@ app.get('/api/costForecast', async (_req, res) => {
     res.json({ cpuForecast, events: count, costForecast });
   } catch {
     res.status(500).json({ error: 'forecast failed' });
+  }
+});
+
+app.post('/api/modelUpdate', async (req, res) => {
+  const tenantId = req.header(TENANT_HEADER);
+  if (!tenantId) return res.status(401).json({ error: 'missing tenant' });
+  try {
+    const response = await fetch(`${FED_TRAIN_URL}/update`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ tenantId, weights: req.body.weights || [] }),
+    });
+    const json = await response.json();
+    res.status(response.status).json(json);
+  } catch {
+    res.status(500).json({ error: 'federated service unavailable' });
   }
 });
 
