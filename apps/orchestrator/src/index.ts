@@ -77,6 +77,7 @@ const FORECAST_FILE = path.join(
   'analytics',
   '.forecast.json'
 );
+const AR_LAYOUT_FILE = process.env.AR_LAYOUT_FILE || 'ar-layout.json';
 
 async function chatCompletion(message: string): Promise<string> {
   if (process.env.CUSTOM_MODEL_URL) {
@@ -281,6 +282,24 @@ app.post('/api/schema', (req, res) => {
     generateMigrations(schema);
   } catch (err) {
     console.error('migration generation failed', err);
+  }
+  res.json({ ok: true });
+});
+
+app.get('/api/arLayout', (_req, res) => {
+  if (!fs.existsSync(AR_LAYOUT_FILE)) return res.json({ items: [] });
+  res.json(JSON.parse(fs.readFileSync(AR_LAYOUT_FILE, 'utf-8')));
+});
+
+app.post('/api/arLayout', async (req, res) => {
+  fs.writeFileSync(AR_LAYOUT_FILE, JSON.stringify(req.body, null, 2));
+  const url = process.env.ANALYTICS_URL;
+  if (url) {
+    fetch(`${url}/events`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ type: 'arLayout', layout: req.body }),
+    }).catch(() => {});
   }
   res.json({ ok: true });
 });

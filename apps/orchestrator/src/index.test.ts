@@ -20,6 +20,14 @@ jest.mock('node-fetch', () =>
     return { ok: true, json: async () => ({}) };
   })
 );
+jest.mock(
+  '@tensorflow/tfjs',
+  () => ({
+    tensor: jest.fn(() => ({ dataSync: () => [0] })),
+    loadLayersModel: jest.fn(async () => ({ predict: () => ({ dataSync: () => [0] }) })),
+  }),
+  { virtual: true }
+);
 
 const jobMem: Record<string, any> = {};
 const connMem: Record<string, any> = {};
@@ -255,5 +263,22 @@ test('publishMobile triggers store calls', async () => {
   expect(fetch).toHaveBeenCalledWith(
     expect.stringContaining('androidpublisher'),
     expect.any(Object)
+  );
+});
+
+test('arLayout endpoints store and retrieve layout', async () => {
+  const fetchMock = require('node-fetch') as jest.Mock;
+  const file = path.resolve('ar-layout.json');
+  if (fs.existsSync(file)) fs.unlinkSync(file);
+  let res = await request(app).get('/api/arLayout');
+  expect(res.body.items).toEqual([]);
+  await request(app)
+    .post('/api/arLayout')
+    .send({ items: [{ x: 1, y: 0, z: -1 }] });
+  res = await request(app).get('/api/arLayout');
+  expect(res.body.items).toHaveLength(1);
+  expect(fetchMock).toHaveBeenCalledWith(
+    expect.stringContaining('/events'),
+    expect.objectContaining({ method: 'POST' })
   );
 });
