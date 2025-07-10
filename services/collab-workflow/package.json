@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "main": "dist/index.js",
   "scripts": {
-    "build": "tsc",
+    "build": "node ../../node_modules/.bin/tsc",
     "start": "node dist/index.js",
     "lint": "echo linting collab-workflow-service",
     "test": "jest"

@@ -375,3 +375,8 @@ This file records brief summaries of each pull request.
 ## PR <pending> - Federated Training Service
 
 - Implemented NestJS service in services/federated-training to aggregate model updates with differential privacy. Added /api/modelUpdate endpoint in orchestrator and documentation. Marked task 168 complete.
+
+## PR <pending> - Accessibility Audit Pipeline
+- Added axe-core based scanner `tools/a11y-scan.ts` and `/api/a11yReport` endpoint invoking it.
+- New portal page `a11y.tsx` lists violations and supports marking them fixed.
+- Documented process in `docs/accessibility-audits.md`.

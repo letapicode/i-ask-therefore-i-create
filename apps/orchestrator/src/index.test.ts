@@ -297,3 +297,12 @@ test('modelUpdate forwards to federated service', async () => {
     expect.objectContaining({ method: 'POST' })
   );
 });
+
+test('a11yReport returns scan results', async () => {
+  const file = path.resolve('test.html');
+  fs.writeFileSync(file, '<html><img src=""></html>');
+  const res = await request(app).post('/api/a11yReport').send({ path: file });
+  expect(res.status).toBe(200);
+  expect(Array.isArray(res.body.violations)).toBe(true);
+  fs.unlinkSync(file);
+});
