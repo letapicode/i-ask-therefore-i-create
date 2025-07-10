@@ -371,3 +371,7 @@ This file records brief summaries of each pull request.
 - Added augmented reality preview page and corresponding orchestrator endpoints.
 - Layout changes persist to analytics for history.
 - Documented usage in docs/ar-preview.md and marked task 167 complete.
+
+## PR <pending> - Federated Training Service
+
+- Implemented NestJS service in services/federated-training to aggregate model updates with differential privacy. Added /api/modelUpdate endpoint in orchestrator and documentation. Marked task 168 complete.

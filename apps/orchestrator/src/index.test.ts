@@ -24,7 +24,9 @@ jest.mock(
   '@tensorflow/tfjs',
   () => ({
     tensor: jest.fn(() => ({ dataSync: () => [0] })),
-    loadLayersModel: jest.fn(async () => ({ predict: () => ({ dataSync: () => [0] }) })),
+    loadLayersModel: jest.fn(async () => ({
+      predict: () => ({ dataSync: () => [0] }),
+    })),
   }),
   { virtual: true }
 );
@@ -279,6 +281,19 @@ test('arLayout endpoints store and retrieve layout', async () => {
   expect(res.body.items).toHaveLength(1);
   expect(fetchMock).toHaveBeenCalledWith(
     expect.stringContaining('/events'),
+    expect.objectContaining({ method: 'POST' })
+  );
+});
+
+test('modelUpdate forwards to federated service', async () => {
+  const fetchMock = require('node-fetch') as jest.Mock;
+  const res = await request(app)
+    .post('/api/modelUpdate')
+    .set('x-tenant-id', 't1')
+    .send({ weights: [0.1, 0.2] });
+  expect(res.status).toBe(200);
+  expect(fetchMock).toHaveBeenCalledWith(
+    expect.stringContaining('/update'),
     expect.objectContaining({ method: 'POST' })
   );
 });
