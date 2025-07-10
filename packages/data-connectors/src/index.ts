@@ -6,6 +6,7 @@ export type Connector = (config: ConnectorConfig) => Promise<void>;
 
 import fetch from 'node-fetch';
 export * from './tfHelper';
+export * from './blockchain';
 export * from './kafka';
 export * from './kinesis';
 
