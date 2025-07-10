@@ -1,8 +1,12 @@
 import express from 'express';
 import fs from 'fs';
-import fetch from 'node-fetch';
+import { randomUUID } from 'crypto';
 import { logAudit } from '../../packages/shared/src/audit';
 import { policyMiddleware } from '../../packages/shared/src/policyMiddleware';
+import {
+  recordPurchase,
+  verifyLicense,
+} from '../../packages/data-connectors/src/blockchain';
 
 export const app = express();
 app.use(express.json());
@@ -13,7 +17,7 @@ app.use((req, _res, next) => {
 });
 
 const DB = process.env.PLUGINS_DB || '.plugin-meta.json';
-const MARKETPLACE_URL = process.env.MARKETPLACE_URL || 'http://localhost:3005';
+const LEDGER = process.env.BLOCKCHAIN_LEDGER || '.ledger.json';
 
 interface PluginMeta {
   name: string;
@@ -39,20 +43,22 @@ function find(name: string, list: PluginMeta[]) {
   return p;
 }
 
-app.post('/install', async (req, res) => {
-  const { name, licenseKey } = req.body as { name?: string; licenseKey?: string };
+app.post('/purchase', (req, res) => {
+  const { name, buyer } = req.body as { name?: string; buyer?: string };
+  if (!name || !buyer) return res.status(400).json({ error: 'missing fields' });
+  const licenseKey = randomUUID();
+  recordPurchase(name, buyer, licenseKey, LEDGER);
+  res.status(201).json({ licenseKey });
+});
+
+app.post('/install', (req, res) => {
+  const { name, licenseKey } = req.body as {
+    name?: string;
+    licenseKey?: string;
+  };
   if (!name) return res.status(400).json({ error: 'missing name' });
-  // verify license if plugin has a price
-  try {
-    const check = await fetch(
-      `${MARKETPLACE_URL}/license?name=${encodeURIComponent(name)}&key=${encodeURIComponent(
-        licenseKey || ''
-      )}`
-    ).then((r) => r.json());
-    if (!check.valid) return res.status(403).json({ error: 'invalid license' });
-  } catch (err) {
-    return res.status(500).json({ error: 'license check failed' });
-  }
+  if (!licenseKey || !verifyLicense(name, licenseKey, LEDGER))
+    return res.status(403).json({ error: 'invalid license' });
   const list = read();
   const p = find(name, list);
   p.installs++;

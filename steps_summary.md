@@ -386,3 +386,8 @@ This file records brief summaries of each pull request.
 - New CLI tool `tools/synthetic-data.ts` uses templates under `packages/codegen-templates/data-templates`.
 - Orchestrator endpoint `/api/syntheticData` forwards requests to the service.
 - Documented feature in `docs/synthetic-data.md` and updated tasks list.
+
+## PR <pending> - Blockchain Plugin Licensing
+- Added blockchain helper module and ledger-based purchase recording.
+- Plugins service now supports `/purchase` and verifies licenses via the ledger.
+- Documented setup in `docs/blockchain-licensing.md` and marked task 171 complete.
