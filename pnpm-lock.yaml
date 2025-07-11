@@ -193,6 +193,12 @@ importers:
         specifier: ^13.9.0
         version: 13.15.15
 
+  services/a11y-assistant:
+    dependencies:
+      express:
+        specifier: ^4.18.2
+        version: 4.21.2
+
   services/analytics:
     dependencies:
       express:
