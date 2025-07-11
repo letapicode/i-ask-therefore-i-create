@@ -424,3 +424,10 @@ This file records brief summaries of each pull request.
 - Implemented CRUD endpoints and accompanying Jest tests.
 - Created `portal/prompts.tsx` page for editing prompts and viewing diffs.
 - Documented workflow in `docs/prompt-management.md` and updated task tracker for task 175.
+
+## PR <pending> - AI-Driven Query Optimization
+
+- Created `services/query-optimizer` Express service to record query stats and generate recommendations.
+- Added portal page `query-optimization.tsx` for viewing and applying suggestions.
+- Introduced `recordQuery` helper in `packages/shared` with tests.
+- Documented usage in `docs/query-optimization.md` and updated task tracker for task 176.
