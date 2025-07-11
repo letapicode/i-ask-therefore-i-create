@@ -377,17 +377,20 @@ This file records brief summaries of each pull request.
 - Implemented NestJS service in services/federated-training to aggregate model updates with differential privacy. Added /api/modelUpdate endpoint in orchestrator and documentation. Marked task 168 complete.
 
 ## PR <pending> - Accessibility Audit Pipeline
+
 - Added axe-core based scanner `tools/a11y-scan.ts` and `/api/a11yReport` endpoint invoking it.
 - New portal page `a11y.tsx` lists violations and supports marking them fixed.
 - Documented process in `docs/accessibility-audits.md`.
 
 ## PR <pending> - Synthetic Data Generation Service
+
 - Added service `services/synthetic-data` providing dataset generation via `/generate`.
 - New CLI tool `tools/synthetic-data.ts` uses templates under `packages/codegen-templates/data-templates`.
 - Orchestrator endpoint `/api/syntheticData` forwards requests to the service.
 - Documented feature in `docs/synthetic-data.md` and updated tasks list.
 
 ## PR <pending> - Blockchain Plugin Licensing
+
 - Added blockchain helper module and ledger-based purchase recording.
 - Plugins service now supports `/purchase` and verifies licenses via the ledger.
 - Documented setup in `docs/blockchain-licensing.md` and marked task 171 complete.
@@ -401,14 +404,23 @@ This file records brief summaries of each pull request.
 - Updated task tracker marking task 172 complete.
 
 ## PR <pending> - AI-Based Accessibility Assistant
+
 - Created new `services/a11y-assistant` Express service storing audit history and returning remediation tips.
 - Orchestrator forwards scan results and exposes `/api/a11yTips`.
 - Added `A11yTips` React component and `/editor` page to display recommendations.
 - Documented usage in `docs/a11y-assistant.md` and marked task 173 complete.
 
 ## PR <pending> - Data Anonymization Tools
+
 - Created `packages/shared/src/pii.ts` with PII detection patterns and anonymization helpers.
 - Added `tools/anonymize-data.ts` CLI for sanitizing JSON and CSV exports.
 - Orchestrator now anonymizes `/api/exportData` responses via middleware.
 - Wrote unit tests for the new utilities and endpoint behavior.
 - Documented guidance in `docs/data-privacy.md` and marked task 174 complete.
+
+## PR <pending> - Prompt Versioning and Management
+
+- Added new `services/prompt-store` Express service to store prompt templates with version history.
+- Implemented CRUD endpoints and accompanying Jest tests.
+- Created `portal/prompts.tsx` page for editing prompts and viewing diffs.
+- Documented workflow in `docs/prompt-management.md` and updated task tracker for task 175.
