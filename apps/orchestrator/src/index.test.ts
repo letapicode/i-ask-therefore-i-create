@@ -318,3 +318,18 @@ test('syntheticData forwards to service', async () => {
     expect.objectContaining({ method: 'POST' })
   );
 });
+
+test('exportData anonymizes PII fields', async () => {
+  jobMem['j1'] = {
+    id: 'j1',
+    tenantId: 't1',
+    provider: 'aws',
+    description: 'test',
+    language: 'node',
+    status: 'complete',
+    email: 'user@example.com',
+  };
+  const res = await request(app).get('/api/exportData').set('x-tenant-id', 't1');
+  expect(res.status).toBe(200);
+  expect(res.body[0].email).toBe('[REDACTED]');
+});
