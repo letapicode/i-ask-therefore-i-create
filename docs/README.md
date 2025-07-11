@@ -25,3 +25,4 @@ This folder contains user guides and architecture diagrams.
 - [Automatic Data Migrations](./automatic-data-migrations.md)
 - [Preview Environments](./preview-environments.md)
 - [Business Tips](./business-tips.md)
+- [Disaster Recovery](./disaster-recovery.md)
