@@ -438,3 +438,10 @@ This file records brief summaries of each pull request.
 - Updated connector registry and README documentation.
 - Created usage guide `docs/blockchain-connectors.md`.
 - Added Jest tests mocking `ethers` in `tests/blockchain`.
+
+## PR <pending> - Graph Database Templates
+
+- Added graph database codegen template with Neo4j CRUD example.
+- Implemented `createNeo4jConnector` and `createNeptuneConnector` in data connectors with tests.
+- Updated portal wizard to select database type and orchestrator to forward database info.
+- Documented usage in `docs/graph-databases.md` and updated task tracker for task 178.

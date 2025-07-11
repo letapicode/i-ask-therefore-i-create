@@ -9,7 +9,9 @@ export * from './tfHelper';
 export * from './blockchain';
 export * from './kafka';
 export * from './kinesis';
+export * from './graph';
 import { ethereumConnector, polygonConnector } from './blockchain';
+import { createNeo4jConnector, createNeptuneConnector } from './graph';
 
 export async function stripeConnector(config: ConnectorConfig) {
   const res = await fetch('https://api.stripe.com/v1/charges', {
@@ -97,4 +99,6 @@ export const connectorRegistry = {
   google: googleConnector,
   ethereum: ethereumConnector,
   polygon: polygonConnector,
+  neo4j: createNeo4jConnector,
+  neptune: createNeptuneConnector,
 };

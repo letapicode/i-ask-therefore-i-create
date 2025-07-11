@@ -8,4 +8,5 @@ export const templates = [
   { name: 'go', description: 'Go REST API boilerplate' },
   { name: 'mobile', description: 'React Native starter app' },
   { name: 'ecommerce', description: 'React storefront with Stripe' },
+  { name: 'graph-db', description: 'Neo4j CRUD example' },
 ];

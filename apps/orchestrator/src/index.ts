@@ -145,6 +145,7 @@ export interface Job {
   provider: 'aws' | 'gcp' | 'azure';
   description: string;
   language: string;
+  database?: string;
   status: 'queued' | 'running' | 'complete' | 'failed';
   created: number;
   previewUrl?: string;
@@ -208,6 +209,7 @@ export async function dispatchJob(job: Job) {
         jobId: job.id,
         description: job.description,
         language: job.language,
+        database: job.database,
         schema,
         provider: job.provider,
         plugins:
@@ -249,7 +251,7 @@ configureHealing(dispatchJob);
 app.post('/api/createApp', async (req, res) => {
   const tenantId = req.header(TENANT_HEADER);
   if (!tenantId) return res.status(401).json({ error: 'missing tenant' });
-  const { description, language = 'node', provider, preview } = req.body;
+  const { description, language = 'node', database, provider, preview } = req.body;
   if (!description)
     return res.status(400).json({ error: 'missing description' });
   const id = randomUUID();
@@ -261,6 +263,7 @@ app.post('/api/createApp', async (req, res) => {
     provider: prov,
     description,
     language,
+    database,
     status: 'queued',
     created: Date.now(),
   };
@@ -536,7 +539,7 @@ app.post('/api/testStream', async (req, res) => {
 app.post('/api/redeploy/:id', async (req, res) => {
   const tenantId = req.header(TENANT_HEADER);
   if (!tenantId) return res.status(401).json({ error: 'missing tenant' });
-  const { description, language = 'node', provider } = req.body;
+  const { description, language = 'node', database, provider } = req.body;
   if (!description)
     return res.status(400).json({ error: 'missing description' });
   const id = req.params.id;
@@ -548,6 +551,7 @@ app.post('/api/redeploy/:id', async (req, res) => {
     provider: prov,
     description,
     language,
+    database,
     status: 'queued',
     created: Date.now(),
   };
