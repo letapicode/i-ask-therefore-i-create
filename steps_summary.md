@@ -405,3 +405,10 @@ This file records brief summaries of each pull request.
 - Orchestrator forwards scan results and exposes `/api/a11yTips`.
 - Added `A11yTips` React component and `/editor` page to display recommendations.
 - Documented usage in `docs/a11y-assistant.md` and marked task 173 complete.
+
+## PR <pending> - Data Anonymization Tools
+- Created `packages/shared/src/pii.ts` with PII detection patterns and anonymization helpers.
+- Added `tools/anonymize-data.ts` CLI for sanitizing JSON and CSV exports.
+- Orchestrator now anonymizes `/api/exportData` responses via middleware.
+- Wrote unit tests for the new utilities and endpoint behavior.
+- Documented guidance in `docs/data-privacy.md` and marked task 174 complete.

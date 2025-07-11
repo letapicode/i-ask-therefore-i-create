@@ -7,6 +7,7 @@ This folder contains user guides and architecture diagrams.
 - [Offline Mode](./offline-mode.md)
 - [Tenant Isolation](./tenant-isolation.md)
 - [GDPR Processes](./gdpr-processes.md)
+- [Data Privacy](./data-privacy.md)
 - [Figma Design Import](./figma-import.md)
 - [Schema Designer](./schema-designer.md)
 - [Voice Guided Modeling](./voice-modeling.md)

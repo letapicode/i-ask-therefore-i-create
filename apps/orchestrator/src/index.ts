@@ -22,6 +22,7 @@ import {
 import { logAudit } from '../../packages/shared/src/audit';
 import { figmaToReact } from '../../packages/shared/src/figma';
 import { policyMiddleware } from '../../packages/shared/src/policyMiddleware';
+import { anonymizeObject } from '../../packages/shared/src/pii';
 import {
   loadModel,
   predict,
@@ -47,6 +48,18 @@ app.use((req, _res, next) => {
   logAudit(`orchestrator ${req.method} ${req.url}`);
   next();
 });
+
+function anonymizeResponse(
+  _req: express.Request,
+  res: express.Response,
+  next: express.NextFunction
+) {
+  const json = res.json.bind(res);
+  res.json = (body: any) => json(anonymizeObject(body));
+  next();
+}
+
+app.use('/api/exportData', anonymizeResponse);
 
 const JOBS_TABLE = process.env.JOBS_TABLE || 'jobs';
 const CODEGEN_URL = process.env.CODEGEN_URL || 'http://localhost:3003/generate';
