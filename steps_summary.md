@@ -431,3 +431,10 @@ This file records brief summaries of each pull request.
 - Added portal page `query-optimization.tsx` for viewing and applying suggestions.
 - Introduced `recordQuery` helper in `packages/shared` with tests.
 - Documented usage in `docs/query-optimization.md` and updated task tracker for task 176.
+
+## PR <pending> - Blockchain Connectors
+
+- Added Ethereum and Polygon connector helpers in `packages/data-connectors`.
+- Updated connector registry and README documentation.
+- Created usage guide `docs/blockchain-connectors.md`.
+- Added Jest tests mocking `ethers` in `tests/blockchain`.

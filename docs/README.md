@@ -18,6 +18,7 @@ This folder contains user guides and architecture diagrams.
 - [AR Preview](./ar-preview.md)
 - [Template Marketplace](./template-marketplace.md)
 - [Pair Programmer Chat](./pair-programmer.md)
+- [Blockchain Connectors](./blockchain-connectors.md)
 - [Regional Compliance](./regional-compliance.md)
 - [Localization](./i18n.md)
 - [Dashboard Monitoring](./dashboard-monitoring.md)

@@ -9,6 +9,7 @@ export * from './tfHelper';
 export * from './blockchain';
 export * from './kafka';
 export * from './kinesis';
+import { ethereumConnector, polygonConnector } from './blockchain';
 
 export async function stripeConnector(config: ConnectorConfig) {
   const res = await fetch('https://api.stripe.com/v1/charges', {
@@ -85,3 +86,15 @@ export async function googleConnector(config: ConnectorConfig) {
   );
   if (!res.ok) throw new Error('Google publish failed');
 }
+
+export const connectorRegistry = {
+  stripe: stripeConnector,
+  slack: slackConnector,
+  shopify: shopifyConnector,
+  quickBooks: quickBooksConnector,
+  zendesk: zendeskConnector,
+  apple: appleConnector,
+  google: googleConnector,
+  ethereum: ethereumConnector,
+  polygon: polygonConnector,
+};
