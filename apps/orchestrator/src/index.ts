@@ -12,6 +12,7 @@ import { uploadObject } from '../../packages/shared/src/s3';
 import { sendEmail } from '../../services/email/src';
 import { initSentry } from '../../packages/shared/src/sentry';
 import { startSelfHealing, configure as configureHealing } from './selfHeal';
+import { startBackupScheduler } from './backup';
 import fs from 'fs';
 import path from 'path';
 import { generateMigrations, Schema } from '../../packages/migrations/src';
@@ -756,6 +757,9 @@ export function start(port = 3002) {
   server.listen(port, () => console.log(`orchestrator listening on ${port}`));
   if (process.env.SELF_HEAL) {
     startSelfHealing();
+  }
+  if (process.env.BACKUP_BUCKET) {
+    startBackupScheduler();
   }
   cleanupPreviews();
   return server;
