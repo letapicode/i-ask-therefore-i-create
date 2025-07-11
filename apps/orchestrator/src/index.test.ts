@@ -124,6 +124,16 @@ test('createApp forwards language', async () => {
   expect(job.provider).toBe('aws');
 });
 
+test('createApp forwards database', async () => {
+  const res = await request(app)
+    .post('/api/createApp')
+    .set('x-tenant-id', 't1')
+    .send({ description: 'db', database: 'graph' });
+  expect(res.status).toBe(202);
+  const job = jobMem[Object.keys(jobMem)[0]];
+  expect(job.database).toBe('graph');
+});
+
 test('provider selection uses tenant table', async () => {
   tenantMem['t2'] = { id: 't2', provider: 'gcp' };
   const res = await request(app)
