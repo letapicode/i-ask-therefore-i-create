@@ -399,3 +399,9 @@ This file records brief summaries of each pull request.
 - `tools/offline.sh` builds and runs the container automatically and sets `CUSTOM_MODEL_URL`.
 - Created `tools/fine-tune-local.sh` and documented requirements in `docs/offline-llm.md`.
 - Updated task tracker marking task 172 complete.
+
+## PR <pending> - AI-Based Accessibility Assistant
+- Created new `services/a11y-assistant` Express service storing audit history and returning remediation tips.
+- Orchestrator forwards scan results and exposes `/api/a11yTips`.
+- Added `A11yTips` React component and `/editor` page to display recommendations.
+- Documented usage in `docs/a11y-assistant.md` and marked task 173 complete.

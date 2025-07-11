@@ -82,6 +82,7 @@ const FORECAST_FILE = path.join(
 const AR_LAYOUT_FILE = process.env.AR_LAYOUT_FILE || 'ar-layout.json';
 const FED_TRAIN_URL = process.env.FED_TRAIN_URL || 'http://localhost:3010';
 const SYN_DATA_URL = process.env.SYN_DATA_URL || 'http://localhost:3011';
+const A11Y_ASSIST_URL = process.env.A11Y_ASSIST_URL || 'http://localhost:3012';
 
 async function chatCompletion(message: string): Promise<string> {
   if (process.env.CUSTOM_MODEL_URL) {
@@ -663,9 +664,31 @@ app.post('/api/a11yReport', async (req, res) => {
   if (!path) return res.status(400).json({ error: 'missing path' });
   try {
     const results = await scanA11y(path);
+    try {
+      await fetch(`${A11Y_ASSIST_URL}/history`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ project: path, violations: results.violations }),
+      });
+    } catch (err) {
+      console.error('a11y assistant unavailable', err);
+    }
     res.json({ violations: results.violations });
   } catch {
     res.status(500).json({ error: 'scan failed' });
+  }
+});
+
+app.get('/api/a11yTips', async (req, res) => {
+  const project = (req.query.project as string) || '';
+  try {
+    const response = await fetch(
+      `${A11Y_ASSIST_URL}/tips?project=${encodeURIComponent(project)}`
+    );
+    const json = await response.json();
+    res.status(response.status).json(json);
+  } catch {
+    res.status(500).json({ error: 'service unavailable' });
   }
 });
 
