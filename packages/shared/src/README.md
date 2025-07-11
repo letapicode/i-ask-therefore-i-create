@@ -28,4 +28,11 @@ This package now includes DynamoDB helper functions built on the AWS SDK v3 `Dyn
 ## Input Sanitization
 
 `sanitize(str)` HTML-escapes user supplied strings to prevent injection attacks.
-\n## Audit Logging\n\n`logAudit(msg)` appends a timestamped entry to `AUDIT_LOG` (default `audit.log`).
+
+## Audit Logging
+
+`logAudit(msg)` appends a timestamped entry to `AUDIT_LOG` (default `audit.log`).
+
+## Query Profiling
+
+`recordQuery(appId, query, duration)` posts query metrics to the query optimizer service for analysis.
