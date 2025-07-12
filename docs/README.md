@@ -17,6 +17,7 @@ This folder contains user guides and architecture diagrams.
 - [A/B Testing](./ab-testing-toolkit.md)
 - [VR Preview](./vr-preview.md)
 - [AR Preview](./ar-preview.md)
+- [Collaborative AR Sessions](./collaborative-ar.md)
 - [Template Marketplace](./template-marketplace.md)
 - [Pair Programmer Chat](./pair-programmer.md)
 - [Blockchain Connectors](./blockchain-connectors.md)

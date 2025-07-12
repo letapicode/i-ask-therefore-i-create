@@ -20,6 +20,7 @@ const EXP_FILE = process.env.EXPERIMENT_DB || '.experiments.json';
 const UI_FILE = process.env.UI_EVENTS_DB || '.ui-events.json';
 const SUGG_FILE = process.env.UI_SUGGESTIONS_DB || '.ui-suggestions.json';
 const CHAT_FILE = process.env.CHAT_DB || '.chat.json';
+const AR_SESSION_FILE = process.env.AR_SESS_FILE || '.ar-sessions.json';
 const ALERT_THRESHOLD = Number(process.env.ALERT_THRESHOLD || '1000');
 const SEC_DIR = path.resolve(__dirname, '../security');
 
@@ -66,6 +67,15 @@ function readChats(): any[] {
 
 function saveChats(data: any[]) {
   fs.writeFileSync(CHAT_FILE, JSON.stringify(data, null, 2));
+}
+
+function readArSessions(): Record<string, any[]> {
+  if (!fs.existsSync(AR_SESSION_FILE)) return {};
+  return JSON.parse(fs.readFileSync(AR_SESSION_FILE, 'utf-8'));
+}
+
+function saveArSessions(data: Record<string, any[]>) {
+  fs.writeFileSync(AR_SESSION_FILE, JSON.stringify(data, null, 2));
 }
 function readSecurityReports() {
   if (!fs.existsSync(SEC_DIR)) return [];
@@ -137,6 +147,25 @@ app.post('/chat', (req, res) => {
 
 app.get('/chat', (_req, res) => {
   res.json(readChats().slice(-100));
+});
+
+app.get('/arSessions', (_req, res) => {
+  const sessions = readArSessions();
+  res.json({ sessions: Object.keys(sessions) });
+});
+
+app.post('/arSessions/:id', (req, res) => {
+  const sessions = readArSessions();
+  const list = sessions[req.params.id] || [];
+  list.push({ ...req.body, time: Date.now() });
+  sessions[req.params.id] = list;
+  saveArSessions(sessions);
+  res.status(201).json({ ok: true });
+});
+
+app.get('/arSessions/:id', (req, res) => {
+  const sessions = readArSessions();
+  res.json({ events: sessions[req.params.id] || [] });
 });
 
 app.get('/summary', (_req, res) => {
@@ -223,7 +252,7 @@ function generateBusinessTips(events: any[]): string[] {
 
 async function generateMarketingCopy(summary: Record<string, number>) {
   if (!process.env.OPENAI_API_KEY) {
-    return 'Promote your app\'s key features to attract users.';
+    return "Promote your app's key features to attract users.";
   }
   try {
     const res = await fetch('https://api.openai.com/v1/chat/completions', {
@@ -247,10 +276,10 @@ async function generateMarketingCopy(summary: Record<string, number>) {
     const data: any = await res.json();
     return (
       data.choices?.[0]?.message?.content ||
-      'Promote your app\'s key features to attract users.'
+      "Promote your app's key features to attract users."
     );
   } catch {
-    return 'Promote your app\'s key features to attract users.';
+    return "Promote your app's key features to attract users.";
   }
 }
 

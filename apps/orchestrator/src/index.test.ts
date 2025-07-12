@@ -253,6 +253,25 @@ test('chat websocket responds', (done) => {
   });
 });
 
+test('arSignal broadcasts messages', (done) => {
+  const server = require('./index').start(0);
+  const port = (server.address() as any).port;
+  const a = new WebSocket(`ws://localhost:${port}/arSignal?session=s1`);
+  const b = new WebSocket(`ws://localhost:${port}/arSignal?session=s1`);
+  b.on('message', (msg) => {
+    const data = JSON.parse(msg.toString());
+    if (data.test) {
+      a.close();
+      b.close();
+      server.close();
+      done();
+    }
+  });
+  a.on('open', () => {
+    a.send(JSON.stringify({ test: true }));
+  });
+});
+
 test('publishMobile triggers store calls', async () => {
   jobMem['j1'] = {
     id: 'j1',
@@ -339,7 +358,9 @@ test('exportData anonymizes PII fields', async () => {
     status: 'complete',
     email: 'user@example.com',
   };
-  const res = await request(app).get('/api/exportData').set('x-tenant-id', 't1');
+  const res = await request(app)
+    .get('/api/exportData')
+    .set('x-tenant-id', 't1');
   expect(res.status).toBe(200);
   expect(res.body[0].email).toBe('[REDACTED]');
 });
@@ -377,7 +398,9 @@ test('seedData endpoint writes seed file', async () => {
     status: 'complete',
     created: Date.now(),
   };
-  const schema = { tables: [{ name: 't', columns: [{ name: 'id', type: 'uuid' }] }] };
+  const schema = {
+    tables: [{ name: 't', columns: [{ name: 'id', type: 'uuid' }] }],
+  };
   fs.writeFileSync('schema.json', JSON.stringify(schema));
   const dir = 'seeds';
   const file = path.join(dir, 's1.json');

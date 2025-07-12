@@ -479,3 +479,9 @@ This file records brief summaries of each pull request.
 - Implemented `/api/seedData/:id` in the orchestrator saving output to `seeds/`.
 - Created portal page `seed-data.tsx` to request generation.
 - Documented usage in `docs/automatic-data-seeding.md` and marked tasks 183-184 complete.
+
+## PR <pending> - Collaborative AR Sessions
+- Added WebRTC signaling WebSocket `/arSignal` in orchestrator and persistence hooks in analytics.
+- Extended analytics API with `/arSessions` endpoints and tests.
+- Updated AR preview page to sync layout changes via peer connections.
+- Documented setup in `docs/collaborative-ar.md` and marked task 185 complete.

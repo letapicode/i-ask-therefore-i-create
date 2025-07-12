@@ -1,14 +1,107 @@
 import { useEffect, useRef, useState } from 'react';
 
+interface PeerInfo {
+  pc: RTCPeerConnection;
+  channel?: RTCDataChannel;
+}
+
 export default function ArPreview() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [layout, setLayout] = useState<any[]>([]);
+  const wsRef = useRef<WebSocket>();
+  const peersRef = useRef<Record<string, PeerInfo>>({});
+  const idRef = useRef<string>('' + Math.random().toString(36).slice(2));
 
   useEffect(() => {
     fetch('/api/arLayout')
       .then((r) => r.json())
       .then((d) => setLayout(d.items || []));
+
+    const ws = new WebSocket('ws://localhost:3002/arSignal?session=default');
+    wsRef.current = ws;
+    ws.onopen = () => {
+      ws.send(JSON.stringify({ type: 'join', id: idRef.current }));
+    };
+    ws.onmessage = async (ev) => {
+      const msg = JSON.parse(ev.data);
+      if (msg.type === 'join' && msg.id !== idRef.current) {
+        connectPeer(msg.id, true);
+      } else if (msg.type === 'offer' && msg.to === idRef.current) {
+        const peer = connectPeer(msg.from, false);
+        await peer.pc.setRemoteDescription(msg.sdp);
+        const answer = await peer.pc.createAnswer();
+        await peer.pc.setLocalDescription(answer);
+        ws.send(
+          JSON.stringify({
+            type: 'answer',
+            from: idRef.current,
+            to: msg.from,
+            sdp: peer.pc.localDescription,
+          })
+        );
+      } else if (msg.type === 'answer' && msg.to === idRef.current) {
+        const peer = peersRef.current[msg.from];
+        if (peer) await peer.pc.setRemoteDescription(msg.sdp);
+      } else if (msg.type === 'candidate' && msg.to === idRef.current) {
+        const peer = peersRef.current[msg.from];
+        if (peer) await peer.pc.addIceCandidate(msg.candidate);
+      }
+    };
+    return () => ws.close();
   }, []);
+
+  const connectPeer = (peerId: string, initiator: boolean): PeerInfo => {
+    let peer = peersRef.current[peerId];
+    if (peer) return peer;
+    const pc = new RTCPeerConnection({
+      iceServers: [{ urls: 'stun:stun.l.google.com:19302' }],
+    });
+    const info: PeerInfo = { pc };
+    peersRef.current[peerId] = info;
+    if (initiator) {
+      info.channel = pc.createDataChannel('layout');
+      setupChannel(info.channel);
+      pc.onnegotiationneeded = async () => {
+        const offer = await pc.createOffer();
+        await pc.setLocalDescription(offer);
+        wsRef.current?.send(
+          JSON.stringify({
+            type: 'offer',
+            from: idRef.current,
+            to: peerId,
+            sdp: pc.localDescription,
+          })
+        );
+      };
+    } else {
+      pc.ondatachannel = (ev) => {
+        info.channel = ev.channel;
+        setupChannel(info.channel);
+      };
+    }
+    pc.onicecandidate = (ev) => {
+      if (ev.candidate) {
+        wsRef.current?.send(
+          JSON.stringify({
+            type: 'candidate',
+            from: idRef.current,
+            to: peerId,
+            candidate: ev.candidate,
+          })
+        );
+      }
+    };
+    return info;
+  };
+
+  const setupChannel = (channel: RTCDataChannel) => {
+    channel.onmessage = (ev) => {
+      const msg = JSON.parse(ev.data);
+      if (msg.type === 'layout') {
+        setLayout(msg.layout);
+      }
+    };
+  };
 
   useEffect(() => {
     if (!canvasRef.current) return;
@@ -47,6 +140,11 @@ export default function ArPreview() {
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ items: newLayout }),
         }).catch(() => {});
+        Object.values(peersRef.current).forEach((p) => {
+          p.channel?.send(
+            JSON.stringify({ type: 'layout', layout: newLayout })
+          );
+        });
       }
 
       const controller = renderer.xr.getController(0);
@@ -60,6 +158,8 @@ export default function ArPreview() {
     init();
     return () => {
       renderer?.setAnimationLoop(null);
+      Object.values(peersRef.current).forEach((p) => p.pc.close());
+      wsRef.current?.close();
     };
   }, [layout]);
 
