@@ -30,3 +30,4 @@ This folder contains user guides and architecture diagrams.
 - [Preview Environments](./preview-environments.md)
 - [Business Tips](./business-tips.md)
 - [Disaster Recovery](./disaster-recovery.md)
+- [Offline LLM Optimization](./offline-llm-optimization.md)
