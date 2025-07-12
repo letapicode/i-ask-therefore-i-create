@@ -452,3 +452,9 @@ This file records brief summaries of each pull request.
 - Added GitHub webhook handler in orchestrator storing review summaries.
 - New portal page `activity.tsx` lists recent review results.
 - Documented configuration in `docs/ai-code-review.md` and marked task 180 complete.
+
+## PR <pending> - OpenTelemetry Tracing
+- Added `observability` package to configure OpenTelemetry tracing.
+- Integrated tracing into orchestrator and analytics services.
+- Provisioned optional collector in `infrastructure/observability`.
+- Documented trace viewing instructions and updated task tracker for task 181.

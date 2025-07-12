@@ -25,3 +25,15 @@ variable "error_threshold" {
   type        = number
   default     = 5
 }
+
+variable "subnets" {
+  description = "Subnets for the OpenTelemetry collector"
+  type        = list(string)
+  default     = []
+}
+
+variable "security_group" {
+  description = "Security group for the OpenTelemetry collector"
+  type        = string
+  default     = null
+}
