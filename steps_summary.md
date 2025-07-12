@@ -498,3 +498,10 @@ This file records brief summaries of each pull request.
 - Orchestrator now records score after each `/api/a11yReport` scan.
 - Created portal page `a11y-score.tsx` displaying score trends.
 - Documented thresholds in `docs/accessibility-scoring.md` and marked task 187 complete.
+
+## PR <pending> - Plugin Resale Marketplace
+- Added license transfer helpers `getLicenseOwner` and `transferLicense` in `packages/data-connectors` with tests.
+- Implemented resale endpoints `/listings` and `/purchase-listing` in `services/plugins` with tests.
+- Created portal page `resale.tsx` for managing resale licenses.
+- Added smart contract sample under `infrastructure/blockchain` and guide `docs/plugin-resale.md`.
+- Linked docs in `docs/README.md` and marked task 188 complete.
