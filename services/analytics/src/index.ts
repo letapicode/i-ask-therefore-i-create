@@ -2,6 +2,7 @@ import express from 'express';
 import fs from 'fs';
 import fetch from 'node-fetch';
 import { initSentry } from '../../packages/shared/src/sentry';
+import { initTracing } from '../../packages/observability/src';
 import { logAudit } from '../../packages/shared/src/audit';
 import { policyMiddleware } from '../../packages/shared/src/policyMiddleware';
 import path from 'path';
@@ -339,6 +340,7 @@ app.get('/experiments/:id', (req, res) => {
 });
 
 export function start(port = 3001) {
+  initTracing('analytics');
   initSentry('analytics');
   app.listen(port, () => console.log(`analytics listening on ${port}`));
 }

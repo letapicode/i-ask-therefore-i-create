@@ -56,3 +56,41 @@ resource "aws_cloudwatch_metric_alarm" "error_alarm" {
   threshold           = var.error_threshold
   alarm_actions       = var.alarm_email == null ? [] : [aws_sns_topic.alarm[0].arn]
 }
+
+resource "aws_ecs_cluster" "otel" {
+  count = length(var.subnets) == 0 ? 0 : 1
+  name  = "${var.log_group_name}-otel"
+}
+
+resource "aws_ecs_task_definition" "otel" {
+  count                    = length(var.subnets) == 0 ? 0 : 1
+  family                   = "${var.log_group_name}-otel"
+  network_mode             = "awsvpc"
+  requires_compatibilities = ["FARGATE"]
+  cpu                      = 256
+  memory                   = 512
+  container_definitions = jsonencode([
+    {
+      name  = "collector"
+      image = "public.ecr.aws/aws-otel/aws-otel-collector:latest"
+      portMappings = [{
+        containerPort = 4318
+      }]
+    }
+  ])
+}
+
+resource "aws_ecs_service" "otel" {
+  count           = length(var.subnets) == 0 ? 0 : 1
+  name            = "${var.log_group_name}-otel"
+  cluster         = aws_ecs_cluster.otel[0].id
+  task_definition = aws_ecs_task_definition.otel[0].arn
+  desired_count   = 1
+  launch_type     = "FARGATE"
+
+  network_configuration {
+    subnets         = var.subnets
+    security_groups = [var.security_group]
+    assign_public_ip = true
+  }
+}
