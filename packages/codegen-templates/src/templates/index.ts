@@ -9,4 +9,5 @@ export const templates = [
   { name: 'mobile', description: 'React Native starter app' },
   { name: 'ecommerce', description: 'React storefront with Stripe' },
   { name: 'graph-db', description: 'Neo4j CRUD example' },
+  { name: 'edge', description: 'Cloudflare Worker template' },
 ];
