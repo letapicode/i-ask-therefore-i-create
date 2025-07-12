@@ -38,6 +38,7 @@ import {
 import * as tf from '@tensorflow/tfjs';
 import { generateSchema } from '../../packages/codegen-templates/src/graphqlBuilder';
 import { runTemplateHooks } from '../../packages/codegen-templates/src/marketplace';
+import { generateSeedData } from '../../packages/codegen-templates/src/seedData';
 import { createServer } from 'http';
 import { WebSocketServer } from 'ws';
 import { startPreview, getPreview, cleanupPreviews } from './preview';
@@ -101,6 +102,7 @@ const SYN_DATA_URL = process.env.SYN_DATA_URL || 'http://localhost:3011';
 const A11Y_ASSIST_URL = process.env.A11Y_ASSIST_URL || 'http://localhost:3012';
 const CODE_REVIEW_URL = process.env.CODE_REVIEW_URL || 'http://localhost:3013';
 const REVIEW_DB = process.env.REVIEW_DB || '.reviews.json';
+const SEED_DIR = process.env.SEED_DIR || 'seeds';
 const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
 
 function readReviews(): any[] {
@@ -813,6 +815,30 @@ app.post('/api/syntheticData', async (req, res) => {
     res.status(response.status).json(json);
   } catch {
     res.status(500).json({ error: 'service unavailable' });
+  }
+});
+
+app.post('/api/seedData/:id', async (req, res) => {
+  const tenantId = req.header(TENANT_HEADER);
+  if (!tenantId) return res.status(401).json({ error: 'missing tenant' });
+  const job = await getItem<Job>(JOBS_TABLE, { id: req.params.id });
+  if (!job || job.tenantId !== tenantId)
+    return res.status(404).json({ error: 'not found' });
+  if (!fs.existsSync(SCHEMA_FILE))
+    return res.status(400).json({ error: 'missing schema' });
+  const schema = JSON.parse(fs.readFileSync(SCHEMA_FILE, 'utf-8')) as Schema;
+  const rows = Number(req.body.rows) || 5;
+  try {
+    const list = await generateSeedData({ schema, rows });
+    if (!fs.existsSync(SEED_DIR)) fs.mkdirSync(SEED_DIR);
+    fs.writeFileSync(
+      path.join(SEED_DIR, `${job.id}.json`),
+      JSON.stringify(list, null, 2)
+    );
+    res.json({ inserted: list.length });
+  } catch (err) {
+    console.error('seed generation failed', err);
+    res.status(500).json({ error: 'seed generation failed' });
   }
 });
 

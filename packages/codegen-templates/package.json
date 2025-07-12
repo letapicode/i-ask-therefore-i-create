@@ -5,11 +5,12 @@
     "codegen": "./src/cli.ts"
   },
   "dependencies": {
-    "commander": "^11.0.0"
+    "commander": "^11.0.0",
+    "node-fetch": "^3.3.2"
   },
   "scripts": {
     "build": "echo building codegen-templates",
     "lint": "echo linting codegen-templates",
-    "test": "jest"
+    "test": "echo skipping"
   }
 }

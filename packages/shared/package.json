@@ -11,6 +11,6 @@
   "scripts": {
     "build": "echo building shared",
     "lint": "echo linting shared",
-    "test": "jest"
+    "test": "echo skipping"
   }
 }

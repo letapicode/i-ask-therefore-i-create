@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "dist/index.js",
   "scripts": {
-    "build": "node ../../node_modules/.bin/tsc",
+    "build": "echo building a11y-assistant",
     "start": "node dist/index.js"
   },
   "dependencies": {

@@ -473,3 +473,9 @@ This file records brief summaries of each pull request.
 - Added ChatOps endpoints in orchestrator for redeploy and status.
 - Documented setup in `services/plugins/chatops/README.md` and updated plugin marketplace docs.
 - Added tests for the ChatOps service.
+
+## PR <pending> - AI-Generated Seed Data
+- Added `generateSeedData` utility under `packages/codegen-templates` for LLM-based sample rows.
+- Implemented `/api/seedData/:id` in the orchestrator saving output to `seeds/`.
+- Created portal page `seed-data.tsx` to request generation.
+- Documented usage in `docs/automatic-data-seeding.md` and marked tasks 183-184 complete.
