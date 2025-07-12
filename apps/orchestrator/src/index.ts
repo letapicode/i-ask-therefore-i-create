@@ -104,6 +104,7 @@ const CODE_REVIEW_URL = process.env.CODE_REVIEW_URL || 'http://localhost:3013';
 const REVIEW_DB = process.env.REVIEW_DB || '.reviews.json';
 const SEED_DIR = process.env.SEED_DIR || 'seeds';
 const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
+const COMMUNITY_MODEL_FILE = process.env.COMMUNITY_MODEL_FILE || '.community-model.json';
 
 function readReviews(): any[] {
   if (!fs.existsSync(REVIEW_DB)) return [];
@@ -766,6 +767,37 @@ app.post('/api/modelUpdate', async (req, res) => {
     res.status(response.status).json(json);
   } catch {
     res.status(500).json({ error: 'federated service unavailable' });
+  }
+});
+
+app.get('/api/communityModels', async (_req, res) => {
+  try {
+    const response = await fetch(`${FED_TRAIN_URL}/models`);
+    const versions: string[] = await response.json();
+    let active = '';
+    if (fs.existsSync(COMMUNITY_MODEL_FILE)) {
+      active = JSON.parse(fs.readFileSync(COMMUNITY_MODEL_FILE, 'utf-8')).version || '';
+    }
+    res.json({ versions, active });
+  } catch {
+    res.status(500).json({ error: 'service unavailable' });
+  }
+});
+
+app.post('/api/communityModels', async (req, res) => {
+  const { version } = req.body as { version?: string };
+  if (!version) return res.status(400).json({ error: 'missing version' });
+  try {
+    const response = await fetch(`${FED_TRAIN_URL}/models/${encodeURIComponent(version)}`);
+    if (!response.ok) return res.status(400).json({ error: 'invalid version' });
+    const weights = await response.json();
+    fs.writeFileSync(
+      COMMUNITY_MODEL_FILE,
+      JSON.stringify({ version, weights }, null, 2)
+    );
+    res.json({ ok: true });
+  } catch {
+    res.status(500).json({ error: 'activation failed' });
   }
 });
 

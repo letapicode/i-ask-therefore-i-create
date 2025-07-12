@@ -17,6 +17,12 @@ jest.mock('node-fetch', () =>
     if (url.includes('/metrics')) {
       return { ok: true, json: async () => ({ count: 2 }) };
     }
+    if (url.endsWith('/models')) {
+      return { ok: true, json: async () => ['v1'] };
+    }
+    if (url.includes('/models/')) {
+      return { ok: true, json: async () => [0, 1] };
+    }
     return { ok: true, json: async () => ({}) };
   })
 );
@@ -419,4 +425,18 @@ test('seedData endpoint writes seed file', async () => {
   expect(data).toHaveLength(1);
   fs.unlinkSync(file);
   fs.unlinkSync('schema.json');
+});
+
+test('community models endpoints', async () => {
+  const listRes = await request(app).get('/api/communityModels');
+  expect(listRes.status).toBe(200);
+  expect(listRes.body.versions).toEqual(['v1']);
+
+  const res = await request(app)
+    .post('/api/communityModels')
+    .send({ version: 'v1' });
+  expect(res.status).toBe(200);
+  expect(fs.existsSync('.community-model.json')).toBe(true);
+  const data = JSON.parse(fs.readFileSync('.community-model.json', 'utf-8'));
+  expect(data.version).toBe('v1');
 });
