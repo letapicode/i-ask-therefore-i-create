@@ -445,23 +445,31 @@ This file records brief summaries of each pull request.
 - Implemented `createNeo4jConnector` and `createNeptuneConnector` in data connectors with tests.
 - Updated portal wizard to select database type and orchestrator to forward database info.
 - Documented usage in `docs/graph-databases.md` and updated task tracker for task 178.
-\n## PR <pending> - Multi-Region Disaster Recovery\n- Added Terraform module `infrastructure/disaster-recovery` enabling S3 cross-region replication.\n- Implemented backup scheduler in orchestrator with analytics reporting.\n- Documented setup in `docs/disaster-recovery.md` and updated task tracker for task 179.
+  \n## PR <pending> - Multi-Region Disaster Recovery\n- Added Terraform module `infrastructure/disaster-recovery` enabling S3 cross-region replication.\n- Implemented backup scheduler in orchestrator with analytics reporting.\n- Documented setup in `docs/disaster-recovery.md` and updated task tracker for task 179.
 
 ## PR <pending> - AI-Driven Code Review Service
+
 - Created `services/code-review` with lint and vulnerability scanning.
 - Added GitHub webhook handler in orchestrator storing review summaries.
 - New portal page `activity.tsx` lists recent review results.
 - Documented configuration in `docs/ai-code-review.md` and marked task 180 complete.
 
 ## PR <pending> - OpenTelemetry Tracing
+
 - Added `observability` package to configure OpenTelemetry tracing.
 - Integrated tracing into orchestrator and analytics services.
 - Provisioned optional collector in `infrastructure/observability`.
 - Documented trace viewing instructions and updated task tracker for task 181.
 
+## PR <pending>
 
-## PR <pending> 
 - Edge Deployment & CDN Integration\n- Added Terraform module `infrastructure/edge` with Cloudflare and Lambda@Edge resources.
 - Added edge provider option in orchestrator with `EDGE_DEPLOY_URL`.\n- Created edge codegen template and updated templates index.
 - Documented usage in `docs/edge-deployments.md` and marked task 182 complete.\n
 
+## PR <pending> - AI ChatOps Assistant
+
+- Created new service `services/plugins/chatops` providing Slack command handling.
+- Added ChatOps endpoints in orchestrator for redeploy and status.
+- Documented setup in `services/plugins/chatops/README.md` and updated plugin marketplace docs.
+- Added tests for the ChatOps service.

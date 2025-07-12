@@ -306,7 +306,13 @@ configureHealing(dispatchJob);
 app.post('/api/createApp', async (req, res) => {
   const tenantId = req.header(TENANT_HEADER);
   if (!tenantId) return res.status(401).json({ error: 'missing tenant' });
-  const { description, language = 'node', database, provider, preview } = req.body;
+  const {
+    description,
+    language = 'node',
+    database,
+    provider,
+    preview,
+  } = req.body;
   if (!description)
     return res.status(400).json({ error: 'missing description' });
   const id = randomUUID();
@@ -613,6 +619,36 @@ app.post('/api/redeploy/:id', async (req, res) => {
   await putItem(JOBS_TABLE, job);
   dispatchJob(job);
   res.status(202).json({ jobId: id });
+});
+
+const CHATOPS_TENANT = process.env.CHATOPS_TENANT || 'chatops';
+
+app.post('/chatops/redeploy/:id', async (req, res) => {
+  const { description, language = 'node', database, provider } = req.body;
+  if (!description)
+    return res.status(400).json({ error: 'missing description' });
+  const id = req.params.id;
+  const prov: 'aws' | 'gcp' | 'azure' | 'edge' =
+    provider || (await getProvider(CHATOPS_TENANT));
+  const job: Job = {
+    id,
+    tenantId: CHATOPS_TENANT,
+    provider: prov,
+    description,
+    language,
+    database,
+    status: 'queued',
+    created: Date.now(),
+  };
+  await putItem(JOBS_TABLE, job);
+  dispatchJob(job);
+  res.status(202).json({ jobId: id });
+});
+
+app.get('/chatops/status/:id', async (_req, res) => {
+  const job = await getItem<Job>(JOBS_TABLE, { id: req.params.id });
+  if (!job) return res.status(404).json({ error: 'not found' });
+  res.json(job);
 });
 
 app.post('/api/publishMobile/:id', async (req, res) => {
