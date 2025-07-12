@@ -21,6 +21,7 @@ const UI_FILE = process.env.UI_EVENTS_DB || '.ui-events.json';
 const SUGG_FILE = process.env.UI_SUGGESTIONS_DB || '.ui-suggestions.json';
 const CHAT_FILE = process.env.CHAT_DB || '.chat.json';
 const AR_SESSION_FILE = process.env.AR_SESS_FILE || '.ar-sessions.json';
+const SCORE_FILE = process.env.A11Y_SCORE_DB || '.a11y-scores.json';
 const ALERT_THRESHOLD = Number(process.env.ALERT_THRESHOLD || '1000');
 const SEC_DIR = path.resolve(__dirname, '../security');
 
@@ -67,6 +68,15 @@ function readChats(): any[] {
 
 function saveChats(data: any[]) {
   fs.writeFileSync(CHAT_FILE, JSON.stringify(data, null, 2));
+}
+
+function readScores(): any[] {
+  if (!fs.existsSync(SCORE_FILE)) return [];
+  return JSON.parse(fs.readFileSync(SCORE_FILE, 'utf-8'));
+}
+
+function saveScores(data: any[]) {
+  fs.writeFileSync(SCORE_FILE, JSON.stringify(data, null, 2));
 }
 
 function readArSessions(): Record<string, any[]> {
@@ -166,6 +176,24 @@ app.post('/arSessions/:id', (req, res) => {
 app.get('/arSessions/:id', (req, res) => {
   const sessions = readArSessions();
   res.json({ events: sessions[req.params.id] || [] });
+});
+
+app.post('/a11yScore', (req, res) => {
+  const { project, score } = req.body as { project?: string; score?: number };
+  if (!project || typeof score !== 'number') {
+    return res.status(400).json({ error: 'invalid payload' });
+  }
+  const list = readScores();
+  list.push({ project, score, time: Date.now() });
+  saveScores(list);
+  res.status(201).json({ ok: true });
+});
+
+app.get('/a11yScore', (req, res) => {
+  const project = (req.query.project as string) || '';
+  let list = readScores();
+  if (project) list = list.filter((s) => s.project === project);
+  res.json(list);
 });
 
 app.get('/summary', (_req, res) => {

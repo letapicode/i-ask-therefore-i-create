@@ -43,6 +43,7 @@ import { createServer } from 'http';
 import { WebSocketServer, WebSocket } from 'ws';
 import { startPreview, getPreview, cleanupPreviews } from './preview';
 import { scan as scanA11y } from '../../../tools/a11y-scan';
+import { calculateScore } from '../../services/a11y-assistant/src/score';
 
 export const app = express();
 app.use(express.json());
@@ -814,6 +815,15 @@ app.post('/api/a11yReport', async (req, res) => {
       });
     } catch (err) {
       console.error('a11y assistant unavailable', err);
+    }
+    const score = calculateScore(results.violations);
+    const url = process.env.ANALYTICS_URL;
+    if (url) {
+      fetch(`${url}/a11yScore`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ project: path, score }),
+      }).catch(() => {});
     }
     res.json({ violations: results.violations });
   } catch {

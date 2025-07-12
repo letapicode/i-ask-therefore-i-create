@@ -11,6 +11,8 @@ Simple Express server to record usage events and provide basic metrics.
 - `GET /alerts` – events exceeding the alert threshold
 - `POST /chat` – store a chat message
 - `GET /chat` – list recent chat history
+- `POST /a11yScore` – record an accessibility score for a project
+- `GET /a11yScore` – list recorded scores, optional `project` query
 - `GET /businessTips` – return monetization recommendations and marketing copy
 
 Set `ALERT_THRESHOLD` to trigger alerts when a metric value exceeds the given number.
