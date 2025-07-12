@@ -11,6 +11,7 @@ import {
 import { uploadObject } from '../../packages/shared/src/s3';
 import { sendEmail } from '../../services/email/src';
 import { initSentry } from '../../packages/shared/src/sentry';
+import { initTracing } from '../../packages/observability/src';
 import { startSelfHealing, configure as configureHealing } from './selfHeal';
 import { startBackupScheduler } from './backup';
 import fs from 'fs';
@@ -797,6 +798,7 @@ app.get('/api/policy', (req, res) => {
 });
 
 export function start(port = 3002) {
+  initTracing('orchestrator');
   initSentry('orchestrator');
   const server = createServer(app);
   const wss = new WebSocketServer({ server, path: '/chat' });
