@@ -13,6 +13,7 @@ This folder contains user guides and architecture diagrams.
 - [Voice Guided Modeling](./voice-modeling.md)
 - [Edge Connectors](./edge-connectors.md)
 - [Edge Inference](./edge-inference.md)
+- [Edge Deployments](./edge-deployments.md)
 - [A/B Testing](./ab-testing-toolkit.md)
 - [VR Preview](./vr-preview.md)
 - [AR Preview](./ar-preview.md)
