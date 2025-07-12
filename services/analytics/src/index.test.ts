@@ -86,3 +86,12 @@ test('records accessibility scores', async () => {
   expect(res.status).toBe(200);
   expect(res.body.pop().score).toBe(95);
 });
+
+test('stores chat context', async () => {
+  const res = await request(app)
+    .post('/chatContext')
+    .send({ user: 'u1', jobId: '321' });
+  expect(res.status).toBe(201);
+  const ctx = await request(app).get('/chatContext?user=u1');
+  expect(ctx.body.jobId).toBe('321');
+});

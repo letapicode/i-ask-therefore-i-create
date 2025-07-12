@@ -5,6 +5,7 @@ import fetch from 'node-fetch';
 const CONTEXT = '.test-chatops.json';
 process.env.CHATOPS_CONTEXT = CONTEXT;
 process.env.ORCH_URL = 'http://orch';
+process.env.ANALYTICS_URL = '';
 const { app } = require('./index');
 
 jest.mock('node-fetch', () =>
@@ -45,4 +46,14 @@ test('redeploy command triggers orchestrator', async () => {
     expect.objectContaining({ method: 'POST' })
   );
   expect(res.body.text).toContain('Redeploy triggered');
+});
+
+test('nlp endpoint parses text and updates context', async () => {
+  const res = await request(app)
+    .post('/api/chatops/nlp')
+    .send({ user: 'u3', text: 'what is the status of job 789?' });
+  expect(res.body.intent).toBe('status');
+  expect(res.body.jobId).toBe('789');
+  const ctx = JSON.parse(fs.readFileSync(CONTEXT, 'utf-8'));
+  expect(ctx.u3).toBe('789');
 });

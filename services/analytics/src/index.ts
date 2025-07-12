@@ -20,6 +20,7 @@ const EXP_FILE = process.env.EXPERIMENT_DB || '.experiments.json';
 const UI_FILE = process.env.UI_EVENTS_DB || '.ui-events.json';
 const SUGG_FILE = process.env.UI_SUGGESTIONS_DB || '.ui-suggestions.json';
 const CHAT_FILE = process.env.CHAT_DB || '.chat.json';
+const CONTEXT_FILE = process.env.CHAT_CONTEXT_DB || '.chat-context.json';
 const AR_SESSION_FILE = process.env.AR_SESS_FILE || '.ar-sessions.json';
 const SCORE_FILE = process.env.A11Y_SCORE_DB || '.a11y-scores.json';
 const ALERT_THRESHOLD = Number(process.env.ALERT_THRESHOLD || '1000');
@@ -68,6 +69,15 @@ function readChats(): any[] {
 
 function saveChats(data: any[]) {
   fs.writeFileSync(CHAT_FILE, JSON.stringify(data, null, 2));
+}
+
+function readChatContext(): Record<string, string> {
+  if (!fs.existsSync(CONTEXT_FILE)) return {};
+  return JSON.parse(fs.readFileSync(CONTEXT_FILE, 'utf-8'));
+}
+
+function saveChatContext(data: Record<string, string>) {
+  fs.writeFileSync(CONTEXT_FILE, JSON.stringify(data, null, 2));
 }
 
 function readScores(): any[] {
@@ -157,6 +167,22 @@ app.post('/chat', (req, res) => {
 
 app.get('/chat', (_req, res) => {
   res.json(readChats().slice(-100));
+});
+
+app.post('/chatContext', (req, res) => {
+  const { user, jobId } = req.body as { user?: string; jobId?: string };
+  if (!user || !jobId) return res.status(400).json({ error: 'invalid payload' });
+  const ctx = readChatContext();
+  ctx[user] = jobId;
+  saveChatContext(ctx);
+  res.status(201).json({ ok: true });
+});
+
+app.get('/chatContext', (req, res) => {
+  const user = req.query.user as string | undefined;
+  const ctx = readChatContext();
+  if (user) return res.json({ jobId: ctx[user] });
+  res.json(ctx);
 });
 
 app.get('/arSessions', (_req, res) => {

@@ -3,6 +3,7 @@ import fetch from 'node-fetch';
 import fs from 'fs';
 import { logAudit } from '../../../../packages/shared/src/audit';
 import { policyMiddleware } from '../../../../packages/shared/src/policyMiddleware';
+import { parseMessage } from './nlp';
 
 export const app = express();
 app.use(express.urlencoded({ extended: true }));
@@ -15,6 +16,7 @@ app.use((req, _res, next) => {
 const CONTEXT_FILE = process.env.CHATOPS_CONTEXT || '.chatops.json';
 const ORCH_URL = process.env.ORCH_URL || 'http://localhost:3002';
 const TENANT_ID = process.env.CHATOPS_TENANT || 'chatops';
+const ANALYTICS_URL = process.env.ANALYTICS_URL;
 
 interface Context {
   [user: string]: string;
@@ -29,16 +31,34 @@ function saveContext(ctx: Context) {
   fs.writeFileSync(CONTEXT_FILE, JSON.stringify(ctx, null, 2));
 }
 
+function sendChat(role: string, content: string, user: string) {
+  if (!ANALYTICS_URL) return;
+  fetch(`${ANALYTICS_URL}/chat`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ role, content, user }),
+  }).catch(() => {});
+}
+
+function updateContextAnalytics(user: string, jobId: string) {
+  if (!ANALYTICS_URL) return;
+  fetch(`${ANALYTICS_URL}/chatContext`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ user, jobId }),
+  }).catch(() => {});
+}
+
 app.post('/slack', async (req, res) => {
   const user = req.body.user_id as string;
   const text = (req.body.text as string) || '';
   const ctx = readContext();
-  const [cmd, arg] = text.trim().split(/\s+/);
-  let jobId = arg || ctx[user];
+  const { intent, jobId } = parseMessage(text, ctx[user]);
+  let resolvedId = jobId;
   let message = '';
   try {
-    if (cmd === 'redeploy' && jobId) {
-      await fetch(`${ORCH_URL}/api/redeploy/${jobId}`, {
+    if (intent === 'redeploy' && resolvedId) {
+      await fetch(`${ORCH_URL}/api/redeploy/${resolvedId}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -49,24 +69,44 @@ app.post('/slack', async (req, res) => {
           language: 'node',
         }),
       });
-      ctx[user] = jobId;
+      ctx[user] = resolvedId;
       saveContext(ctx);
-      message = `Redeploy triggered for job ${jobId}`;
-    } else if (cmd === 'status' && jobId) {
-      const resp = await fetch(`${ORCH_URL}/api/status/${jobId}`, {
+      updateContextAnalytics(user, resolvedId);
+      message = `Redeploy triggered for job ${resolvedId}`;
+    } else if (intent === 'status' && resolvedId) {
+      const resp = await fetch(`${ORCH_URL}/api/status/${resolvedId}`, {
         headers: { 'x-tenant-id': TENANT_ID },
       });
       const data = await resp.json();
-      ctx[user] = jobId;
+      ctx[user] = resolvedId;
       saveContext(ctx);
-      message = `Job ${jobId} status: ${data.status}`;
+      updateContextAnalytics(user, resolvedId);
+      message = `Job ${resolvedId} status: ${data.status}`;
     } else {
       message = 'Usage: redeploy <jobId> | status <jobId>';
     }
   } catch {
     message = 'Error processing command';
   }
+  sendChat('user', text, user);
+  sendChat('assistant', message, user);
   res.json({ text: message });
+});
+
+app.post('/api/chatops/nlp', (req, res) => {
+  const { user = 'unknown', text = '' } = req.body as {
+    user?: string;
+    text?: string;
+  };
+  const ctx = readContext();
+  const result = parseMessage(text, ctx[user]);
+  if (result.jobId) {
+    ctx[user] = result.jobId;
+    saveContext(ctx);
+    updateContextAnalytics(user, result.jobId);
+  }
+  sendChat('user', text, user);
+  res.json(result);
 });
 
 export function start(port = 3014) {

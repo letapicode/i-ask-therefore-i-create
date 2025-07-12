@@ -512,3 +512,11 @@ This file records brief summaries of each pull request.
 - Documented workflow in `docs/offline-llm-optimization.md` and linked from README files.
 - Created unit test `benchmark.test.ts` validating the benchmark script.
 - Updated task status to mark 189 complete.
+
+## PR <pending> - Natural Language ChatOps
+- Added NLP parser `services/plugins/chatops/src/nlp.ts` with tests.
+- Extended chatops service with `/api/chatops/nlp` endpoint and analytics logging.
+- Persisted conversation context via new `/chatContext` routes in analytics service.
+- Updated ChatOps README with NLP command details.
+- Marked task 190 complete in tracker.
+
