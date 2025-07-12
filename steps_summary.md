@@ -446,3 +446,9 @@ This file records brief summaries of each pull request.
 - Updated portal wizard to select database type and orchestrator to forward database info.
 - Documented usage in `docs/graph-databases.md` and updated task tracker for task 178.
 \n## PR <pending> - Multi-Region Disaster Recovery\n- Added Terraform module `infrastructure/disaster-recovery` enabling S3 cross-region replication.\n- Implemented backup scheduler in orchestrator with analytics reporting.\n- Documented setup in `docs/disaster-recovery.md` and updated task tracker for task 179.
+
+## PR <pending> - AI-Driven Code Review Service
+- Created `services/code-review` with lint and vulnerability scanning.
+- Added GitHub webhook handler in orchestrator storing review summaries.
+- New portal page `activity.tsx` lists recent review results.
+- Documented configuration in `docs/ai-code-review.md` and marked task 180 complete.

@@ -343,3 +343,26 @@ test('exportData anonymizes PII fields', async () => {
   expect(res.status).toBe(200);
   expect(res.body[0].email).toBe('[REDACTED]');
 });
+
+test('github webhook stores review results', async () => {
+  const fetchMock = require('node-fetch') as jest.Mock;
+  fetchMock.mockResolvedValueOnce({
+    ok: true,
+    json: async () => ({ lintErrors: 2, vulnerabilities: 1 }),
+  });
+  const file = path.resolve('.reviews.json');
+  if (fs.existsSync(file)) fs.unlinkSync(file);
+  const payload = {
+    action: 'opened',
+    pull_request: { number: 1 },
+    repository: {
+      clone_url: 'http://example.com/repo.git',
+      full_name: 'org/repo',
+    },
+  };
+  const res = await request(app).post('/github/webhook').send(payload);
+  expect(res.status).toBe(200);
+  const list = JSON.parse(fs.readFileSync(file, 'utf-8'));
+  expect(list[0].lintErrors).toBe(2);
+  fs.unlinkSync(file);
+});
