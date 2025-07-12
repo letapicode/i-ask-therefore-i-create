@@ -97,6 +97,18 @@ const AR_LAYOUT_FILE = process.env.AR_LAYOUT_FILE || 'ar-layout.json';
 const FED_TRAIN_URL = process.env.FED_TRAIN_URL || 'http://localhost:3010';
 const SYN_DATA_URL = process.env.SYN_DATA_URL || 'http://localhost:3011';
 const A11Y_ASSIST_URL = process.env.A11Y_ASSIST_URL || 'http://localhost:3012';
+const CODE_REVIEW_URL = process.env.CODE_REVIEW_URL || 'http://localhost:3013';
+const REVIEW_DB = process.env.REVIEW_DB || '.reviews.json';
+const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
+
+function readReviews(): any[] {
+  if (!fs.existsSync(REVIEW_DB)) return [];
+  return JSON.parse(fs.readFileSync(REVIEW_DB, 'utf-8'));
+}
+
+function saveReviews(list: any[]) {
+  fs.writeFileSync(REVIEW_DB, JSON.stringify(list, null, 2));
+}
 
 async function chatCompletion(message: string): Promise<string> {
   if (process.env.CUSTOM_MODEL_URL) {
@@ -244,6 +256,43 @@ export async function dispatchJob(job: Job) {
         data: { id: job.id },
       });
     }
+  }
+}
+
+async function runCodeReview(repo: string, pr: number, full: string) {
+  try {
+    const res = await fetch(`${CODE_REVIEW_URL}/review`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ repo }),
+    });
+    const json = await res.json();
+    if (GITHUB_TOKEN) {
+      await fetch(
+        `https://api.github.com/repos/${full}/issues/${pr}/comments`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `token ${GITHUB_TOKEN}`,
+          },
+          body: JSON.stringify({
+            body: `Lint errors: ${json.lintErrors}, vulnerabilities: ${json.vulnerabilities}`,
+          }),
+        }
+      ).catch(() => {});
+    }
+    const list = readReviews();
+    list.push({
+      repo: full,
+      pr,
+      lintErrors: json.lintErrors,
+      vulnerabilities: json.vulnerabilities,
+      time: Date.now(),
+    });
+    saveReviews(list);
+  } catch (err) {
+    console.error('code review failed', err);
   }
 }
 
@@ -724,6 +773,23 @@ app.post('/api/syntheticData', async (req, res) => {
   } catch {
     res.status(500).json({ error: 'service unavailable' });
   }
+});
+
+app.post('/github/webhook', async (req, res) => {
+  const body = req.body as any;
+  if (body.action === 'opened' || body.action === 'synchronize') {
+    const pr = body.pull_request?.number;
+    const repo = body.repository?.clone_url;
+    const full = body.repository?.full_name;
+    if (pr && repo && full) {
+      runCodeReview(repo, pr, full);
+    }
+  }
+  res.json({ ok: true });
+});
+
+app.get('/api/reviews', (_req, res) => {
+  res.json(readReviews());
 });
 
 app.get('/api/policy', (req, res) => {
