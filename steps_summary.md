@@ -505,3 +505,10 @@ This file records brief summaries of each pull request.
 - Created portal page `resale.tsx` for managing resale licenses.
 - Added smart contract sample under `infrastructure/blockchain` and guide `docs/plugin-resale.md`.
 - Linked docs in `docs/README.md` and marked task 188 complete.
+
+## PR <pending> - Offline LLM Optimization Pipeline
+- Added `tools/llm-optimization` with `benchmark.ts` and `optimize.sh` for testing and optimizing local models.
+- Modified `offline-model/Dockerfile` to copy optimized weights if available.
+- Documented workflow in `docs/offline-llm-optimization.md` and linked from README files.
+- Created unit test `benchmark.test.ts` validating the benchmark script.
+- Updated task status to mark 189 complete.
