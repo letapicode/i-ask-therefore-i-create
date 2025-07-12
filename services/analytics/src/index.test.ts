@@ -77,3 +77,12 @@ test('stores and retrieves AR session events', async () => {
   const list = await request(app).get('/arSessions');
   expect(list.body.sessions).toContain('s1');
 });
+
+test('records accessibility scores', async () => {
+  await request(app)
+    .post('/a11yScore')
+    .send({ project: 'demo', score: 95 });
+  const res = await request(app).get('/a11yScore?project=demo');
+  expect(res.status).toBe(200);
+  expect(res.body.pop().score).toBe(95);
+});

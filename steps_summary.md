@@ -492,3 +492,9 @@ This file records brief summaries of each pull request.
 - Implemented `/api/communityModels` GET/POST in the orchestrator to list and activate versions.
 - Created portal page `models.tsx` to manage community models.
 - Documented privacy considerations in `docs/community-models.md` and marked task 186 complete.
+## PR <pending> - Accessibility Score Tracking
+- Added `calculateScore` utility and tests in `services/a11y-assistant`.
+- Persisted scores via new `/a11yScore` endpoints in `services/analytics` with tests and docs.
+- Orchestrator now records score after each `/api/a11yReport` scan.
+- Created portal page `a11y-score.tsx` displaying score trends.
+- Documented thresholds in `docs/accessibility-scoring.md` and marked task 187 complete.
