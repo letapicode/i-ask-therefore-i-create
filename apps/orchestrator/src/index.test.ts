@@ -145,6 +145,16 @@ test('provider selection uses tenant table', async () => {
   expect(job.provider).toBe('gcp');
 });
 
+test('createApp accepts edge provider', async () => {
+  const res = await request(app)
+    .post('/api/createApp')
+    .set('x-tenant-id', 't1')
+    .send({ description: 'edge', provider: 'edge' });
+  expect(res.status).toBe(202);
+  const job = jobMem[Object.keys(jobMem)[0]];
+  expect(job.provider).toBe('edge');
+});
+
 test('preview flag stores preview info', async () => {
   const res = await request(app)
     .post('/api/createApp')
@@ -339,7 +349,9 @@ test('exportData anonymizes PII fields', async () => {
     status: 'complete',
     email: 'user@example.com',
   };
-  const res = await request(app).get('/api/exportData').set('x-tenant-id', 't1');
+  const res = await request(app)
+    .get('/api/exportData')
+    .set('x-tenant-id', 't1');
   expect(res.status).toBe(200);
   expect(res.body[0].email).toBe('[REDACTED]');
 });

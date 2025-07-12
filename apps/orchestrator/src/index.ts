@@ -68,6 +68,7 @@ const CODEGEN_URL = process.env.CODEGEN_URL || 'http://localhost:3003/generate';
 const DEPLOY_URL = process.env.DEPLOY_URL;
 const GCP_DEPLOY_URL = process.env.GCP_DEPLOY_URL;
 const AZURE_DEPLOY_URL = process.env.AZURE_DEPLOY_URL;
+const EDGE_DEPLOY_URL = process.env.EDGE_DEPLOY_URL;
 const NOTIFY_EMAIL = process.env.NOTIFY_EMAIL;
 const ARTIFACTS_BUCKET = process.env.ARTIFACTS_BUCKET;
 const TENANT_HEADER = 'x-tenant-id';
@@ -146,17 +147,19 @@ async function chatCompletion(message: string): Promise<string> {
   }
 }
 
-async function getProvider(tenantId: string): Promise<'aws' | 'azure' | 'gcp'> {
+async function getProvider(
+  tenantId: string
+): Promise<'aws' | 'azure' | 'gcp' | 'edge'> {
   const cfg = await getItem<{ id: string; provider?: string }>(TENANTS_TABLE, {
     id: tenantId,
   });
-  return (cfg?.provider as 'aws' | 'azure' | 'gcp') || 'aws';
+  return (cfg?.provider as 'aws' | 'azure' | 'gcp' | 'edge') || 'aws';
 }
 
 export interface Job {
   id: string;
   tenantId: string;
-  provider: 'aws' | 'gcp' | 'azure';
+  provider: 'aws' | 'gcp' | 'azure' | 'edge';
   description: string;
   language: string;
   database?: string;
@@ -171,6 +174,7 @@ async function triggerDeploy(jobId: string, provider: string) {
   if (provider === 'aws') url = DEPLOY_URL;
   if (provider === 'gcp') url = GCP_DEPLOY_URL;
   if (provider === 'azure') url = AZURE_DEPLOY_URL;
+  if (provider === 'edge') url = EDGE_DEPLOY_URL;
   if (!url) {
     console.log('deploy url not configured for provider', provider);
     return;
@@ -302,11 +306,17 @@ configureHealing(dispatchJob);
 app.post('/api/createApp', async (req, res) => {
   const tenantId = req.header(TENANT_HEADER);
   if (!tenantId) return res.status(401).json({ error: 'missing tenant' });
-  const { description, language = 'node', database, provider, preview } = req.body;
+  const {
+    description,
+    language = 'node',
+    database,
+    provider,
+    preview,
+  } = req.body;
   if (!description)
     return res.status(400).json({ error: 'missing description' });
   const id = randomUUID();
-  const prov: 'aws' | 'gcp' | 'azure' =
+  const prov: 'aws' | 'gcp' | 'azure' | 'edge' =
     provider || (await getProvider(tenantId));
   const job: Job = {
     id,

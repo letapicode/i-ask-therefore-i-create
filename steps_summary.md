@@ -458,3 +458,9 @@ This file records brief summaries of each pull request.
 - Integrated tracing into orchestrator and analytics services.
 - Provisioned optional collector in `infrastructure/observability`.
 - Documented trace viewing instructions and updated task tracker for task 181.
+
+## PR <pending> - Edge Deployment & CDN Integration
+- Added Terraform module `infrastructure/edge` with Cloudflare Worker and Lambda@Edge resources.
+- Introduced edge deployment template under `packages/codegen-templates`.
+- Orchestrator now accepts `edge` provider and triggers `EDGE_DEPLOY_URL`.
+- Documented usage in `docs/edge-deployments.md` and marked task 182 complete.
