@@ -366,3 +366,34 @@ test('github webhook stores review results', async () => {
   expect(list[0].lintErrors).toBe(2);
   fs.unlinkSync(file);
 });
+
+test('seedData endpoint writes seed file', async () => {
+  jobMem['s1'] = {
+    id: 's1',
+    tenantId: 't1',
+    provider: 'aws',
+    description: 'demo',
+    language: 'node',
+    status: 'complete',
+    created: Date.now(),
+  };
+  const schema = { tables: [{ name: 't', columns: [{ name: 'id', type: 'uuid' }] }] };
+  fs.writeFileSync('schema.json', JSON.stringify(schema));
+  const dir = 'seeds';
+  const file = path.join(dir, 's1.json');
+  if (fs.existsSync(file)) fs.unlinkSync(file);
+  const fetchMock = require('node-fetch') as jest.Mock;
+  fetchMock.mockResolvedValueOnce({
+    json: async () => ({ choices: [{ message: { content: '[{"id":1}]' } }] }),
+  });
+  const res = await request(app)
+    .post('/api/seedData/s1')
+    .set('x-tenant-id', 't1')
+    .send({ rows: 1 });
+  expect(res.status).toBe(200);
+  expect(fs.existsSync(file)).toBe(true);
+  const data = JSON.parse(fs.readFileSync(file, 'utf-8'));
+  expect(data).toHaveLength(1);
+  fs.unlinkSync(file);
+  fs.unlinkSync('schema.json');
+});

@@ -185,3 +185,5 @@
 | 181    | OpenTelemetry Tracing                     | Completed |
 | 182    | Edge Deployment & CDN Integration          | Completed |
 
+| 183    | AI ChatOps Assistant                        | Completed |
+| 184    | AI-Generated Seed Data                      | Completed |

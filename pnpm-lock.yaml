@@ -156,6 +156,9 @@ importers:
       commander:
         specifier: ^11.0.0
         version: 11.1.0
+      node-fetch:
+        specifier: ^3.3.2
+        version: 3.3.2
 
   packages/data-connectors:
     dependencies:
