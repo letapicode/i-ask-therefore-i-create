@@ -66,3 +66,14 @@ test('business tips endpoint returns tips', async () => {
     )
   ).toBe(true);
 });
+
+test('stores and retrieves AR session events', async () => {
+  await request(app)
+    .post('/arSessions/s1')
+    .send({ action: 'add', item: { x: 1 } });
+  const res = await request(app).get('/arSessions/s1');
+  expect(res.status).toBe(200);
+  expect(res.body.events[0].item.x).toBe(1);
+  const list = await request(app).get('/arSessions');
+  expect(list.body.sessions).toContain('s1');
+});

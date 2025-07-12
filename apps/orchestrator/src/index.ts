@@ -40,7 +40,7 @@ import { generateSchema } from '../../packages/codegen-templates/src/graphqlBuil
 import { runTemplateHooks } from '../../packages/codegen-templates/src/marketplace';
 import { generateSeedData } from '../../packages/codegen-templates/src/seedData';
 import { createServer } from 'http';
-import { WebSocketServer } from 'ws';
+import { WebSocketServer, WebSocket } from 'ws';
 import { startPreview, getPreview, cleanupPreviews } from './preview';
 import { scan as scanA11y } from '../../../tools/a11y-scan';
 
@@ -886,6 +886,56 @@ export function start(port = 3002) {
           body: JSON.stringify({ role: 'assistant', content: reply }),
         }).catch(() => {});
       }
+    });
+  });
+
+  const sessions = new Map<string, Set<WebSocket>>();
+  const ids = new Map<WebSocket, string>();
+  const arWss = new WebSocketServer({ server, path: '/arSignal' });
+  arWss.on('connection', (ws, req) => {
+    const url = new URL(req.url || '', 'http://localhost');
+    const id = url.searchParams.get('session') || 'default';
+    let set = sessions.get(id);
+    if (!set) {
+      set = new Set();
+      sessions.set(id, set);
+    }
+    set.add(ws);
+    ws.on('message', (data) => {
+      try {
+        const msg = JSON.parse(data.toString());
+        if (msg.type === 'join') {
+          ids.set(ws, msg.id);
+          for (const client of set!) {
+            if (client !== ws && client.readyState === WebSocket.OPEN) {
+              client.send(JSON.stringify({ type: 'join', id: msg.id }));
+            }
+          }
+          for (const client of set!) {
+            if (client === ws) continue;
+            const otherId = ids.get(client);
+            if (otherId) ws.send(JSON.stringify({ type: 'join', id: otherId }));
+          }
+        }
+      } catch {}
+      for (const client of set!) {
+        if (client !== ws && client.readyState === WebSocket.OPEN) {
+          client.send(data.toString());
+        }
+      }
+      const analytics = process.env.ANALYTICS_URL;
+      if (analytics) {
+        fetch(`${analytics}/arSessions/${id}`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: data.toString(),
+        }).catch(() => {});
+      }
+    });
+    ws.on('close', () => {
+      set!.delete(ws);
+      ids.delete(ws);
+      if (set!.size === 0) sessions.delete(id);
     });
   });
   server.listen(port, () => console.log(`orchestrator listening on ${port}`));
