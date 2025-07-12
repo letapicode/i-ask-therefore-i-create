@@ -1,5 +1,6 @@
 import express from 'express';
 import fs from 'fs';
+import { saveModel, listModels, loadModel } from './storage';
 
 export const app = express();
 app.use(express.json());
@@ -68,7 +69,25 @@ app.get('/model', (_req, res) => {
     agg[i] = agg[i] / filtered.length + gaussian(NOISE);
   }
   writeJson(MODEL_FILE, agg);
+  const version = new Date().toISOString();
+  saveModel(version, agg).catch((err) =>
+    console.error('model upload failed', err)
+  );
   res.json(agg);
+});
+
+app.get('/models', async (_req, res) => {
+  const list = await listModels().catch(() => []);
+  res.json(list);
+});
+
+app.get('/models/:version', async (req, res) => {
+  try {
+    const model = await loadModel(req.params.version);
+    res.json(model);
+  } catch {
+    res.status(404).json({ error: 'not found' });
+  }
 });
 
 export function start(port = 3010) {

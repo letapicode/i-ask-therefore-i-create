@@ -485,3 +485,10 @@ This file records brief summaries of each pull request.
 - Extended analytics API with `/arSessions` endpoints and tests.
 - Updated AR preview page to sync layout changes via peer connections.
 - Documented setup in `docs/collaborative-ar.md` and marked task 185 complete.
+
+## PR <pending> - Community Model Sharing Hub
+- Added S3 storage helpers in `services/federated-training/src/storage.ts`.
+- Updated federated training service to upload checkpoints and expose model listing endpoints.
+- Implemented `/api/communityModels` GET/POST in the orchestrator to list and activate versions.
+- Created portal page `models.tsx` to manage community models.
+- Documented privacy considerations in `docs/community-models.md` and marked task 186 complete.
