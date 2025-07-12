@@ -6,6 +6,8 @@ import { policyMiddleware } from '../../packages/shared/src/policyMiddleware';
 import {
   recordPurchase,
   verifyLicense,
+  getLicenseOwner,
+  transferLicense,
 } from '../../packages/data-connectors/src/blockchain';
 
 export const app = express();
@@ -18,6 +20,7 @@ app.use((req, _res, next) => {
 
 const DB = process.env.PLUGINS_DB || '.plugin-meta.json';
 const LEDGER = process.env.BLOCKCHAIN_LEDGER || '.ledger.json';
+const LISTINGS = process.env.PLUGIN_LISTINGS || '.resale.json';
 
 interface PluginMeta {
   name: string;
@@ -41,6 +44,23 @@ function find(name: string, list: PluginMeta[]) {
     list.push(p);
   }
   return p;
+}
+
+interface Listing {
+  plugin: string;
+  licenseKey: string;
+  price: number;
+  seller: string;
+}
+
+function readListings(): Listing[] {
+  return fs.existsSync(LISTINGS)
+    ? (JSON.parse(fs.readFileSync(LISTINGS, 'utf-8')) as Listing[])
+    : [];
+}
+
+function saveListings(data: Listing[]) {
+  fs.writeFileSync(LISTINGS, JSON.stringify(data, null, 2));
 }
 
 app.post('/purchase', (req, res) => {
@@ -81,6 +101,49 @@ app.post('/rate', (req, res) => {
   p.ratings.push(Number(value));
   save(list);
   res.status(201).json({ ok: true });
+});
+
+app.get('/listings', (_req, res) => {
+  res.json(readListings());
+});
+
+app.post('/listings', (req, res) => {
+  const { plugin, licenseKey, price, seller } = req.body as Listing;
+  if (!plugin || !licenseKey || !seller)
+    return res.status(400).json({ error: 'missing fields' });
+  if (!verifyLicense(plugin, licenseKey, LEDGER))
+    return res.status(400).json({ error: 'invalid license' });
+  const owner = getLicenseOwner(plugin, licenseKey, LEDGER);
+  if (owner !== seller)
+    return res.status(403).json({ error: 'not owner' });
+  const listings = readListings();
+  listings.push({ plugin, licenseKey, price: Number(price) || 0, seller });
+  saveListings(listings);
+  res.status(201).json({ ok: true });
+});
+
+app.post('/purchase-listing', (req, res) => {
+  const { plugin, licenseKey, buyer } = req.body as {
+    plugin?: string;
+    licenseKey?: string;
+    buyer?: string;
+  };
+  if (!plugin || !licenseKey || !buyer)
+    return res.status(400).json({ error: 'missing fields' });
+  const listings = readListings();
+  const idx = listings.findIndex(
+    (l) => l.plugin === plugin && l.licenseKey === licenseKey,
+  );
+  if (idx === -1) return res.status(404).json({ error: 'listing not found' });
+  const listing = listings[idx];
+  try {
+    transferLicense(plugin, licenseKey, listing.seller, buyer, LEDGER);
+    listings.splice(idx, 1);
+    saveListings(listings);
+    res.status(201).json({ licenseKey });
+  } catch (err) {
+    res.status(400).json({ error: 'transfer failed' });
+  }
 });
 
 app.get('/stats', (_req, res) => {

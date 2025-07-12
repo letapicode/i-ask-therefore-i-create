@@ -190,3 +190,4 @@
 | 185    | Collaborative AR Sessions                   | Completed |
 | 186    | Community Model Sharing Hub               | Completed |
 | 187    | Accessibility Score Tracking               | Completed |
+| 188    | Plugin Resale Marketplace                   | Completed |
