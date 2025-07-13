@@ -542,3 +542,10 @@ This file records brief summaries of each pull request.
 - Implemented orchestrator endpoint `/api/privacyStats` to fetch these metrics.
 - Created portal page `privacy-dashboard.tsx` rendering charts of noise and participation.
 - Documented usage in `docs/federated-privacy.md` and marked task 192 complete.
+
+## PR <pending> - Cross-Chain Plugin License Sync
+
+- Added bridge APIs `bridgeRecord` and `syncLedgers` in `packages/data-connectors`.
+- Queued sync jobs on plugin purchases via new `.cross-chain-queue.json`.
+- Implemented CLI `tools/resync-licenses.ts` to mirror ledgers.
+- Documented setup in `docs/cross-chain-licensing.md` and marked task 193 complete.

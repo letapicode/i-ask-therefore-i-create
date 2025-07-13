@@ -20,6 +20,7 @@ This folder contains user guides and architecture diagrams.
 - [Collaborative AR Sessions](./collaborative-ar.md)
 - [Plugin Marketplace](./plugin-marketplace.md)
 - [Plugin Resale](./plugin-resale.md)
+- [Cross-Chain Licensing](./cross-chain-licensing.md)
 - [Template Marketplace](./template-marketplace.md)
 - [Pair Programmer Chat](./pair-programmer.md)
 - [Blockchain Connectors](./blockchain-connectors.md)

@@ -21,6 +21,30 @@ app.use((req, _res, next) => {
 const DB = process.env.PLUGINS_DB || '.plugin-meta.json';
 const LEDGER = process.env.BLOCKCHAIN_LEDGER || '.ledger.json';
 const LISTINGS = process.env.PLUGIN_LISTINGS || '.resale.json';
+const SYNC_QUEUE = process.env.CROSS_CHAIN_QUEUE || '.cross-chain-queue.json';
+
+interface SyncJob {
+  plugin: string;
+  buyer: string;
+  licenseKey: string;
+  tx: string;
+}
+
+function readQueue(): SyncJob[] {
+  return fs.existsSync(SYNC_QUEUE)
+    ? (JSON.parse(fs.readFileSync(SYNC_QUEUE, 'utf8')) as SyncJob[])
+    : [];
+}
+
+function saveQueue(data: SyncJob[]) {
+  fs.writeFileSync(SYNC_QUEUE, JSON.stringify(data, null, 2));
+}
+
+function enqueue(job: SyncJob) {
+  const q = readQueue();
+  q.push(job);
+  saveQueue(q);
+}
 
 interface PluginMeta {
   name: string;
@@ -67,7 +91,8 @@ app.post('/purchase', (req, res) => {
   const { name, buyer } = req.body as { name?: string; buyer?: string };
   if (!name || !buyer) return res.status(400).json({ error: 'missing fields' });
   const licenseKey = randomUUID();
-  recordPurchase(name, buyer, licenseKey, LEDGER);
+  const tx = recordPurchase(name, buyer, licenseKey, LEDGER);
+  enqueue({ plugin: name, buyer, licenseKey, tx });
   res.status(201).json({ licenseKey });
 });
 
