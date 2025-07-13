@@ -1,6 +1,7 @@
 import express from 'express';
 import fs from 'fs';
 import { saveModel, listModels, loadModel } from './storage';
+import { recordMetric, getMetrics } from './metrics';
 
 export const app = express();
 app.use(express.json());
@@ -59,7 +60,10 @@ app.get('/model', (_req, res) => {
   const opts = readJson<string[]>(OPT_IN_FILE, []);
   const updates = readJson<any[]>(UPDATES_FILE, []);
   const filtered = updates.filter((u) => opts.includes(u.tenantId));
-  if (!filtered.length) return res.json([]);
+  if (!filtered.length) {
+    recordMetric(0, opts.length, 0);
+    return res.json([]);
+  }
   const len = filtered[0].weights.length;
   const agg = new Array(len).fill(0);
   for (const u of filtered) {
@@ -73,6 +77,7 @@ app.get('/model', (_req, res) => {
   saveModel(version, agg).catch((err) =>
     console.error('model upload failed', err)
   );
+  recordMetric(NOISE, opts.length, filtered.length);
   res.json(agg);
 });
 
@@ -88,6 +93,10 @@ app.get('/models/:version', async (req, res) => {
   } catch {
     res.status(404).json({ error: 'not found' });
   }
+});
+
+app.get('/metrics', (_req, res) => {
+  res.json(getMetrics());
 });
 
 export function start(port = 3010) {
