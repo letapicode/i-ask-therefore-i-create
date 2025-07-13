@@ -520,3 +520,9 @@ This file records brief summaries of each pull request.
 - Updated ChatOps README with NLP command details.
 - Marked task 190 complete in tracker.
 
+
+## PR <pending> - Reusable AR Gesture Library
+- Added new package `packages/ar-gestures` providing `attachGestures` to handle drag, rotate and scale interactions.
+- Integrated gesture support in `apps/portal/src/pages/ar/index.tsx` for editing AR layouts.
+- Documented usage and extension points in `packages/ar-gestures/README.md`.
+- Updated portal dependencies and marked task 191 complete.
