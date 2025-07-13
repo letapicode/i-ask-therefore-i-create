@@ -106,3 +106,48 @@ export function createBlockchainConnector(options: ChainOptions) {
 
 export const ethereumConnector = createBlockchainConnector;
 export const polygonConnector = createBlockchainConnector;
+
+export interface BridgeJob {
+  tx: string;
+  plugin: string;
+  buyer: string;
+  licenseKey: string;
+}
+
+export function bridgeRecord(
+  tx: string,
+  fromLedger: string,
+  toLedger: string,
+): string {
+  const src = readLedger(fromLedger);
+  const rec = src.find((r) => r.tx === tx);
+  if (!rec) throw new Error('transaction not found');
+  const dest = readLedger(toLedger);
+  const exists = dest.some(
+    (r: any) => r.tx === tx || (r.bridgedFrom && r.bridgedFrom === tx),
+  );
+  if (exists) return tx;
+  const newTx = randomUUID();
+  dest.push({ ...rec, tx: newTx, bridgedFrom: tx });
+  saveLedger(toLedger, dest);
+  return newTx;
+}
+
+export function syncLedgers(
+  fromLedger: string,
+  toLedger: string,
+): string[] {
+  const from = readLedger(fromLedger);
+  const dest = readLedger(toLedger);
+  const existing = new Set(dest.map((r: any) => r.bridgedFrom || r.tx));
+  const added: string[] = [];
+  for (const rec of from) {
+    if (!existing.has(rec.tx)) {
+      const newTx = randomUUID();
+      dest.push({ ...rec, tx: newTx, bridgedFrom: rec.tx });
+      added.push(newTx);
+    }
+  }
+  if (added.length) saveLedger(toLedger, dest);
+  return added;
+}

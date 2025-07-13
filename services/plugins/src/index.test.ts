@@ -5,20 +5,24 @@ import { app } from './index';
 const LEDGER = '.test-ledger.json';
 const META = '.test-plugin-meta.json';
 const LIST = '.test-resale.json';
+const QUEUE = '.test-sync-queue.json';
 process.env.BLOCKCHAIN_LEDGER = LEDGER;
 process.env.PLUGINS_DB = META;
 process.env.PLUGIN_LISTINGS = LIST;
+process.env.CROSS_CHAIN_QUEUE = QUEUE;
 
 beforeEach(() => {
   if (fs.existsSync(LEDGER)) fs.unlinkSync(LEDGER);
   if (fs.existsSync(META)) fs.unlinkSync(META);
   if (fs.existsSync(LIST)) fs.unlinkSync(LIST);
+  if (fs.existsSync(QUEUE)) fs.unlinkSync(QUEUE);
 });
 
 afterEach(() => {
   if (fs.existsSync(LEDGER)) fs.unlinkSync(LEDGER);
   if (fs.existsSync(META)) fs.unlinkSync(META);
   if (fs.existsSync(LIST)) fs.unlinkSync(LIST);
+  if (fs.existsSync(QUEUE)) fs.unlinkSync(QUEUE);
 });
 
 test('purchase, install and rate plugin', async () => {
@@ -26,6 +30,8 @@ test('purchase, install and rate plugin', async () => {
     .post('/purchase')
     .send({ name: 'auth', buyer: '0xabc' });
   expect(purchase.status).toBe(201);
+  const queue = JSON.parse(fs.readFileSync(QUEUE, 'utf8'));
+  expect(queue.length).toBe(1);
   const key = purchase.body.licenseKey;
   const install = await request(app)
     .post('/install')
