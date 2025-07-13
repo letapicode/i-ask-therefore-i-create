@@ -67,6 +67,9 @@ jest.mock('../../packages/shared/src/dynamo', () => ({
     else delete jobMem[key.id];
   }),
 }));
+jest.mock('../../packages/shared/src/scaling', () => ({
+  updateEdgeScaling: jest.fn(async () => {})
+}));
 
 afterEach(() => {
   for (const key of Object.keys(jobMem)) delete jobMem[key];
@@ -439,4 +442,19 @@ test('community models endpoints', async () => {
   expect(fs.existsSync('.community-model.json')).toBe(true);
   const data = JSON.parse(fs.readFileSync('.community-model.json', 'utf-8'));
   expect(data.version).toBe('v1');
+});
+
+test('edge scaling endpoint validates input', async () => {
+  const res = await request(app).post('/api/edgeScaling').send({});
+  expect(res.status).toBe(400);
+});
+
+test('edge scaling triggers update', async () => {
+  const { updateEdgeScaling } = require('../../packages/shared/src/scaling');
+  updateEdgeScaling.mockResolvedValueOnce();
+  const res = await request(app)
+    .post('/api/edgeScaling')
+    .send({ functionName: 'fn', version: '1', min: 1, max: 2 });
+  expect(res.status).toBe(201);
+  expect(updateEdgeScaling).toHaveBeenCalled();
 });
