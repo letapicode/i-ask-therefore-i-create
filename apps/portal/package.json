@@ -7,6 +7,7 @@
     "test": "echo testing portal"
   },
   "dependencies": {
-    "chart.js": "^4.4.0"
+    "chart.js": "^4.4.0",
+    "ar-gestures": "workspace:*"
   }
 }

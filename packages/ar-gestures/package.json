@@ -1,0 +1,11 @@
+{
+  "name": "ar-gestures",
+  "version": "0.1.0",
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+  "scripts": {
+    "build": "echo building ar-gestures",
+    "lint": "echo linting ar-gestures",
+    "test": "echo skipping"
+  }
+}

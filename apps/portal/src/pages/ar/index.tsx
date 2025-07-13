@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { attachGestures } from 'ar-gestures';
 
 interface PeerInfo {
   pc: RTCPeerConnection;
@@ -10,6 +11,7 @@ export default function ArPreview() {
   const [layout, setLayout] = useState<any[]>([]);
   const wsRef = useRef<WebSocket>();
   const peersRef = useRef<Record<string, PeerInfo>>({});
+  const selectedRef = useRef<any>(null);
   const idRef = useRef<string>('' + Math.random().toString(36).slice(2));
 
   useEffect(() => {
@@ -133,6 +135,7 @@ export default function ArPreview() {
         const mesh = new THREE.Mesh(box, mat);
         mesh.position.set(0, 0, -0.5);
         scene.add(mesh);
+        selectedRef.current = mesh;
         const newLayout = [...layout, { x: 0, y: 0, z: -0.5 }];
         setLayout(newLayout);
         fetch('/api/arLayout', {
@@ -162,6 +165,37 @@ export default function ArPreview() {
       wsRef.current?.close();
     };
   }, [layout]);
+
+  useEffect(() => {
+    if (!canvasRef.current) return;
+    const dispose = attachGestures(
+      canvasRef.current,
+      {
+        onDrag: (dx, dy) => {
+          const mesh = selectedRef.current;
+          if (mesh) {
+            mesh.position.x += dx * 0.001;
+            mesh.position.y -= dy * 0.001;
+          }
+        },
+        onRotate: (r) => {
+          const mesh = selectedRef.current;
+          if (mesh) {
+            mesh.rotation.y += r;
+          }
+        },
+        onScale: (s) => {
+          const mesh = selectedRef.current;
+          if (mesh) {
+            const factor = 1 + s;
+            mesh.scale.multiplyScalar(factor);
+          }
+        },
+      },
+      { rotateSensitivity: 1, scaleSensitivity: 0.005 }
+    );
+    return dispose;
+  }, []);
 
   return (
     <div style={{ padding: 20 }}>
