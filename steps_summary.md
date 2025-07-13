@@ -475,24 +475,29 @@ This file records brief summaries of each pull request.
 - Added tests for the ChatOps service.
 
 ## PR <pending> - AI-Generated Seed Data
+
 - Added `generateSeedData` utility under `packages/codegen-templates` for LLM-based sample rows.
 - Implemented `/api/seedData/:id` in the orchestrator saving output to `seeds/`.
 - Created portal page `seed-data.tsx` to request generation.
 - Documented usage in `docs/automatic-data-seeding.md` and marked tasks 183-184 complete.
 
 ## PR <pending> - Collaborative AR Sessions
+
 - Added WebRTC signaling WebSocket `/arSignal` in orchestrator and persistence hooks in analytics.
 - Extended analytics API with `/arSessions` endpoints and tests.
 - Updated AR preview page to sync layout changes via peer connections.
 - Documented setup in `docs/collaborative-ar.md` and marked task 185 complete.
 
 ## PR <pending> - Community Model Sharing Hub
+
 - Added S3 storage helpers in `services/federated-training/src/storage.ts`.
 - Updated federated training service to upload checkpoints and expose model listing endpoints.
 - Implemented `/api/communityModels` GET/POST in the orchestrator to list and activate versions.
 - Created portal page `models.tsx` to manage community models.
 - Documented privacy considerations in `docs/community-models.md` and marked task 186 complete.
+
 ## PR <pending> - Accessibility Score Tracking
+
 - Added `calculateScore` utility and tests in `services/a11y-assistant`.
 - Persisted scores via new `/a11yScore` endpoints in `services/analytics` with tests and docs.
 - Orchestrator now records score after each `/api/a11yReport` scan.
@@ -500,6 +505,7 @@ This file records brief summaries of each pull request.
 - Documented thresholds in `docs/accessibility-scoring.md` and marked task 187 complete.
 
 ## PR <pending> - Plugin Resale Marketplace
+
 - Added license transfer helpers `getLicenseOwner` and `transferLicense` in `packages/data-connectors` with tests.
 - Implemented resale endpoints `/listings` and `/purchase-listing` in `services/plugins` with tests.
 - Created portal page `resale.tsx` for managing resale licenses.
@@ -507,6 +513,7 @@ This file records brief summaries of each pull request.
 - Linked docs in `docs/README.md` and marked task 188 complete.
 
 ## PR <pending> - Offline LLM Optimization Pipeline
+
 - Added `tools/llm-optimization` with `benchmark.ts` and `optimize.sh` for testing and optimizing local models.
 - Modified `offline-model/Dockerfile` to copy optimized weights if available.
 - Documented workflow in `docs/offline-llm-optimization.md` and linked from README files.
@@ -514,15 +521,24 @@ This file records brief summaries of each pull request.
 - Updated task status to mark 189 complete.
 
 ## PR <pending> - Natural Language ChatOps
+
 - Added NLP parser `services/plugins/chatops/src/nlp.ts` with tests.
 - Extended chatops service with `/api/chatops/nlp` endpoint and analytics logging.
 - Persisted conversation context via new `/chatContext` routes in analytics service.
 - Updated ChatOps README with NLP command details.
 - Marked task 190 complete in tracker.
 
-
 ## PR <pending> - Reusable AR Gesture Library
+
 - Added new package `packages/ar-gestures` providing `attachGestures` to handle drag, rotate and scale interactions.
 - Integrated gesture support in `apps/portal/src/pages/ar/index.tsx` for editing AR layouts.
 - Documented usage and extension points in `packages/ar-gestures/README.md`.
 - Updated portal dependencies and marked task 191 complete.
+
+## PR <pending> - Federated Training Privacy Dashboard
+
+- Added `metrics.ts` to record noise, opted-in tenants, and update counts in `services/federated-training`.
+- Logged metrics on model aggregation and exposed new `/metrics` endpoint.
+- Implemented orchestrator endpoint `/api/privacyStats` to fetch these metrics.
+- Created portal page `privacy-dashboard.tsx` rendering charts of noise and participation.
+- Documented usage in `docs/federated-privacy.md` and marked task 192 complete.
