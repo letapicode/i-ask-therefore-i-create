@@ -9,6 +9,7 @@ import {
   deleteItem,
 } from '../../packages/shared/src/dynamo';
 import { uploadObject } from '../../packages/shared/src/s3';
+import { updateEdgeScaling } from '../../packages/shared/src/scaling';
 import { sendEmail } from '../../services/email/src';
 import { initSentry } from '../../packages/shared/src/sentry';
 import { initTracing } from '../../packages/observability/src';
@@ -816,6 +817,19 @@ app.get('/api/privacyStats', async (_req, res) => {
     res.json(metrics);
   } catch {
     res.status(500).json({ error: 'service unavailable' });
+  }
+});
+
+app.post('/api/edgeScaling', async (req, res) => {
+  const { functionName, version, min, max } = req.body as any;
+  if (!functionName || !version)
+    return res.status(400).json({ error: 'missing params' });
+  try {
+    await updateEdgeScaling(functionName, version, Number(min || 1), Number(max || 10));
+    res.status(201).json({ ok: true });
+  } catch (err) {
+    console.error('edge scaling failed', err);
+    res.status(500).json({ error: 'scaling failed' });
   }
 });
 

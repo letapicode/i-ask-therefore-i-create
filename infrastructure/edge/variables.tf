@@ -52,3 +52,31 @@ variable "s3_origin_domain" {
   description = "Domain of the S3 bucket origin"
   type        = string
 }
+
+variable "function_name" {
+  description = "Name of the Lambda@Edge function to scale"
+  type        = string
+}
+
+variable "function_version" {
+  description = "Version of the Lambda@Edge function"
+  type        = string
+}
+
+variable "min_capacity" {
+  description = "Minimum provisioned concurrency"
+  type        = number
+  default     = 1
+}
+
+variable "max_capacity" {
+  description = "Maximum provisioned concurrency"
+  type        = number
+  default     = 10
+}
+
+variable "target_utilization" {
+  description = "Utilization percentage for scaling"
+  type        = number
+  default     = 0.75
+}

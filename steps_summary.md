@@ -549,3 +549,12 @@ This file records brief summaries of each pull request.
 - Queued sync jobs on plugin purchases via new `.cross-chain-queue.json`.
 - Implemented CLI `tools/resync-licenses.ts` to mirror ledgers.
 - Documented setup in `docs/cross-chain-licensing.md` and marked task 193 complete.
+
+## PR <pending> - Edge Auto-Scaling
+
+- Created Terraform config `infrastructure/edge/auto-scaling.tf` with Lambda provisioned concurrency policies.
+- Added `updateEdgeScaling` helper in `packages/shared` with tests.
+- Updated edge worker template to report metrics to the analytics service.
+- Exposed orchestrator endpoint `/api/edgeScaling` to adjust scaling settings.
+- Documented the feature in `docs/edge-auto-scaling.md` and marked task 194 complete.
+
