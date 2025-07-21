@@ -565,3 +565,9 @@ This file records brief summaries of each pull request.
 - Implemented orchestrator proxy routes `/api/experiments` for managing experiments.
 - Created portal page `prompt-tests.tsx` for launching and tracking prompt tests.
 - Documented workflow in `docs/prompt-ab-testing.md` and marked task 195 complete.
+
+## PR <pending> - Prompt Experiments Enhancements
+
+- Sanitized input fields in the `prompt-experiments` service.
+- Added `/experiments/:id/summary` endpoint returning success rates.
+- Extended tests and README documentation for the new behavior.
