@@ -3,6 +3,7 @@ import fs from 'fs';
 import { randomUUID } from 'crypto';
 import { policyMiddleware } from '../../packages/shared/src/policyMiddleware';
 import { logAudit } from '../../packages/shared/src/audit';
+import { sanitize } from '../../packages/shared/src/sanitize';
 
 export const app = express();
 app.use(express.json());
@@ -22,6 +23,21 @@ interface Experiment {
   created: number;
 }
 
+interface VariantSummary {
+  prompt: string;
+  success: number;
+  total: number;
+  rate: number;
+}
+
+interface ExperimentSummary {
+  id: string;
+  name: string;
+  winner?: string;
+  variants: Record<string, VariantSummary>;
+  best?: string;
+}
+
 function read(): Experiment[] {
   return fs.existsSync(DB_FILE)
     ? (JSON.parse(fs.readFileSync(DB_FILE, 'utf-8')) as Experiment[])
@@ -34,6 +50,27 @@ function save(data: Experiment[]) {
 
 function find(id: string, list: Experiment[]) {
   return list.find((e) => e.id === id);
+}
+
+function summarize(exp: Experiment): ExperimentSummary {
+  const summaries: Record<string, VariantSummary> = {};
+  let best = exp.winner;
+  let bestRate = -1;
+  for (const [name, v] of Object.entries(exp.variants)) {
+    const rate = v.total === 0 ? 0 : v.success / v.total;
+    summaries[name] = { ...v, rate };
+    if (rate > bestRate) {
+      bestRate = rate;
+      best = name;
+    }
+  }
+  return {
+    id: exp.id,
+    name: exp.name,
+    winner: exp.winner,
+    variants: summaries,
+    best,
+  };
 }
 
 app.get('/experiments', (_req, res) => {
@@ -49,9 +86,9 @@ app.post('/experiments', (req, res) => {
   const list = read();
   const record: Experiment = {
     id: randomUUID(),
-    name,
+    name: sanitize(name),
     variants: Object.fromEntries(
-      Object.entries(variants).map(([k, v]) => [k, { prompt: v.prompt, success: 0, total: 0 }])
+      Object.entries(variants).map(([k, v]) => [k, { prompt: sanitize(v.prompt), success: 0, total: 0 }])
     ),
     created: Date.now(),
   };
@@ -66,6 +103,12 @@ app.get('/experiments/:id', (req, res) => {
   res.json(exp);
 });
 
+app.get('/experiments/:id/summary', (req, res) => {
+  const exp = find(req.params.id, read());
+  if (!exp) return res.status(404).json({ error: 'not found' });
+  res.json(summarize(exp));
+});
+
 app.put('/experiments/:id', (req, res) => {
   const { variant, success, winner } = req.body as {
     variant?: string;
@@ -76,11 +119,12 @@ app.put('/experiments/:id', (req, res) => {
   const exp = find(req.params.id, list);
   if (!exp) return res.status(404).json({ error: 'not found' });
   if (winner) {
-    exp.winner = winner;
+    exp.winner = sanitize(winner);
   }
-  if (variant && exp.variants[variant]) {
-    exp.variants[variant].total += 1;
-    if (success) exp.variants[variant].success += 1;
+  const cleanVariant = variant ? sanitize(variant) : undefined;
+  if (cleanVariant && exp.variants[cleanVariant]) {
+    exp.variants[cleanVariant].total += 1;
+    if (success) exp.variants[cleanVariant].success += 1;
   }
   save(list);
   res.json(exp);
