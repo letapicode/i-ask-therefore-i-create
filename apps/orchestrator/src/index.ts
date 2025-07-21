@@ -103,6 +103,7 @@ const FED_TRAIN_URL = process.env.FED_TRAIN_URL || 'http://localhost:3010';
 const SYN_DATA_URL = process.env.SYN_DATA_URL || 'http://localhost:3011';
 const A11Y_ASSIST_URL = process.env.A11Y_ASSIST_URL || 'http://localhost:3012';
 const CODE_REVIEW_URL = process.env.CODE_REVIEW_URL || 'http://localhost:3013';
+const PROMPT_EXP_URL = process.env.PROMPT_EXP_URL || 'http://localhost:3016';
 const REVIEW_DB = process.env.REVIEW_DB || '.reviews.json';
 const SEED_DIR = process.env.SEED_DIR || 'seeds';
 const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
@@ -547,6 +548,72 @@ app.delete('/api/plugins/:name', async (req, res) => {
     console.error('plugin service error', err);
   }
   res.json({ ok: true });
+});
+
+app.get('/api/experiments', async (_req, res) => {
+  try {
+    const response = await fetch(`${PROMPT_EXP_URL}/experiments`);
+    const json = await response.json();
+    res.json(json);
+  } catch {
+    res.status(500).json({ error: 'service unavailable' });
+  }
+});
+
+app.post('/api/experiments', async (req, res) => {
+  try {
+    const response = await fetch(`${PROMPT_EXP_URL}/experiments`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(req.body),
+    });
+    const json = await response.json();
+    res.status(response.status).json(json);
+  } catch {
+    res.status(500).json({ error: 'service unavailable' });
+  }
+});
+
+app.get('/api/experiments/:id', async (req, res) => {
+  try {
+    const response = await fetch(
+      `${PROMPT_EXP_URL}/experiments/${encodeURIComponent(req.params.id)}`
+    );
+    const json = await response.json();
+    res.status(response.status).json(json);
+  } catch {
+    res.status(500).json({ error: 'service unavailable' });
+  }
+});
+
+app.put('/api/experiments/:id', async (req, res) => {
+  try {
+    const response = await fetch(
+      `${PROMPT_EXP_URL}/experiments/${encodeURIComponent(req.params.id)}`,
+      {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(req.body),
+      }
+    );
+    const json = await response.json();
+    res.status(response.status).json(json);
+  } catch {
+    res.status(500).json({ error: 'service unavailable' });
+  }
+});
+
+app.delete('/api/experiments/:id', async (req, res) => {
+  try {
+    const response = await fetch(
+      `${PROMPT_EXP_URL}/experiments/${encodeURIComponent(req.params.id)}`,
+      { method: 'DELETE' }
+    );
+    const json = await response.json();
+    res.status(response.status).json(json);
+  } catch {
+    res.status(500).json({ error: 'service unavailable' });
+  }
 });
 
 app.post('/api/figma', (req, res) => {

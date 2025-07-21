@@ -1,0 +1,14 @@
+{
+  "name": "prompt-experiments",
+  "version": "1.0.0",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "echo building prompt-experiments",
+    "test": "echo skipping",
+    "lint": "eslint src --ext .ts"
+  },
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+}

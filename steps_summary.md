@@ -558,3 +558,10 @@ This file records brief summaries of each pull request.
 - Exposed orchestrator endpoint `/api/edgeScaling` to adjust scaling settings.
 - Documented the feature in `docs/edge-auto-scaling.md` and marked task 194 complete.
 
+
+## PR <pending> - Prompt A/B Testing Platform
+
+- Added new `prompt-experiments` service with CRUD endpoints and tests.
+- Implemented orchestrator proxy routes `/api/experiments` for managing experiments.
+- Created portal page `prompt-tests.tsx` for launching and tracking prompt tests.
+- Documented workflow in `docs/prompt-ab-testing.md` and marked task 195 complete.
