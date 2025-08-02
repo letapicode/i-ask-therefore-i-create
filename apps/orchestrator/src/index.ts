@@ -586,6 +586,21 @@ app.get('/api/experiments/:id', async (req, res) => {
   }
 });
 
+app.get('/api/experiments/:id/export', async (req, res) => {
+  try {
+    const response = await fetch(
+      `${PROMPT_EXP_URL}/experiments/${encodeURIComponent(req.params.id)}/export`
+    );
+    const text = await response.text();
+    res
+      .status(response.status)
+      .set('Content-Type', response.headers.get('content-type') || 'text/plain')
+      .send(text);
+  } catch {
+    res.status(500).json({ error: 'service unavailable' });
+  }
+});
+
 app.put('/api/experiments/:id', async (req, res) => {
   try {
     const response = await fetch(
@@ -892,7 +907,12 @@ app.post('/api/edgeScaling', async (req, res) => {
   if (!functionName || !version)
     return res.status(400).json({ error: 'missing params' });
   try {
-    await updateEdgeScaling(functionName, version, Number(min || 1), Number(max || 10));
+    await updateEdgeScaling(
+      functionName,
+      version,
+      Number(min || 1),
+      Number(max || 10)
+    );
     res.status(201).json({ ok: true });
   } catch (err) {
     console.error('edge scaling failed', err);

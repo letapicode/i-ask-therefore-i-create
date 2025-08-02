@@ -558,7 +558,6 @@ This file records brief summaries of each pull request.
 - Exposed orchestrator endpoint `/api/edgeScaling` to adjust scaling settings.
 - Documented the feature in `docs/edge-auto-scaling.md` and marked task 194 complete.
 
-
 ## PR <pending> - Prompt A/B Testing Platform
 
 - Added new `prompt-experiments` service with CRUD endpoints and tests.
@@ -571,3 +570,9 @@ This file records brief summaries of each pull request.
 - Sanitized input fields in the `prompt-experiments` service.
 - Added `/experiments/:id/summary` endpoint returning success rates.
 - Extended tests and README documentation for the new behavior.
+
+## PR <pending> - Prompt Experiments Export
+
+- Added CSV export functionality via `/experiments/:id/export` in `prompt-experiments`.
+- Proxied export route through the orchestrator and exposed download links in portal pages.
+- Documented the workflow and extended tests to validate CSV output.

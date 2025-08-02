@@ -8,6 +8,7 @@ This service manages prompt A/B tests and metrics.
 - `POST /experiments` – create or update an experiment
 - `GET /experiments/:id` – fetch a single experiment
 - `GET /experiments/:id/summary` – get success rates and best variant
+- `GET /experiments/:id/export` – download results as CSV
 - `PUT /experiments/:id` – update metrics or winner
 - `DELETE /experiments/:id` – remove an experiment
 
