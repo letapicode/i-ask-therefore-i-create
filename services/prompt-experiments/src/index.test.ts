@@ -16,12 +16,15 @@ afterEach(() => {
 test('create, update and delete experiment', async () => {
   const create = await request(app)
     .post('/experiments')
-    .send({ name: '<b>test</b>', variants: { A: { prompt: '<i>a</i>' }, B: { prompt: 'b' } } });
+    .send({
+      name: '<b>test</b>',
+      variants: { A: { prompt: '<i>a</i>' }, B: { prompt: 'b' } },
+    });
   expect(create.status).toBe(201);
   const id = create.body.id;
   // ensure sanitization
-  expect(create.body.name).toBe('&lt;b&gt;test&lt;/b&gt;');
-  expect(create.body.variants.A.prompt).toBe('&lt;i&gt;a&lt;/i&gt;');
+  expect(create.body.name).toBe('&lt;b&gt;test&lt;&#x2F;b&gt;');
+  expect(create.body.variants.A.prompt).toBe('&lt;i&gt;a&lt;&#x2F;i&gt;');
 
   await request(app)
     .put(`/experiments/${id}`)
@@ -32,6 +35,12 @@ test('create, update and delete experiment', async () => {
   const summary = await request(app).get(`/experiments/${id}/summary`);
   expect(summary.body.variants.A.rate).toBe(1);
   expect(summary.body.best).toBe('A');
+
+  const exportRes = await request(app).get(`/experiments/${id}/export`);
+  expect(exportRes.status).toBe(200);
+  expect(exportRes.headers['content-type']).toMatch(/text\/csv/);
+  expect(exportRes.text).toContain('variant,prompt,success,total,rate');
+  expect(exportRes.text).toContain('A,"&lt;i&gt;a&lt;&#x2F;i&gt;",1,1,1');
 
   const del = await request(app).delete(`/experiments/${id}`);
   expect(del.status).toBe(200);

@@ -15,7 +15,10 @@ export default function PromptTests() {
     await fetch('/api/experiments', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ name, variants: { A: { prompt: a }, B: { prompt: b } } }),
+      body: JSON.stringify({
+        name,
+        variants: { A: { prompt: a }, B: { prompt: b } },
+      }),
     });
     setName('');
     setA('');
@@ -38,7 +41,11 @@ export default function PromptTests() {
     <div style={{ padding: 20 }}>
       <h1>Prompt Experiments</h1>
       <div style={{ marginBottom: 10 }}>
-        <input placeholder="Name" value={name} onChange={(e) => setName(e.target.value)} />
+        <input
+          placeholder="Name"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+        />
         <input
           placeholder="Variant A"
           value={a}
@@ -61,13 +68,17 @@ export default function PromptTests() {
           {exp.winner && <span>(winner: {exp.winner})</span>}
           <div>
             <button onClick={() => record(exp.id, 'A', true)}>A Success</button>
-            <button onClick={() => record(exp.id, 'B', true)} style={{ marginLeft: 4 }}>
+            <button
+              onClick={() => record(exp.id, 'B', true)}
+              style={{ marginLeft: 4 }}
+            >
               B Success
             </button>
           </div>
           <pre style={{ background: '#f0f0f0', padding: 10 }}>
             {JSON.stringify(exp.variants, null, 2)}
           </pre>
+          <a href={`/api/experiments/${exp.id}/export`}>Export CSV</a>
         </div>
       ))}
     </div>

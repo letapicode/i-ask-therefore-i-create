@@ -73,6 +73,16 @@ function summarize(exp: Experiment): ExperimentSummary {
   };
 }
 
+function exportCsv(exp: Experiment): string {
+  const header = 'variant,prompt,success,total,rate';
+  const rows = Object.entries(exp.variants).map(([name, v]) => {
+    const prompt = `"${v.prompt.replace(/"/g, '""')}"`;
+    const rate = v.total === 0 ? 0 : v.success / v.total;
+    return `${name},${prompt},${v.success},${v.total},${rate}`;
+  });
+  return [header, ...rows].join('\n');
+}
+
 app.get('/experiments', (_req, res) => {
   res.json(read());
 });
@@ -82,13 +92,17 @@ app.post('/experiments', (req, res) => {
     name?: string;
     variants?: Record<string, { prompt: string }>;
   };
-  if (!name || !variants) return res.status(400).json({ error: 'missing fields' });
+  if (!name || !variants)
+    return res.status(400).json({ error: 'missing fields' });
   const list = read();
   const record: Experiment = {
     id: randomUUID(),
     name: sanitize(name),
     variants: Object.fromEntries(
-      Object.entries(variants).map(([k, v]) => [k, { prompt: sanitize(v.prompt), success: 0, total: 0 }])
+      Object.entries(variants).map(([k, v]) => [
+        k,
+        { prompt: sanitize(v.prompt), success: 0, total: 0 },
+      ])
     ),
     created: Date.now(),
   };
@@ -107,6 +121,15 @@ app.get('/experiments/:id/summary', (req, res) => {
   const exp = find(req.params.id, read());
   if (!exp) return res.status(404).json({ error: 'not found' });
   res.json(summarize(exp));
+});
+
+app.get('/experiments/:id/export', (req, res) => {
+  const exp = find(req.params.id, read());
+  if (!exp) return res.status(404).json({ error: 'not found' });
+  const csv = exportCsv(exp);
+  res.setHeader('Content-Type', 'text/csv');
+  res.setHeader('Content-Disposition', `attachment; filename="${exp.id}.csv"`);
+  res.send(csv);
 });
 
 app.put('/experiments/:id', (req, res) => {
@@ -140,7 +163,9 @@ app.delete('/experiments/:id', (req, res) => {
 });
 
 export function start(port = 3016) {
-  app.listen(port, () => console.log(`prompt-experiments listening on ${port}`));
+  app.listen(port, () =>
+    console.log(`prompt-experiments listening on ${port}`)
+  );
 }
 
 if (require.main === module) {
