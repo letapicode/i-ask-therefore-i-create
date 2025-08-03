@@ -29,6 +29,9 @@ This package now includes DynamoDB helper functions built on the AWS SDK v3 `Dyn
 
 `sanitize(str)` HTML-escapes user supplied strings to prevent injection attacks.
 
+`sanitizeObject(value)` recursively escapes all string fields within objects or
+arrays, returning a sanitized copy. Useful for cleaning complex payloads.
+
 ## Audit Logging
 
 `logAudit(msg)` appends a timestamped entry to `AUDIT_LOG` (default `audit.log`).
