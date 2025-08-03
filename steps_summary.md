@@ -582,3 +582,8 @@ This file records brief summaries of each pull request.
 - Added `sanitizeObject` helper in `packages/shared` to deeply escape all string fields.
 - Extended sanitization tests to cover nested objects and arrays.
 - Documented the new helper in `packages/shared/src/README.md`.
+
+## PR <pending> - Retry exponential backoff
+
+- Extended `packages/retry` to support exponential backoff via a `factor` parameter.
+- Added unit tests validating delay growth and updated README usage examples.
