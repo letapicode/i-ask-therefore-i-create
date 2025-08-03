@@ -576,3 +576,9 @@ This file records brief summaries of each pull request.
 - Added CSV export functionality via `/experiments/:id/export` in `prompt-experiments`.
 - Proxied export route through the orchestrator and exposed download links in portal pages.
 - Documented the workflow and extended tests to validate CSV output.
+
+## PR <pending> - Recursive sanitization utility
+
+- Added `sanitizeObject` helper in `packages/shared` to deeply escape all string fields.
+- Extended sanitization tests to cover nested objects and arrays.
+- Documented the new helper in `packages/shared/src/README.md`.
