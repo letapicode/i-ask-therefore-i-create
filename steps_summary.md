@@ -593,3 +593,8 @@ This file records brief summaries of each pull request.
 - Enforced variant and winner validation in `services/prompt-experiments` update endpoint.
 - Added unit tests for invalid variant and winner scenarios.
 - Documented validation rules in service README and prompt A/B testing guide.
+
+## PR <pending> - Add experiment variant creation
+
+- Added `/experiments/:id/variants` endpoint with sanitization and duplicate checks in `services/prompt-experiments`.
+- Updated orchestrator proxy, portal page, and documentation to support adding variants.

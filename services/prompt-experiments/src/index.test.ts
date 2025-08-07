@@ -69,3 +69,24 @@ test('rejects invalid variant and winner', async () => {
   expect(fetchExp.body.variants.A.total).toBe(0);
   expect(fetchExp.body.winner).toBeUndefined();
 });
+
+test('adds new variants with sanitization', async () => {
+  const create = await request(app)
+    .post('/experiments')
+    .send({ name: 'test', variants: { A: { prompt: 'a' } } });
+  const id = create.body.id;
+
+  const add = await request(app)
+    .post(`/experiments/${id}/variants`)
+    .send({ name: 'B', prompt: '<b>b</b>' });
+  expect(add.status).toBe(201);
+  expect(add.body.prompt).toBe('&lt;b&gt;b&lt;&#x2F;b&gt;');
+
+  const fetchExp = await request(app).get(`/experiments/${id}`);
+  expect(fetchExp.body.variants.B.prompt).toBe('&lt;b&gt;b&lt;&#x2F;b&gt;');
+
+  const dup = await request(app)
+    .post(`/experiments/${id}/variants`)
+    .send({ name: 'B', prompt: 'other' });
+  expect(dup.status).toBe(400);
+});

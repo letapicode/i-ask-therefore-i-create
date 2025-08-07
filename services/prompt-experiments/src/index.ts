@@ -111,6 +111,31 @@ app.post('/experiments', (req, res) => {
   res.status(201).json(record);
 });
 
+app.post('/experiments/:id/variants', (req, res) => {
+  const { name, prompt } = req.body as {
+    name?: string;
+    prompt?: string;
+  };
+  if (!name || !prompt)
+    return res.status(400).json({ error: 'missing fields' });
+
+  const list = read();
+  const exp = find(req.params.id, list);
+  if (!exp) return res.status(404).json({ error: 'not found' });
+
+  const cleanName = sanitize(name);
+  if (exp.variants[cleanName])
+    return res.status(400).json({ error: 'variant exists' });
+
+  exp.variants[cleanName] = {
+    prompt: sanitize(prompt),
+    success: 0,
+    total: 0,
+  };
+  save(list);
+  res.status(201).json(exp.variants[cleanName]);
+});
+
 app.get('/experiments/:id', (req, res) => {
   const exp = find(req.params.id, read());
   if (!exp) return res.status(404).json({ error: 'not found' });
