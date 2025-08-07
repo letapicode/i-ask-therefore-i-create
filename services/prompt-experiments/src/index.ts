@@ -138,17 +138,29 @@ app.put('/experiments/:id', (req, res) => {
     success?: boolean;
     winner?: string;
   };
+
   const list = read();
   const exp = find(req.params.id, list);
   if (!exp) return res.status(404).json({ error: 'not found' });
+
   if (winner) {
-    exp.winner = sanitize(winner);
+    const cleanWinner = sanitize(winner);
+    if (!exp.variants[cleanWinner]) {
+      return res.status(400).json({ error: 'winner not found' });
+    }
+    exp.winner = cleanWinner;
   }
-  const cleanVariant = variant ? sanitize(variant) : undefined;
-  if (cleanVariant && exp.variants[cleanVariant]) {
-    exp.variants[cleanVariant].total += 1;
-    if (success) exp.variants[cleanVariant].success += 1;
+
+  if (variant) {
+    const cleanVariant = sanitize(variant);
+    const v = exp.variants[cleanVariant];
+    if (!v) {
+      return res.status(400).json({ error: 'variant not found' });
+    }
+    v.total += 1;
+    if (success) v.success += 1;
   }
+
   save(list);
   res.json(exp);
 });

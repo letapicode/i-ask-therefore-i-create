@@ -45,3 +45,27 @@ test('create, update and delete experiment', async () => {
   const del = await request(app).delete(`/experiments/${id}`);
   expect(del.status).toBe(200);
 });
+
+test('rejects invalid variant and winner', async () => {
+  const create = await request(app)
+    .post('/experiments')
+    .send({
+      name: 'test',
+      variants: { A: { prompt: 'a' } },
+    });
+  const id = create.body.id;
+
+  const badVariant = await request(app)
+    .put(`/experiments/${id}`)
+    .send({ variant: 'B', success: true });
+  expect(badVariant.status).toBe(400);
+
+  const badWinner = await request(app)
+    .put(`/experiments/${id}`)
+    .send({ winner: 'B' });
+  expect(badWinner.status).toBe(400);
+
+  const fetchExp = await request(app).get(`/experiments/${id}`);
+  expect(fetchExp.body.variants.A.total).toBe(0);
+  expect(fetchExp.body.winner).toBeUndefined();
+});
