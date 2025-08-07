@@ -587,3 +587,9 @@ This file records brief summaries of each pull request.
 
 - Extended `packages/retry` to support exponential backoff via a `factor` parameter.
 - Added unit tests validating delay growth and updated README usage examples.
+
+## PR <pending> - Prompt experiment validation
+
+- Enforced variant and winner validation in `services/prompt-experiments` update endpoint.
+- Added unit tests for invalid variant and winner scenarios.
+- Documented validation rules in service README and prompt A/B testing guide.
