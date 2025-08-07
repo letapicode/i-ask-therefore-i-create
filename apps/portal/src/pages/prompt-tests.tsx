@@ -78,9 +78,45 @@ export default function PromptTests() {
           <pre style={{ background: '#f0f0f0', padding: 10 }}>
             {JSON.stringify(exp.variants, null, 2)}
           </pre>
+          <VariantAdder id={exp.id} mutate={mutate} />
           <a href={`/api/experiments/${exp.id}/export`}>Export CSV</a>
         </div>
       ))}
+    </div>
+  );
+}
+
+function VariantAdder({ id, mutate }: { id: string; mutate: () => void }) {
+  const [name, setName] = useState('');
+  const [prompt, setPrompt] = useState('');
+
+  const add = async () => {
+    await fetch(`/api/experiments/${id}/variants`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name, prompt }),
+    });
+    setName('');
+    setPrompt('');
+    mutate();
+  };
+
+  return (
+    <div style={{ marginTop: 4 }}>
+      <input
+        placeholder="Variant name"
+        value={name}
+        onChange={(e) => setName(e.target.value)}
+      />
+      <input
+        placeholder="Prompt"
+        value={prompt}
+        onChange={(e) => setPrompt(e.target.value)}
+        style={{ marginLeft: 4 }}
+      />
+      <button onClick={add} style={{ marginLeft: 4 }}>
+        Add Variant
+      </button>
     </div>
   );
 }

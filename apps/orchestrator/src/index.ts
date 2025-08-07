@@ -574,6 +574,23 @@ app.post('/api/experiments', async (req, res) => {
   }
 });
 
+app.post('/api/experiments/:id/variants', async (req, res) => {
+  try {
+    const response = await fetch(
+      `${PROMPT_EXP_URL}/experiments/${encodeURIComponent(req.params.id)}/variants`,
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(req.body),
+      }
+    );
+    const json = await response.json();
+    res.status(response.status).json(json);
+  } catch {
+    res.status(500).json({ error: 'service unavailable' });
+  }
+});
+
 app.get('/api/experiments/:id', async (req, res) => {
   try {
     const response = await fetch(
