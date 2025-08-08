@@ -87,6 +87,11 @@ app.get('/experiments', (_req, res) => {
   res.json(read());
 });
 
+app.get('/experiments/summary', (_req, res) => {
+  const list = read().map(summarize);
+  res.json(list);
+});
+
 app.post('/experiments', (req, res) => {
   const { name, variants } = req.body as {
     name?: string;

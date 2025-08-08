@@ -90,3 +90,19 @@ test('adds new variants with sanitization', async () => {
     .send({ name: 'B', prompt: 'other' });
   expect(dup.status).toBe(400);
 });
+
+test('returns summaries for all experiments', async () => {
+  const create = await request(app)
+    .post('/experiments')
+    .send({ name: 'sum', variants: { A: { prompt: 'a' } } });
+  const id = create.body.id;
+  await request(app)
+    .put(`/experiments/${id}`)
+    .send({ variant: 'A', success: true });
+
+  const summaries = await request(app).get('/experiments/summary');
+  expect(summaries.status).toBe(200);
+  expect(summaries.body).toHaveLength(1);
+  expect(summaries.body[0].best).toBe('A');
+  expect(summaries.body[0].variants.A.rate).toBe(1);
+});

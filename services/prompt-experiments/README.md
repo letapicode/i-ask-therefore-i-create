@@ -5,6 +5,7 @@ This service manages prompt A/B tests and metrics.
 ## Endpoints
 
 - `GET /experiments` – list all experiments
+- `GET /experiments/summary` – list summaries with success rates
 - `POST /experiments` – create a new experiment
 - `POST /experiments/:id/variants` – add a variant
 - `GET /experiments/:id` – fetch a single experiment

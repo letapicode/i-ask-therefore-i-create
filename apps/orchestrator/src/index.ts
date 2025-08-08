@@ -560,6 +560,16 @@ app.get('/api/experiments', async (_req, res) => {
   }
 });
 
+app.get('/api/experiments/summary', async (_req, res) => {
+  try {
+    const response = await fetch(`${PROMPT_EXP_URL}/experiments/summary`);
+    const json = await response.json();
+    res.status(response.status).json(json);
+  } catch {
+    res.status(500).json({ error: 'service unavailable' });
+  }
+});
+
 app.post('/api/experiments', async (req, res) => {
   try {
     const response = await fetch(`${PROMPT_EXP_URL}/experiments`, {

@@ -598,3 +598,9 @@ This file records brief summaries of each pull request.
 
 - Added `/experiments/:id/variants` endpoint with sanitization and duplicate checks in `services/prompt-experiments`.
 - Updated orchestrator proxy, portal page, and documentation to support adding variants.
+
+## PR <pending> - Experiment summaries endpoint
+
+- Added `/experiments/summary` route in `prompt-experiments` for aggregate success rates.
+- Proxied summaries through the orchestrator and updated portal listings.
+- Documented usage and extended service tests.
