@@ -604,3 +604,9 @@ This file records brief summaries of each pull request.
 - Added `/experiments/summary` route in `prompt-experiments` for aggregate success rates.
 - Proxied summaries through the orchestrator and updated portal listings.
 - Documented usage and extended service tests.
+
+## PR <pending> - Experiment variant deletion
+
+- Added DELETE endpoint to remove variants and clear winners in `services/prompt-experiments` with tests.
+- Proxied deletion through the orchestrator and updated portal UI to remove variants.
+- Documented the new route in service README and prompt A/B testing guide.

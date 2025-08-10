@@ -601,6 +601,21 @@ app.post('/api/experiments/:id/variants', async (req, res) => {
   }
 });
 
+app.delete('/api/experiments/:id/variants/:name', async (req, res) => {
+  try {
+    const response = await fetch(
+      `${PROMPT_EXP_URL}/experiments/${encodeURIComponent(
+        req.params.id
+      )}/variants/${encodeURIComponent(req.params.name)}`,
+      { method: 'DELETE' }
+    );
+    const json = await response.json();
+    res.status(response.status).json(json);
+  } catch {
+    res.status(500).json({ error: 'service unavailable' });
+  }
+});
+
 app.get('/api/experiments/:id', async (req, res) => {
   try {
     const response = await fetch(

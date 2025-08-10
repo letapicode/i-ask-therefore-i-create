@@ -1,9 +1,10 @@
 import request from 'supertest';
 import fs from 'fs';
-import { app } from './index';
 
 const DB = '.test-prompt-experiments.json';
 process.env.EXPERIMENT_DB = DB;
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const { app } = require('./index');
 
 beforeEach(() => {
   if (fs.existsSync(DB)) fs.unlinkSync(DB);
@@ -105,4 +106,24 @@ test('returns summaries for all experiments', async () => {
   expect(summaries.body).toHaveLength(1);
   expect(summaries.body[0].best).toBe('A');
   expect(summaries.body[0].variants.A.rate).toBe(1);
+});
+
+test('deletes variant and clears winner', async () => {
+  const create = await request(app)
+    .post('/experiments')
+    .send({ name: 'del', variants: { A: { prompt: 'a' }, B: { prompt: 'b' } } });
+  const id = create.body.id;
+
+  await request(app)
+    .put(`/experiments/${id}`)
+    .send({ winner: 'B' });
+
+  const del = await request(app).delete(
+    `/experiments/${id}/variants/B`
+  );
+  expect(del.status).toBe(200);
+
+  const fetchExp = await request(app).get(`/experiments/${id}`);
+  expect(fetchExp.body.variants.B).toBeUndefined();
+  expect(fetchExp.body.winner).toBeUndefined();
 });
