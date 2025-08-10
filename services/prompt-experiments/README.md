@@ -8,6 +8,7 @@ This service manages prompt A/B tests and metrics.
 - `GET /experiments/summary` – list summaries with success rates
 - `POST /experiments` – create a new experiment
 - `POST /experiments/:id/variants` – add a variant
+- `PUT /experiments/:id/variants/:name` – update a variant's prompt
 - `DELETE /experiments/:id/variants/:name` – remove a variant (clears winner if deleted)
 - `GET /experiments/:id` – fetch a single experiment
 - `GET /experiments/:id/summary` – get success rates and best variant

@@ -127,3 +127,19 @@ test('deletes variant and clears winner', async () => {
   expect(fetchExp.body.variants.B).toBeUndefined();
   expect(fetchExp.body.winner).toBeUndefined();
 });
+
+test('updates variant prompt with sanitization', async () => {
+  const create = await request(app)
+    .post('/experiments')
+    .send({ name: 'upd', variants: { A: { prompt: 'a' } } });
+  const id = create.body.id;
+
+  const update = await request(app)
+    .put(`/experiments/${id}/variants/A`)
+    .send({ prompt: '<b>c</b>' });
+  expect(update.status).toBe(200);
+  expect(update.body.prompt).toBe('&lt;b&gt;c&lt;&#x2F;b&gt;');
+
+  const fetchExp = await request(app).get(`/experiments/${id}`);
+  expect(fetchExp.body.variants.A.prompt).toBe('&lt;b&gt;c&lt;&#x2F;b&gt;');
+});

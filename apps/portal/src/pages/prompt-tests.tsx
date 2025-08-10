@@ -132,6 +132,20 @@ function VariantList({
   variants: Record<string, any>;
   mutate: () => void;
 }) {
+  const updatePrompt = async (name: string, current: string) => {
+    const promptText = window.prompt('New prompt', current);
+    if (!promptText) return;
+    await fetch(
+      `/api/experiments/${id}/variants/${encodeURIComponent(name)}`,
+      {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ prompt: promptText }),
+      }
+    );
+    mutate();
+  };
+
   const remove = async (name: string) => {
     await fetch(
       `/api/experiments/${id}/variants/${encodeURIComponent(name)}`,
@@ -145,6 +159,12 @@ function VariantList({
       {Object.entries(variants).map(([name, v]) => (
         <li key={name}>
           <strong>{name}:</strong> {v.prompt} (success {v.success}/{v.total})
+          <button
+            onClick={() => updatePrompt(name, v.prompt)}
+            style={{ marginLeft: 4 }}
+          >
+            Edit
+          </button>
           <button onClick={() => remove(name)} style={{ marginLeft: 4 }}>
             Delete
           </button>
