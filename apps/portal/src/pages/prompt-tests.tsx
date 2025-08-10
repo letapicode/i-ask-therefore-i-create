@@ -75,9 +75,11 @@ export default function PromptTests() {
               B Success
             </button>
           </div>
-          <pre style={{ background: '#f0f0f0', padding: 10 }}>
-            {JSON.stringify(exp.variants, null, 2)}
-          </pre>
+          <VariantList
+            id={exp.id}
+            variants={exp.variants}
+            mutate={mutate}
+          />
           <VariantAdder id={exp.id} mutate={mutate} />
           <a href={`/api/experiments/${exp.id}/export`}>Export CSV</a>
         </div>
@@ -118,5 +120,36 @@ function VariantAdder({ id, mutate }: { id: string; mutate: () => void }) {
         Add Variant
       </button>
     </div>
+  );
+}
+
+function VariantList({
+  id,
+  variants,
+  mutate,
+}: {
+  id: string;
+  variants: Record<string, any>;
+  mutate: () => void;
+}) {
+  const remove = async (name: string) => {
+    await fetch(
+      `/api/experiments/${id}/variants/${encodeURIComponent(name)}`,
+      { method: 'DELETE' }
+    );
+    mutate();
+  };
+
+  return (
+    <ul style={{ background: '#f0f0f0', padding: 10 }}>
+      {Object.entries(variants).map(([name, v]) => (
+        <li key={name}>
+          <strong>{name}:</strong> {v.prompt} (success {v.success}/{v.total})
+          <button onClick={() => remove(name)} style={{ marginLeft: 4 }}>
+            Delete
+          </button>
+        </li>
+      ))}
+    </ul>
   );
 }

@@ -141,6 +141,21 @@ app.post('/experiments/:id/variants', (req, res) => {
   res.status(201).json(exp.variants[cleanName]);
 });
 
+app.delete('/experiments/:id/variants/:name', (req, res) => {
+  const list = read();
+  const exp = find(req.params.id, list);
+  if (!exp) return res.status(404).json({ error: 'not found' });
+
+  const variantName = sanitize(req.params.name);
+  if (!exp.variants[variantName])
+    return res.status(404).json({ error: 'variant not found' });
+
+  delete exp.variants[variantName];
+  if (exp.winner === variantName) delete exp.winner;
+  save(list);
+  res.json({ ok: true });
+});
+
 app.get('/experiments/:id', (req, res) => {
   const exp = find(req.params.id, read());
   if (!exp) return res.status(404).json({ error: 'not found' });
