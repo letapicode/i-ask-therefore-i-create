@@ -141,6 +141,23 @@ app.post('/experiments/:id/variants', (req, res) => {
   res.status(201).json(exp.variants[cleanName]);
 });
 
+app.put('/experiments/:id/variants/:name', (req, res) => {
+  const { prompt } = req.body as { prompt?: string };
+  if (!prompt) return res.status(400).json({ error: 'missing fields' });
+
+  const list = read();
+  const exp = find(req.params.id, list);
+  if (!exp) return res.status(404).json({ error: 'not found' });
+
+  const variantName = sanitize(req.params.name);
+  const variant = exp.variants[variantName];
+  if (!variant) return res.status(404).json({ error: 'variant not found' });
+
+  variant.prompt = sanitize(prompt);
+  save(list);
+  res.json(variant);
+});
+
 app.delete('/experiments/:id/variants/:name', (req, res) => {
   const list = read();
   const exp = find(req.params.id, list);

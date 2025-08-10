@@ -610,3 +610,9 @@ This file records brief summaries of each pull request.
 - Added DELETE endpoint to remove variants and clear winners in `services/prompt-experiments` with tests.
 - Proxied deletion through the orchestrator and updated portal UI to remove variants.
 - Documented the new route in service README and prompt A/B testing guide.
+
+## PR <pending> - Variant prompt editing
+
+- Added `PUT /experiments/:id/variants/:name` endpoint to update variant prompts with sanitization.
+- Proxied the route through the orchestrator and enabled editing in the portal UI.
+- Updated README and docs, and extended service tests for the new behavior.
