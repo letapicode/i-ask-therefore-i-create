@@ -616,3 +616,9 @@ This file records brief summaries of each pull request.
 - Added `PUT /experiments/:id/variants/:name` endpoint to update variant prompts with sanitization.
 - Proxied the route through the orchestrator and enabled editing in the portal UI.
 - Updated README and docs, and extended service tests for the new behavior.
+
+## PR <pending> - Experiment metrics reset
+
+- Added `POST /experiments/:id/reset` endpoint in `services/prompt-experiments` to clear variant stats and winner.
+- Proxied reset route through the orchestrator and exposed a Reset button on the portal page.
+- Documented the new endpoint and marked task 196 complete in the tracker.

@@ -35,6 +35,11 @@ export default function PromptTests() {
     mutate();
   };
 
+  const reset = async (id: string) => {
+    await fetch(`/api/experiments/${id}/reset`, { method: 'POST' });
+    mutate();
+  };
+
   if (!data) return <p>Loading...</p>;
 
   return (
@@ -82,6 +87,9 @@ export default function PromptTests() {
           />
           <VariantAdder id={exp.id} mutate={mutate} />
           <a href={`/api/experiments/${exp.id}/export`}>Export CSV</a>
+          <button onClick={() => reset(exp.id)} style={{ marginLeft: 4 }}>
+            Reset
+          </button>
         </div>
       ))}
     </div>
