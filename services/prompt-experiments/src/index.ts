@@ -194,6 +194,21 @@ app.get('/experiments/:id/export', (req, res) => {
   res.send(csv);
 });
 
+app.post('/experiments/:id/reset', (req, res) => {
+  const list = read();
+  const exp = find(req.params.id, list);
+  if (!exp) return res.status(404).json({ error: 'not found' });
+
+  for (const variant of Object.values(exp.variants)) {
+    variant.success = 0;
+    variant.total = 0;
+  }
+  delete exp.winner;
+
+  save(list);
+  res.json(exp);
+});
+
 app.put('/experiments/:id', (req, res) => {
   const { variant, success, winner } = req.body as {
     variant?: string;
