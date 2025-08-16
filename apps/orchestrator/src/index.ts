@@ -660,6 +660,19 @@ app.get('/api/experiments/:id/export', async (req, res) => {
   }
 });
 
+app.post('/api/experiments/:id/clone', async (req, res) => {
+  try {
+    const response = await fetch(
+      `${PROMPT_EXP_URL}/experiments/${encodeURIComponent(req.params.id)}/clone`,
+      { method: 'POST' }
+    );
+    const json = await response.json();
+    res.status(response.status).json(json);
+  } catch {
+    res.status(500).json({ error: 'service unavailable' });
+  }
+});
+
 app.post('/api/experiments/:id/reset', async (req, res) => {
   try {
     const response = await fetch(

@@ -2448,3 +2448,14 @@ This file expands on each item in `Tasks.md` with a short description of the exp
     2. Proxy via the orchestrator and expose rename UI in the portal.
     3. Update docs and tests.
 
+198. **Experiment Clone Endpoint**
+
+   - Duplicate existing experiments for new testing rounds.
+   - Reset metrics and timestamps on the cloned record.
+   - Task details: Provide cloning capability in the experiment service and orchestrator.
+  - Steps:
+    1. Add a `/experiments/:id/clone` route to `services/prompt-experiments`.
+    2. Proxy the endpoint through the orchestrator.
+    3. Reset variant metrics and omit winners on clones.
+    4. Document the workflow and add tests.
+

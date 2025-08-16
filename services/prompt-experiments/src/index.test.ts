@@ -179,3 +179,24 @@ test('renames experiment with sanitization', async () => {
   const fetchExp = await request(app).get(`/experiments/${id}`);
   expect(fetchExp.body.name).toBe('&lt;b&gt;new&lt;&#x2F;b&gt;');
 });
+
+test('clones experiment resetting metrics', async () => {
+  const create = await request(app)
+    .post('/experiments')
+    .send({ name: 'base', variants: { A: { prompt: 'a' } } });
+  const id = create.body.id;
+
+  await request(app)
+    .put(`/experiments/${id}`)
+    .send({ variant: 'A', success: true });
+
+  const clone = await request(app).post(`/experiments/${id}/clone`);
+  expect(clone.status).toBe(201);
+  expect(clone.body.id).not.toBe(id);
+  expect(clone.body.winner).toBeUndefined();
+  expect(clone.body.variants.A.success).toBe(0);
+  expect(clone.body.variants.A.total).toBe(0);
+
+  const list = await request(app).get('/experiments');
+  expect(list.body).toHaveLength(2);
+});

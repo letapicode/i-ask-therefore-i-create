@@ -194,6 +194,27 @@ app.get('/experiments/:id/export', (req, res) => {
   res.send(csv);
 });
 
+app.post('/experiments/:id/clone', (req, res) => {
+  const list = read();
+  const exp = find(req.params.id, list);
+  if (!exp) return res.status(404).json({ error: 'not found' });
+
+  const clone: Experiment = {
+    id: randomUUID(),
+    name: sanitize(`${exp.name} copy`),
+    variants: Object.fromEntries(
+      Object.entries(exp.variants).map(([name, v]) => [
+        name,
+        { prompt: v.prompt, success: 0, total: 0 },
+      ])
+    ),
+    created: Date.now(),
+  };
+  list.push(clone);
+  save(list);
+  res.status(201).json(clone);
+});
+
 app.post('/experiments/:id/reset', (req, res) => {
   const list = read();
   const exp = find(req.params.id, list);
