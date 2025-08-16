@@ -628,3 +628,9 @@ This file records brief summaries of each pull request.
 - Added `PUT /experiments/:id/name` in `services/prompt-experiments` to rename experiments with sanitization.
 - Proxied rename route through the orchestrator and added a Rename button in the portal UI.
 - Updated documentation and marked task 197 complete in the tracker.
+
+## PR <pending> - Experiment clone endpoint
+
+- Added `POST /experiments/:id/clone` to duplicate experiments with metrics reset.
+- Proxied clone route through the orchestrator and documented usage.
+- Extended tests and marked task 198 complete.
