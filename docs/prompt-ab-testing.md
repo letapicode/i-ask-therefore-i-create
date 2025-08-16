@@ -11,3 +11,4 @@ The prompt experiments service allows comparing multiple prompt variants and col
 5. Remove a variant with `DELETE /api/experiments/:id/variants/:name`.
 6. Visit `/prompt-tests` in the portal to launch tests, add variants and monitor results.
 7. Download CSV results from `/api/experiments/:id/export` for further analysis.
+8. Rename experiments using `PUT /api/experiments/:id/name`.

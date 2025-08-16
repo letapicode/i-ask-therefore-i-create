@@ -622,3 +622,9 @@ This file records brief summaries of each pull request.
 - Added `POST /experiments/:id/reset` endpoint in `services/prompt-experiments` to clear variant stats and winner.
 - Proxied reset route through the orchestrator and exposed a Reset button on the portal page.
 - Documented the new endpoint and marked task 196 complete in the tracker.
+
+## PR <pending> - Experiment rename endpoint
+
+- Added `PUT /experiments/:id/name` in `services/prompt-experiments` to rename experiments with sanitization.
+- Proxied rename route through the orchestrator and added a Rename button in the portal UI.
+- Updated documentation and marked task 197 complete in the tracker.

@@ -163,3 +163,19 @@ test('resets experiment metrics and clears winner', async () => {
   expect(reset.body.variants.A.success).toBe(0);
   expect(reset.body.variants.A.total).toBe(0);
 });
+
+test('renames experiment with sanitization', async () => {
+  const create = await request(app)
+    .post('/experiments')
+    .send({ name: 'old', variants: { A: { prompt: 'a' } } });
+  const id = create.body.id;
+
+  const rename = await request(app)
+    .put(`/experiments/${id}/name`)
+    .send({ name: '<b>new</b>' });
+  expect(rename.status).toBe(200);
+  expect(rename.body.name).toBe('&lt;b&gt;new&lt;&#x2F;b&gt;');
+
+  const fetchExp = await request(app).get(`/experiments/${id}`);
+  expect(fetchExp.body.name).toBe('&lt;b&gt;new&lt;&#x2F;b&gt;');
+});

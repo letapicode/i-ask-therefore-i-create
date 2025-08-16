@@ -209,6 +209,19 @@ app.post('/experiments/:id/reset', (req, res) => {
   res.json(exp);
 });
 
+app.put('/experiments/:id/name', (req, res) => {
+  const { name } = req.body as { name?: string };
+  if (!name) return res.status(400).json({ error: 'missing fields' });
+
+  const list = read();
+  const exp = find(req.params.id, list);
+  if (!exp) return res.status(404).json({ error: 'not found' });
+
+  exp.name = sanitize(name);
+  save(list);
+  res.json(exp);
+});
+
 app.put('/experiments/:id', (req, res) => {
   const { variant, success, winner } = req.body as {
     variant?: string;
