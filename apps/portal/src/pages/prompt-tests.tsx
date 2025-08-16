@@ -40,6 +40,17 @@ export default function PromptTests() {
     mutate();
   };
 
+  const rename = async (id: string, current: string) => {
+    const newName = window.prompt('New name', current);
+    if (!newName) return;
+    await fetch(`/api/experiments/${id}/name`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name: newName }),
+    });
+    mutate();
+  };
+
   if (!data) return <p>Loading...</p>;
 
   return (
@@ -71,6 +82,12 @@ export default function PromptTests() {
         <div key={exp.id} style={{ marginBottom: 10 }}>
           <strong>{exp.name}</strong>{' '}
           {exp.winner && <span>(winner: {exp.winner})</span>}
+          <button
+            onClick={() => rename(exp.id, exp.name)}
+            style={{ marginLeft: 4 }}
+          >
+            Rename
+          </button>
           <div>
             <button onClick={() => record(exp.id, 'A', true)}>A Success</button>
             <button

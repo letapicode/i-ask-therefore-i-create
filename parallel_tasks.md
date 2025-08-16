@@ -2430,3 +2430,21 @@ This file expands on each item in `Tasks.md` with a short description of the exp
     3. Implement `portal/prompt-tests.tsx` to launch and monitor tests.
     4. Document workflows in `docs/prompt-ab-testing.md`.
 
+196. **Experiment Reset Endpoint**
+
+   - Clear experiment metrics and winner.
+   - Task details: Add a `/experiments/:id/reset` endpoint and integrate across services.
+  - Steps:
+    1. Implement reset route in `services/prompt-experiments`.
+    2. Proxy through the orchestrator and add portal Reset button.
+    3. Document the endpoint and tests.
+
+197. **Experiment Rename Endpoint**
+
+   - Allow renaming experiments.
+   - Task details: Add a `/experiments/:id/name` endpoint and update clients.
+  - Steps:
+    1. Add rename route in `services/prompt-experiments` with sanitization.
+    2. Proxy via the orchestrator and expose rename UI in the portal.
+    3. Update docs and tests.
+

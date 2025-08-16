@@ -673,6 +673,23 @@ app.post('/api/experiments/:id/reset', async (req, res) => {
   }
 });
 
+app.put('/api/experiments/:id/name', async (req, res) => {
+  try {
+    const response = await fetch(
+      `${PROMPT_EXP_URL}/experiments/${encodeURIComponent(req.params.id)}/name`,
+      {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(req.body),
+      }
+    );
+    const json = await response.json();
+    res.status(response.status).json(json);
+  } catch {
+    res.status(500).json({ error: 'service unavailable' });
+  }
+});
+
 app.put('/api/experiments/:id', async (req, res) => {
   try {
     const response = await fetch(
