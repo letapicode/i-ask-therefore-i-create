@@ -634,3 +634,9 @@ This file records brief summaries of each pull request.
 - Added `POST /experiments/:id/clone` to duplicate experiments with metrics reset.
 - Proxied clone route through the orchestrator and documented usage.
 - Extended tests and marked task 198 complete.
+
+## PR <pending> - Variant rename endpoint
+
+- Introduced `PUT /experiments/:id/variants/:name/name` in `prompt-experiments` for renaming variants with sanitization.
+- Proxied the rename route through the orchestrator and added UI controls in the portal.
+- Documented the new endpoint, added tests, and marked task 199 complete.

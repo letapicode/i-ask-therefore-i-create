@@ -171,6 +171,20 @@ function VariantList({
     mutate();
   };
 
+  const rename = async (oldName: string) => {
+    const newName = window.prompt('New variant name', oldName);
+    if (!newName) return;
+    await fetch(
+      `/api/experiments/${id}/variants/${encodeURIComponent(oldName)}/name`,
+      {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name: newName }),
+      }
+    );
+    mutate();
+  };
+
   const remove = async (name: string) => {
     await fetch(
       `/api/experiments/${id}/variants/${encodeURIComponent(name)}`,
@@ -189,6 +203,9 @@ function VariantList({
             style={{ marginLeft: 4 }}
           >
             Edit
+          </button>
+          <button onClick={() => rename(name)} style={{ marginLeft: 4 }}>
+            Rename
           </button>
           <button onClick={() => remove(name)} style={{ marginLeft: 4 }}>
             Delete
