@@ -144,6 +144,28 @@ test('updates variant prompt with sanitization', async () => {
   expect(fetchExp.body.variants.A.prompt).toBe('&lt;b&gt;c&lt;&#x2F;b&gt;');
 });
 
+test('renames variant and updates winner', async () => {
+  const create = await request(app)
+    .post('/experiments')
+    .send({ name: 'rename', variants: { A: { prompt: 'a' } } });
+  const id = create.body.id;
+
+  await request(app)
+    .put(`/experiments/${id}`)
+    .send({ winner: 'A' });
+
+  const rename = await request(app)
+    .put(`/experiments/${id}/variants/A/name`)
+    .send({ name: '<b>B</b>' });
+  expect(rename.status).toBe(200);
+  expect(rename.body.prompt).toBe('a');
+
+  const fetchExp = await request(app).get(`/experiments/${id}`);
+  const key = '&lt;b&gt;B&lt;&#x2F;b&gt;';
+  expect(fetchExp.body.variants[key].prompt).toBe('a');
+  expect(fetchExp.body.winner).toBe(key);
+});
+
 test('resets experiment metrics and clears winner', async () => {
   const create = await request(app)
     .post('/experiments')

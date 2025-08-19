@@ -2459,3 +2459,13 @@ This file expands on each item in `Tasks.md` with a short description of the exp
     3. Reset variant metrics and omit winners on clones.
     4. Document the workflow and add tests.
 
+199. **Variant Rename Endpoint**
+
+   - Rename experiment variants without losing metrics.
+   - Task details: Add a `/experiments/:id/variants/:name/name` endpoint and wire it through the portal and orchestrator.
+  - Steps:
+    1. Implement rename route in `services/prompt-experiments` with sanitization and winner updates.
+    2. Proxy the endpoint through the orchestrator.
+    3. Expose rename controls in the portal UI.
+    4. Document the endpoint and tests.
+
