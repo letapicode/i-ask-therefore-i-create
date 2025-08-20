@@ -186,6 +186,32 @@ test('resets experiment metrics and clears winner', async () => {
   expect(reset.body.variants.A.total).toBe(0);
 });
 
+test('resets variant metrics and clears winner', async () => {
+  const create = await request(app)
+    .post('/experiments')
+    .send({ name: 'var-reset', variants: { A: { prompt: 'a' } } });
+  const id = create.body.id;
+
+  await request(app)
+    .put(`/experiments/${id}`)
+    .send({ variant: 'A', success: true });
+  await request(app)
+    .put(`/experiments/${id}`)
+    .send({ winner: 'A' });
+
+  const reset = await request(app).post(
+    `/experiments/${id}/variants/A/reset`
+  );
+  expect(reset.status).toBe(200);
+  expect(reset.body.success).toBe(0);
+  expect(reset.body.total).toBe(0);
+
+  const fetchExp = await request(app).get(`/experiments/${id}`);
+  expect(fetchExp.body.winner).toBeUndefined();
+  expect(fetchExp.body.variants.A.success).toBe(0);
+  expect(fetchExp.body.variants.A.total).toBe(0);
+});
+
 test('renames experiment with sanitization', async () => {
   const create = await request(app)
     .post('/experiments')

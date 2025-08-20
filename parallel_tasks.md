@@ -2469,3 +2469,12 @@ This file expands on each item in `Tasks.md` with a short description of the exp
     3. Expose rename controls in the portal UI.
     4. Document the endpoint and tests.
 
+200. **Variant Reset Endpoint**
+
+   - Clear metrics for a single variant without deleting it.
+   - Task details: Add a `/experiments/:id/variants/:name/reset` endpoint and integrate across layers.
+  - Steps:
+    1. Implement reset route in `services/prompt-experiments`.
+    2. Proxy through the orchestrator and add UI controls in the portal.
+    3. Document the endpoint and add tests.
+

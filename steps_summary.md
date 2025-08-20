@@ -640,3 +640,8 @@ This file records brief summaries of each pull request.
 - Introduced `PUT /experiments/:id/variants/:name/name` in `prompt-experiments` for renaming variants with sanitization.
 - Proxied the rename route through the orchestrator and added UI controls in the portal.
 - Documented the new endpoint, added tests, and marked task 199 complete.
+
+## PR <pending> - Variant reset endpoint
+
+- Added `POST /experiments/:id/variants/:name/reset` in `prompt-experiments` to clear variant metrics and winner.
+- Extended tests to cover variant resets and updated task tracker for task 200.

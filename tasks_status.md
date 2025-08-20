@@ -203,3 +203,4 @@
 | 197 | Experiment Rename Endpoint | Completed |
 | 198 | Experiment Clone Endpoint | Completed |
 | 199 | Variant Rename Endpoint | Completed |
+| 200 | Variant Reset Endpoint | Completed |
