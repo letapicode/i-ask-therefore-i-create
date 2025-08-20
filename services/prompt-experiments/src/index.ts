@@ -182,6 +182,23 @@ app.put('/experiments/:id/variants/:name/name', (req, res) => {
   res.json(exp.variants[newName]);
 });
 
+app.post('/experiments/:id/variants/:name/reset', (req, res) => {
+  const list = read();
+  const exp = find(req.params.id, list);
+  if (!exp) return res.status(404).json({ error: 'not found' });
+
+  const variantName = sanitize(req.params.name);
+  const variant = exp.variants[variantName];
+  if (!variant) return res.status(404).json({ error: 'variant not found' });
+
+  variant.success = 0;
+  variant.total = 0;
+  if (exp.winner === variantName) delete exp.winner;
+
+  save(list);
+  res.json(variant);
+});
+
 app.delete('/experiments/:id/variants/:name', (req, res) => {
   const list = read();
   const exp = find(req.params.id, list);
