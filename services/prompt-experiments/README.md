@@ -10,7 +10,9 @@ This service manages prompt A/B tests and metrics.
 - `POST /experiments/:id/variants` – add a variant
 - `PUT /experiments/:id/variants/:name` – update a variant's prompt
 - `PUT /experiments/:id/variants/:name/name` – rename a variant
+- `POST /experiments/:id/variants/:name/clone` – duplicate a variant with metrics reset
 - `DELETE /experiments/:id/variants/:name` – remove a variant (clears winner if deleted)
+- `POST /experiments/:id/variants/:name/reset` – reset metrics for a single variant
 - `GET /experiments/:id` – fetch a single experiment
 - `GET /experiments/:id/summary` – get success rates and best variant
 - `GET /experiments/:id/export` – download results as CSV

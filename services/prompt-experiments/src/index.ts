@@ -182,6 +182,27 @@ app.put('/experiments/:id/variants/:name/name', (req, res) => {
   res.json(exp.variants[newName]);
 });
 
+app.post('/experiments/:id/variants/:name/clone', (req, res) => {
+  const { name } = req.body as { name?: string };
+  if (!name) return res.status(400).json({ error: 'missing fields' });
+
+  const list = read();
+  const exp = find(req.params.id, list);
+  if (!exp) return res.status(404).json({ error: 'not found' });
+
+  const sourceName = sanitize(req.params.name);
+  const source = exp.variants[sourceName];
+  if (!source) return res.status(404).json({ error: 'variant not found' });
+
+  const newName = sanitize(name);
+  if (exp.variants[newName])
+    return res.status(400).json({ error: 'variant exists' });
+
+  exp.variants[newName] = { prompt: source.prompt, success: 0, total: 0 };
+  save(list);
+  res.status(201).json(exp.variants[newName]);
+});
+
 app.post('/experiments/:id/variants/:name/reset', (req, res) => {
   const list = read();
   const exp = find(req.params.id, list);

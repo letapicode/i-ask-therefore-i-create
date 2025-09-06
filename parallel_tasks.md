@@ -2478,3 +2478,13 @@ This file expands on each item in `Tasks.md` with a short description of the exp
     2. Proxy through the orchestrator and add UI controls in the portal.
     3. Document the endpoint and add tests.
 
+201. **Variant Clone Endpoint**
+
+   - Duplicate existing variants for iterative testing.
+   - Task details: Add a `/experiments/:id/variants/:name/clone` endpoint and integrate across layers.
+  - Steps:
+    1. Implement clone route in `services/prompt-experiments` resetting metrics.
+    2. Proxy the endpoint through the orchestrator.
+    3. Expose clone controls in the portal UI.
+    4. Document the endpoint and add tests.
+
