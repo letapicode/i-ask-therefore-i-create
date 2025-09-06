@@ -9,7 +9,8 @@ The prompt experiments service allows comparing multiple prompt variants and col
 3. Retrieve aggregated success rates with `/api/experiments/summary`.
 4. Update a variant's prompt via `PUT /api/experiments/:id/variants/:name`.
 5. Remove a variant with `DELETE /api/experiments/:id/variants/:name`.
-6. Visit `/prompt-tests` in the portal to launch tests, add variants and monitor results.
-7. Download CSV results from `/api/experiments/:id/export` for further analysis.
-8. Rename experiments using `PUT /api/experiments/:id/name`.
-9. Duplicate an experiment with `POST /api/experiments/:id/clone` to start fresh tests.
+6. Clone a variant with `POST /api/experiments/:id/variants/:name/clone` to reset metrics while reusing prompts.
+7. Visit `/prompt-tests` in the portal to launch tests, add variants and monitor results.
+8. Download CSV results from `/api/experiments/:id/export` for further analysis.
+9. Rename experiments using `PUT /api/experiments/:id/name`.
+10. Duplicate an experiment with `POST /api/experiments/:id/clone` to start fresh tests.

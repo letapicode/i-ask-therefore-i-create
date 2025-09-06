@@ -645,3 +645,9 @@ This file records brief summaries of each pull request.
 
 - Added `POST /experiments/:id/variants/:name/reset` in `prompt-experiments` to clear variant metrics and winner.
 - Extended tests to cover variant resets and updated task tracker for task 200.
+
+## PR <pending> - Variant clone endpoint
+
+- Added `POST /experiments/:id/variants/:name/clone` in `prompt-experiments` for duplicating variants with fresh metrics.
+- Proxied the endpoint through the orchestrator and exposed a Clone control in the portal UI.
+- Documented the workflow and marked task 201 complete.

@@ -185,6 +185,20 @@ function VariantList({
     mutate();
   };
 
+  const cloneVariant = async (source: string) => {
+    const newName = window.prompt('Clone variant as', source + '-copy');
+    if (!newName) return;
+    await fetch(
+      `/api/experiments/${id}/variants/${encodeURIComponent(source)}/clone`,
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name: newName }),
+      }
+    );
+    mutate();
+  };
+
   const remove = async (name: string) => {
     await fetch(
       `/api/experiments/${id}/variants/${encodeURIComponent(name)}`,
@@ -206,6 +220,9 @@ function VariantList({
           </button>
           <button onClick={() => rename(name)} style={{ marginLeft: 4 }}>
             Rename
+          </button>
+          <button onClick={() => cloneVariant(name)} style={{ marginLeft: 4 }}>
+            Clone
           </button>
           <button onClick={() => remove(name)} style={{ marginLeft: 4 }}>
             Delete

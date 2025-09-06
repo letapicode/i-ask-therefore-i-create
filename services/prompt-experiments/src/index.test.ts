@@ -248,3 +248,27 @@ test('clones experiment resetting metrics', async () => {
   const list = await request(app).get('/experiments');
   expect(list.body).toHaveLength(2);
 });
+
+test('clones variant with sanitized name and reset metrics', async () => {
+  const create = await request(app)
+    .post('/experiments')
+    .send({ name: 'var-clone', variants: { A: { prompt: 'a' } } });
+  const id = create.body.id;
+
+  await request(app)
+    .put(`/experiments/${id}`)
+    .send({ variant: 'A', success: true });
+
+  const clone = await request(app)
+    .post(`/experiments/${id}/variants/A/clone`)
+    .send({ name: '<b>B</b>' });
+  expect(clone.status).toBe(201);
+
+  const fetchExp = await request(app).get(`/experiments/${id}`);
+  const keys = Object.keys(fetchExp.body.variants);
+  expect(keys).toContain('&lt;b&gt;B&lt;&#x2F;b&gt;');
+  const variant = fetchExp.body.variants['&lt;b&gt;B&lt;&#x2F;b&gt;'];
+  expect(variant.prompt).toBe('a');
+  expect(variant.success).toBe(0);
+  expect(variant.total).toBe(0);
+});
