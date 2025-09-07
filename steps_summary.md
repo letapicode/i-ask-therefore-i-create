@@ -651,3 +651,8 @@ This file records brief summaries of each pull request.
 - Added `POST /experiments/:id/variants/:name/clone` in `prompt-experiments` for duplicating variants with fresh metrics.
 - Proxied the endpoint through the orchestrator and exposed a Clone control in the portal UI.
 - Documented the workflow and marked task 201 complete.
+
+## PR <pending> - Variant reset orchestration
+
+- Proxied `POST /experiments/:id/variants/:name/reset` through the orchestrator.
+- Added portal controls to reset variant metrics and documented reset endpoints.

@@ -458,3 +458,10 @@ test('edge scaling triggers update', async () => {
   expect(res.status).toBe(201);
   expect(updateEdgeScaling).toHaveBeenCalled();
 });
+
+test('variant reset proxies to experiment service', async () => {
+  const res = await request(app)
+    .post('/api/experiments/e1/variants/A/reset')
+    .set('x-tenant-id', 't1');
+  expect(res.status).toBe(200);
+});

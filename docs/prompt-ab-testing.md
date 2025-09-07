@@ -14,3 +14,5 @@ The prompt experiments service allows comparing multiple prompt variants and col
 8. Download CSV results from `/api/experiments/:id/export` for further analysis.
 9. Rename experiments using `PUT /api/experiments/:id/name`.
 10. Duplicate an experiment with `POST /api/experiments/:id/clone` to start fresh tests.
+11. Reset experiment metrics with `POST /api/experiments/:id/reset` or clear a single
+    variant's counters via `POST /api/experiments/:id/variants/:name/reset`.
