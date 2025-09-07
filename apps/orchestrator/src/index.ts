@@ -637,7 +637,25 @@ app.put(
     } catch {
       res.status(500).json({ error: 'service unavailable' });
     }
-  } 
+  }
+);
+
+app.post(
+  '/api/experiments/:id/variants/:name/reset',
+  async (req, res) => {
+    try {
+      const response = await fetch(
+        `${PROMPT_EXP_URL}/experiments/${encodeURIComponent(
+          req.params.id
+        )}/variants/${encodeURIComponent(req.params.name)}/reset`,
+        { method: 'POST' }
+      );
+      const json = await response.json();
+      res.status(response.status).json(json);
+    } catch {
+      res.status(500).json({ error: 'service unavailable' });
+    }
+  }
 );
 
 app.post(

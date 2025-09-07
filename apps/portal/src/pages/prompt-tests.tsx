@@ -199,6 +199,14 @@ function VariantList({
     mutate();
   };
 
+  const resetVariant = async (name: string) => {
+    await fetch(
+      `/api/experiments/${id}/variants/${encodeURIComponent(name)}/reset`,
+      { method: 'POST' }
+    );
+    mutate();
+  };
+
   const remove = async (name: string) => {
     await fetch(
       `/api/experiments/${id}/variants/${encodeURIComponent(name)}`,
@@ -223,6 +231,9 @@ function VariantList({
           </button>
           <button onClick={() => cloneVariant(name)} style={{ marginLeft: 4 }}>
             Clone
+          </button>
+          <button onClick={() => resetVariant(name)} style={{ marginLeft: 4 }}>
+            Reset
           </button>
           <button onClick={() => remove(name)} style={{ marginLeft: 4 }}>
             Delete
