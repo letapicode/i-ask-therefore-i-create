@@ -6,12 +6,18 @@ The prompt experiments service allows comparing multiple prompt variants and col
 
 1. Start the service with `pnpm --filter prompt-experiments build && node services/prompt-experiments/dist/index.js`.
 2. Use the orchestrator endpoints `/api/experiments` to create experiments and `/api/experiments/:id/variants` to add variants. When recording results or setting a winner via `PUT /api/experiments/:id`, provide variant and winner names that exist on the experiment; otherwise a `400` error is returned.
-3. Retrieve aggregated success rates with `/api/experiments/summary`.
+3. Retrieve aggregated success rates with `/api/experiments/summary`. The
+   response now includes Wilson score confidence intervals, lift relative to
+   the automatically selected baseline variant, a `leaderByLowerBound` field
+   showing the most statistically robust option and `significant` flags when a
+   variant's lower bound exceeds the baseline's upper bound.
 4. Update a variant's prompt via `PUT /api/experiments/:id/variants/:name`.
 5. Remove a variant with `DELETE /api/experiments/:id/variants/:name`.
 6. Clone a variant with `POST /api/experiments/:id/variants/:name/clone` to reset metrics while reusing prompts.
 7. Visit `/prompt-tests` in the portal to launch tests, add variants and monitor results.
 8. Download CSV results from `/api/experiments/:id/export` for further analysis.
+   The export includes rate, confidence bounds, lift, significance and baseline
+   markers for each variant, making it easy to share experiment outcomes.
 9. Rename experiments using `PUT /api/experiments/:id/name`.
 10. Duplicate an experiment with `POST /api/experiments/:id/clone` to start fresh tests.
 11. Reset experiment metrics with `POST /api/experiments/:id/reset` or clear a single

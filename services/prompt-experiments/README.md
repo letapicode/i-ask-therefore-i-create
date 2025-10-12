@@ -5,7 +5,8 @@ This service manages prompt A/B tests and metrics.
 ## Endpoints
 
 - `GET /experiments` – list all experiments
-- `GET /experiments/summary` – list summaries with success rates
+- `GET /experiments/summary` – list summaries with success rates, Wilson score
+  confidence intervals, lift against the baseline and significance flags
 - `POST /experiments` – create a new experiment
 - `POST /experiments/:id/variants` – add a variant
 - `PUT /experiments/:id/variants/:name` – update a variant's prompt
@@ -14,8 +15,10 @@ This service manages prompt A/B tests and metrics.
 - `DELETE /experiments/:id/variants/:name` – remove a variant (clears winner if deleted)
 - `POST /experiments/:id/variants/:name/reset` – reset metrics for a single variant
 - `GET /experiments/:id` – fetch a single experiment
-- `GET /experiments/:id/summary` – get success rates and best variant
-- `GET /experiments/:id/export` – download results as CSV
+- `GET /experiments/:id/summary` – get success rates, confidence intervals,
+  baseline selection and statistically significant leaders
+- `GET /experiments/:id/export` – download results as CSV (includes rate,
+  confidence interval bounds, lift, significance and baseline columns)
 - `POST /experiments/:id/clone` – duplicate an experiment with metrics reset
 - `POST /experiments/:id/reset` – reset all variant metrics and clear winner
 - `PUT /experiments/:id/name` – rename an experiment

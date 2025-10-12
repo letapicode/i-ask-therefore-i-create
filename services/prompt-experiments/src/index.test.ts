@@ -4,14 +4,16 @@ import fs from 'fs';
 const DB = '.test-prompt-experiments.json';
 process.env.EXPERIMENT_DB = DB;
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-const { app } = require('./index');
+const { app, clearExperimentCache } = require('./index');
 
 beforeEach(() => {
   if (fs.existsSync(DB)) fs.unlinkSync(DB);
+  clearExperimentCache();
 });
 
 afterEach(() => {
   if (fs.existsSync(DB)) fs.unlinkSync(DB);
+  clearExperimentCache();
 });
 
 test('create, update and delete experiment', async () => {
@@ -35,13 +37,20 @@ test('create, update and delete experiment', async () => {
 
   const summary = await request(app).get(`/experiments/${id}/summary`);
   expect(summary.body.variants.A.rate).toBe(1);
+  expect(summary.body.variants.A.ciLow).toBeGreaterThan(0.2);
+  expect(summary.body.variants.A.ciHigh).toBe(1);
+  expect(summary.body.variants.A.isBaseline).toBe(true);
   expect(summary.body.best).toBe('A');
 
   const exportRes = await request(app).get(`/experiments/${id}/export`);
   expect(exportRes.status).toBe(200);
   expect(exportRes.headers['content-type']).toMatch(/text\/csv/);
-  expect(exportRes.text).toContain('variant,prompt,success,total,rate');
-  expect(exportRes.text).toContain('A,"&lt;i&gt;a&lt;&#x2F;i&gt;",1,1,1');
+  expect(exportRes.text).toContain(
+    'variant,prompt,success,total,rate,ci_low,ci_high,lift,lift_pct,significant,is_baseline'
+  );
+  expect(exportRes.text).toContain(
+    'A,"&lt;i&gt;a&lt;&#x2F;i&gt;",1,1,1.000000'
+  );
 
   const del = await request(app).delete(`/experiments/${id}`);
   expect(del.status).toBe(200);
@@ -271,4 +280,30 @@ test('clones variant with sanitized name and reset metrics', async () => {
   expect(variant.prompt).toBe('a');
   expect(variant.success).toBe(0);
   expect(variant.total).toBe(0);
+});
+
+test('computes confidence intervals and significance', async () => {
+  const experiment = {
+    id: 'exp-1',
+    name: 'interval',
+    created: Date.now(),
+    variants: {
+      control: { prompt: 'base', success: 30, total: 100 },
+      challenger: { prompt: 'test', success: 60, total: 100 },
+    },
+  };
+  fs.writeFileSync(DB, JSON.stringify([experiment], null, 2));
+  clearExperimentCache();
+
+  const summary = await request(app).get('/experiments/summary');
+  expect(summary.status).toBe(200);
+  const [record] = summary.body;
+  expect(record.baseline).toBe('control');
+  expect(record.variants.control.isBaseline).toBe(true);
+  expect(record.variants.challenger.significant).toBe(true);
+  expect(record.leaderByLowerBound).toBe('challenger');
+  expect(record.variants.challenger.ciLow).toBeLessThan(
+    record.variants.challenger.ciHigh
+  );
+  expect(record.variants.challenger.lift).toBeGreaterThan(0);
 });

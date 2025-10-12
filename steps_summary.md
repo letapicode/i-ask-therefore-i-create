@@ -656,3 +656,13 @@ This file records brief summaries of each pull request.
 
 - Proxied `POST /experiments/:id/variants/:name/reset` through the orchestrator.
 - Added portal controls to reset variant metrics and documented reset endpoints.
+
+## PR <pending> - Experiment analytics confidence intervals
+
+- Refactored `services/prompt-experiments` storage to use asynchronous file access
+  with locking, added Wilson score confidence intervals, lift calculations and
+  significance flags for summaries and CSV exports.
+- Extended Jest coverage to verify the new analytics, sanitization cache reset
+  behaviour and CSV output, keeping the audit log clean for tests.
+- Updated the portal experiments page to present success rates, confidence
+  intervals and lift in a tabular layout and documented the enhanced metrics.
